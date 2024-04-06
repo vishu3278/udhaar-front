@@ -104,14 +104,16 @@
             <div class="flex-auto w-1/3">
                 <aside class="bg-slate-200 rounded p-3">
                     <template v-if="detail">
-                        <h4 class="text-indigo-500 mb-0 flex gap-3 items-center">{{detail.name}} <small class="text-slate-500 text-sm">({{detail.id}})</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
+                        <h4 class="text-indigo-500 mb-0 flex gap-3 items-center">{{detail.name}} <small class="bg-indigo-400 text-white w-6 h-6 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
                         <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
                         <div v-for="item in detail.udhaars" class="flex gap-5 flex-wrap border border-indigo-300 py-1 px-1">
+                            <small>{{item.id}}</small>
                             <p class="udhaar"><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{humanDate(item.date)}}</p>
                             <div class="emi">
                                 <div v-for="trs in detail.transactions">
                                     <p v-if="trs.udhaar_id == item.id">&rarr; <i class="ri-refund-line"></i> {{trs.amount}} - <i class="ri-calendar-line"></i> {{humanDate(trs.date)}}</p>
                                 </div>
+                                <pre>{{item.amount}} == {{calcAmount(detail.transactions)}}</pre>
                                 <div v-if="item.amount > calcAmount(detail.transactions)"><button class="btn-sm" @click="showTrnzForm(detail.id, item.id)">Add transaction</button></div>
                             </div>
                             <div v-if="item.id == transaction.udhaar_id" class=" basis-full  mb-2">
