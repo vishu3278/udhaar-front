@@ -63,7 +63,9 @@
                         <tr v-for="(p, index) in payees" :key="index">
                             <td>{{ p.id }}</td>
                             <td>{{ p.name }}</td>
-                            <td class="text-right">{{ calcAmount(p.udhaars) }}</td>
+                            <td class="text-right">
+                                {{ p.udhaar.total }}
+                            </td>
                             <td class="text-center">
                                 <!-- <span :class="{
                                         'text-red-500 font-bold': p.pending > 0 && !p.bad,
@@ -234,7 +236,7 @@ import axios from "axios"
 import Modal from "@/components/Modal.vue"
 import Transactions from "@/components/udhaar/Transactions.vue"
 // import { collection, getDocs } from "firebase/firestore";
-// import { getPayees, updatePayee, addTransaction, addUdhaar } from "@/firebase.js";
+import { getPayees, updatePayee, addTransaction, addUdhaar } from "@/firebase.js";
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
 
@@ -276,24 +278,24 @@ export default {
     mounted() {
         // console.log('mounted')
         
-        axios.get(
+        /*axios.get(
                 import.meta.env.VITE_API_URL + "/people").then(res => {
                 // console.log(res.data)
                 this.payees = res.data.data
                 this.loading = false
-            }).catch(err => console.warn(err))
-        /*getPayees()
+            }).catch(err => console.warn(err))*/
+        getPayees()
             .then((p) => {
+                console.log(p)
                 this.payees = p;
-                this.payees.map((elem) => {
-                    // return something;
+                /*this.payees.map((elem) => {
                     // console.log(elem.amount)
                     this.total += elem.amount;
                     this.pending += elem.pending;
                     this.bad += elem.bad ? elem.pending : 0;
-                });
+                });*/
             })
-            .catch((e) => console.log(e));*/
+            .catch((e) => console.log(e));
     },
     methods: {
         calcAmount(udhaars){

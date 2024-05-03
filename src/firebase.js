@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDoc, getDocs, doc, addDoc, setDoc, updateDoc, query, orderBy, limit, where, onSnapshot, arrayUnion, arrayRemove  } from "firebase/firestore";
+import { getFirestore, collection, getDoc, getDocs, doc, addDoc, setDoc, updateDoc, query, orderBy, limit, where, onSnapshot, arrayUnion, arrayRemove } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth } from "firebase/auth";
@@ -29,8 +29,17 @@ const getPayees = async () => {
 
     const payeesSnapshot = await getDocs(payeesRef);
 
-    payeesSnapshot.docs.map(doc => {
+    payeesSnapshot.docs.map(async (doc, index) => {
         payees.push({ id: doc.id, ...doc.data() })
+
+        payees[index]["udhaar"] = await getUdhaar(doc.id)
+        // Query a reference to a subcollection
+        /*const subQuery = await getDocs(collection(db, "payees", doc.id, "udhaar"));
+        subQuery.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            payees[index]["udhaar"] = doc.data()
+        });*/
     });
     // console.log(payees)
     return payees;
@@ -80,13 +89,33 @@ const addUdhaar = async (id, content) => {
     return udh
 }
 
+const getUdhaar = async (id) => {
+
+    let u = { total: 0, data: [] }
+    const query = await getDocs(collection(db, "payees", id, "udhaar"));
+    /*const coll = collection(firestore, 'payees', id, "udhaar");
+    const snapshot = await getAggregateFromServer(coll, {
+        total: sum('amount')
+    });*/
+
+    // console.log('total: ', snapshot.data().total);
+
+    query.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        u.data.push({ id, ...doc.data() })
+        u.total += doc.data().amount
+    });
+    return u
+}
+
 const addTransaction = async (id, payload) => {
-    console.log("firebase ->",payload)
+    console.log("firebase ->", payload)
 
     // payeeRef.update({transactions: firebase.firestore.FieldValue.arrayUnion(payload)})
     const upd = await updateDoc(doc(db, 'payees', id), {
         pending: payload.pending,
-        transactions: arrayUnion({amount: payload.amount, duedate: payload.duedate, paydate: payload.paydate})
+        transactions: arrayUnion({ amount: payload.amount, duedate: payload.duedate, paydate: payload.paydate })
     });
     return upd
 }
@@ -125,7 +154,7 @@ const getInvoices = async (content) => {
     // var collectionRef = firebase.firestore().collection('invoices');
 
     invSnapshot.docs.map(doc => {
-        inv.push({id: doc.id, ...doc.data()})
+        inv.push({ id: doc.id, ...doc.data() })
     })
     return inv
 }
@@ -141,7 +170,7 @@ const getCompanies = async (content) => {
     const snapShot = await getDocs(q)
 
     snapShot.docs.map(doc => {
-        comp.push({ id: doc.id, ...doc.data()})
+        comp.push({ id: doc.id, ...doc.data() })
     })
 
     return comp;
@@ -151,7 +180,7 @@ const addCompany = async (content) => {
     const compRef = await addDoc(companyRef, content);
     return compRef
 }
-const updateCompany = async(id, content) => {
+const updateCompany = async (id, content) => {
     const compRef = await updateDoc(doc(db, 'company', id), content)
     return compRef
 }
