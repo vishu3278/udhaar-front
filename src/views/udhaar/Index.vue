@@ -54,7 +54,7 @@
                             <th>Amount</th>
                             <th>Udhaar</th>
                             <!-- <th>Return Date</th> -->
-                            <!-- <th>Remarks</th> -->
+                            <th>Remarks</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -64,7 +64,7 @@
                             <td>{{ p.id }}</td>
                             <td>{{ p.name }}</td>
                             <td class="text-right">
-                                {{ p.udhaar.total }}
+                                {{ p.udhaar?.total }}
                             </td>
                             <td class="text-center">
                                 <!-- <span :class="{
@@ -76,7 +76,7 @@
                                 {{ humanDate(p.duedate) }} -
                                 <span v-html="status(p.duedate)"></span>
                             </td> -->
-                            <!-- <td>{{ p.remarks }}</td> -->
+                            <td>{{ p.remarks }}</td>
                             <td class="text-center">
                                 <!-- <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span>
                                 <span v-show="!p.bad && p.pending > 0" class="text-xs px-2 rounded-full bg-blue-300 mr-1">Pending</span>
@@ -96,7 +96,7 @@
                                     <button v-else class="btn bg-purple-200 border-purple-200 text-purple-900 hover:bg-purple-400 hover:border-purple-400 btn-sm mr-1" @click="markNotBad(p.id)">Not Bad</button>
                                     <!-- </div> -->
                                     
-                                    <button class="btn btn-sm" @click="getPeopleDetail(p.id)">Details</button>
+                                    <button class="btn btn-sm" @click="getPeopleDetail(p)">Details</button>
                                 </div>
                             </td>
                         </tr>
@@ -108,25 +108,25 @@
                     <template v-if="detail">
                         <h4 class="text-indigo-500 mb-0 flex gap-3 items-center">{{detail.name}} <small class="bg-indigo-400 text-white w-6 h-6 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
                         <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
-                        <div v-for="item in detail.udhaars" class="flex gap-5 flex-wrap border border-indigo-300 py-1 px-1">
+                        <div v-for="item in detail.udhaar" class="flex gap-5 flex-wrap border border-indigo-300 py-1 px-1">
                             <small>{{item.id}}</small>
                             <p class="udhaar"><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{humanDate(item.date)}}</p>
                             <div class="emi">
-                                <div v-for="trs in detail.transactions">
-                                    <p v-if="trs.udhaar_id == item.id">&rarr; <i class="ri-refund-line"></i> {{trs.amount}} - <i class="ri-calendar-line"></i> {{humanDate(trs.date)}}</p>
+                                <div v-for="trs in detail.transaction">
+                                    <p>&rarr; <i class="ri-refund-line"></i> {{trs.amount}} - <i class="ri-calendar-line"></i> {{humanDate(trs.date)}}</p>
                                 </div>
-                                <pre>{{item.amount}} == {{calcAmount(detail.transactions)}}</pre>
-                                <div v-if="item.amount > calcAmount(detail.transactions)"><button class="btn-sm" @click="showTrnzForm(detail.id, item.id)">Add transaction</button></div>
+                                <!-- <pre>{{item.amount}} == {{calcAmount(detail.transaction)}}</pre>
+                                <div v-if="item.amount > calcAmount(detail.transaction)"><button class="btn-sm" @click="showTrnzForm(detail.id, item.id)">Add transaction</button></div> -->
                             </div>
-                            <div v-if="item.id == transaction.udhaar_id" class=" basis-full  mb-2">
+                            <!-- <div v-if="item.id == transaction.udhaar_id" class=" basis-full  mb-2">
                                 <p>Add transaction for this udhaar</p>
                                 <div class="flex gap-2 items-center">
                                     <div class="form-group mb-0">
-                                        <!-- <label class="form-label">Amount</label> -->
+                                        
                                         <input class="form-input input-sm" type="number" v-model="transaction.amount" placeholder="Amount" />
                                     </div>
                                     <div class="form-group mb-0">
-                                        <!-- <label class="form-label">Date</label> -->
+                                        
                                         <input class="form-input input-sm" type="date" v-model="transaction.date" placeholder="Date" />
                                     </div>
                                     <div class="form-group mb-0">
@@ -142,7 +142,7 @@
                                         Add
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                     </template>
@@ -193,10 +193,10 @@
                 </div>
             </template>
         </Modal> -->
-        <Modal v-show="udhaarModal" @close="closeUdhaarModal" title="Add Udhaar">
+        <Modal v-show="udhaarModal" @close="closeUdhaarModal" :title="`Add Udhaar for ${payee?.name}`">
             <template v-slot:content>
                 <div class="content">
-                    <div class="grid grid-cols-3 gap-2">
+                    <div class="grid grid-cols-2 gap-2">
                         <div class="form-group">
                             <label class="form-label">Amount</label>
                             <input class="form-input input-sm" type="number" v-model="udhaar.amount" placeholder="Amount" />
@@ -205,10 +205,10 @@
                             <label class="form-label">Date</label>
                             <input class="form-input input-sm" type="date" v-model="udhaar.date" placeholder="Due date" />
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="form-label">{{payee?.name}}</label>
                             <input class="form-input input-sm" type="number" v-model="udhaar.people_id" placeholder="People id" readonly />
-                        </div>
+                        </div> -->
                         <!-- <button class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="submitTransaction">
                             Add
                         </button> -->
@@ -236,7 +236,7 @@ import axios from "axios"
 import Modal from "@/components/Modal.vue"
 import Transactions from "@/components/udhaar/Transactions.vue"
 // import { collection, getDocs } from "firebase/firestore";
-import { getPayees, updatePayee, addTransaction, addUdhaar } from "@/firebase.js";
+import { getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact } from "@/firebase.js";
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
 
@@ -367,7 +367,7 @@ export default {
         },
         async openUdhaarModal(payee){
             this.payee = payee
-            this.udhaar.people_id = payee.id
+            // this.udhaar.people_id = payee.id
             this.udhaarModal = true
         },
         closeUdhaarModal(){
@@ -419,25 +419,29 @@ export default {
             })
         },
         addUdhaar(){
-            axios.post(
+            /*axios.post(
                 import.meta.env.VITE_API_URL + "/udhaar", { amount: this.udhaar.amount, date: this.udhaar.date, people_id: this.udhaar.people_id }).then((res) => {
                 console.log(res.data)
                 // this.transactions.push(res.data)
                 this.loading = false
                 this.udhaar = {}
                 this.udhaarModal = false
-            })
+            })*/
 
-            // addUdhaar(this.udhaar.payee, { amount: this.udhaar.amount, date: this.udhaar.date})
+            addUdhaar(this.udhaar.payee, { amount: this.udhaar.amount, date: this.udhaar.date})
         },
-        getPeopleDetail(id){
-            axios.get(
+        getPeopleDetail(people){
+            // console.log(people)
+            getUdhaarTransact(people.id).then(data => {
+                // console.log(data)
+                this.detail = data
+            }).catch(e => console.warn(e))
+            /*axios.get(
                 import.meta.env.VITE_API_URL + "/people/detail/" + id).then(p => {
                 // console.log(p.data)
-                // let ppl = p.data[0]
                 this.detail = p.data
                 
-            }).catch(err => console.warn(err))
+            }).catch(err => console.warn(err))*/
         },
 
     },

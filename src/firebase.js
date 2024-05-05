@@ -30,37 +30,14 @@ const getPayees = async () => {
     const payeesSnapshot = await getDocs(payeesRef);
 
     payeesSnapshot.docs.map(async (doc, index) => {
-        payees.push({ id: doc.id, ...doc.data() })
 
-        payees[index]["udhaar"] = await getUdhaar(doc.id)
-        // Query a reference to a subcollection
-        /*const subQuery = await getDocs(collection(db, "payees", doc.id, "udhaar"));
-        subQuery.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            // console.log(doc.id, " => ", doc.data());
-            payees[index]["udhaar"] = doc.data()
-        });*/
+        const u = await getUdhaar(doc.id)
+        payees.push({ id: doc.id, ...doc.data(), udhaar: u })
+        
     });
     // console.log(payees)
     return payees;
 }
-
-/*const getPayeesRealtime = async () => {
-    const q = query(collection(db, "payees"), orderBy("name"));
-    let payees = []
-    const unsubscribe = await onSnapshot(q, (querySnapshot) => {
-        const cities = [];
-        querySnapshot.docs.map(doc => {
-            cities.push(doc.data());
-            // console.log('loop->',doc.data());
-        });
-        console.log("Current payees ", cities);
-        payees = cities
-        return cities
-    })
-    console.log(unsubscribe, payees)
-    return payees
-}*/
 
 const getPayeeById = async (id) => {
     const docSnap = await getDoc(doc(db, "payees", id));
@@ -93,12 +70,6 @@ const getUdhaar = async (id) => {
 
     let u = { total: 0, data: [] }
     const query = await getDocs(collection(db, "payees", id, "udhaar"));
-    /*const coll = collection(firestore, 'payees', id, "udhaar");
-    const snapshot = await getAggregateFromServer(coll, {
-        total: sum('amount')
-    });*/
-
-    // console.log('total: ', snapshot.data().total);
 
     query.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -109,22 +80,48 @@ const getUdhaar = async (id) => {
     return u
 }
 
-const addTransaction = async (id, payload) => {
-    console.log("firebase ->", payload)
+const getUdhaarTransact = async (id) => {
+    let u = { total: 0, udhaar: [] }
+    const p = await getPayeeById(id)
+    const query = await getDocs(collection(db, "payees", id, "udhaar"));
+    query.forEach(async (doc, index) => {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        let ent = { ...p, id, ...doc.data(), transaction: [] }
+        const t = await getTransactions(id, doc.id)
+        ent.transaction.push(t)
+        u.udhaar.push(ent)
+        u.total += doc.data().amount
+        // u.tt += t.amount
+    });
+    return u
+}
 
+const addTransaction = async (id, payload) => {
+    console.log("firebase ->", id, payload)
+
+    const docRef = doc(db, "payees", id)
+    console.log(docRef)
     // payeeRef.update({transactions: firebase.firestore.FieldValue.arrayUnion(payload)})
-    const upd = await updateDoc(doc(db, 'payees', id), {
+    /*const upd = await updateDoc(doc(db, 'payees', id), {
         pending: payload.pending,
         transactions: arrayUnion({ amount: payload.amount, duedate: payload.duedate, paydate: payload.paydate })
-    });
+    });*/
     return upd
 }
 
-const getTransactions = async (id) => {
+const getTransactions = async (pId, uId) => {
     // var payeeRef = doc(db, 'payees', id);
-    const docSnap = await getDoc(doc(db, "payees", id));
-    return docSnap.data().transactions
+    let t = []
+    const query = await getDocs(collection(db, "payees", pId, "udhaar", uId, "transaction"));
+    query.forEach(doc => {
+        // console.log(doc.id, doc.data())
+        t.push(doc.data())
+    })
+    // console.log(query)
+    return t
 }
+
 
 const getExpense = async () => {
     let exp = []
@@ -186,4 +183,22 @@ const updateCompany = async (id, content) => {
 }
 
 const auth = getAuth();
-export { db, addPayee, getPayees, getPayeeById, updatePayee, addUdhaar, addTransaction, getTransactions, getExpense, addExpense, getInvoices, addInvoice, auth, getCompanies, addCompany, updateCompany }
+export {
+    db,
+    addPayee,
+    getPayees,
+    getPayeeById,
+    updatePayee,
+    addUdhaar,
+    addTransaction,
+    getUdhaarTransact,
+    getTransactions,
+    getExpense,
+    addExpense,
+    getInvoices,
+    addInvoice,
+    auth,
+    getCompanies,
+    addCompany,
+    updateCompany
+}
