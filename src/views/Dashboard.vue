@@ -1,5 +1,7 @@
 <template>
     <section class="py-1 px-4 ">
+        <div v-if="loading">Loading...</div>
+        <div v-if="error">{{ error }}</div>
         <div class="grid grid-cols-2 my-4">
             <div class="column ">
                 <div class="grid grid-cols-2 gap-5">
@@ -10,7 +12,7 @@
                             </div>
                             <div class="card-header">
                                 <div class="card-title h5">Total</div>
-                                <div class="card-subtitle text-gray">lorem ipsum</div>
+                                <div class="card-subtitle ">Payees - {{payees.length}}</div>
                             </div>
                         </div>
                     </div>
@@ -21,7 +23,7 @@
                             </div>
                             <div class="card-header">
                                 <div class="card-title h5">Pending</div>
-                                <div class="card-subtitle text-gray">lorem ipsum</div>
+                                <div class="card-subtitle ">lorem ipsum</div>
                             </div>
                         </div>
                     </div>
@@ -32,7 +34,7 @@
                             </div>
                             <div class="card-header">
                                 <div class="card-title h5">Bad</div>
-                                <div class="card-subtitle text-gray">lorem ipsum</div>
+                                <div class="card-subtitle ">lorem ipsum</div>
                             </div>
                         </div>
                     </div>
@@ -43,18 +45,27 @@
                             </div>
                             <div class="card-header">
                                 <div class="card-title h5">Recovered</div>
-                                <div class="card-subtitle text-gray">lorem ipsum</div>
+                                <div class="card-subtitle ">lorem ipsum</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="column ">
-                <div class="card">
-                    <!-- <div class="card-header">
-                        <div class="card-title h5">Total</div>
-                        <div class="card-subtitle text-gray">lorem</div>
-                    </div> -->
+                <div class="card p-3 rounded">
+                    <div class="card-header">
+                        <div class="card-title font-bold text-blue-400">Total</div>
+                        <div class="card-subtitle font-black text-xl">{{totalUdhaar}}</div>
+                    </div>
+                    <hr>
+                    <div v-for="item in payees" :key="item.id">
+                        <div class="flex gap-3">
+                            <p class="font-semibold text-pink-500">{{item.name}}</p>
+                            <!-- <span>=> {{item.udhaar.total}}</span> -->
+                            <pre>{{item.udhaar}}</pre>
+                        </div>
+                        <hr>
+                    </div>
                     <div class="card-body">
                         <div id="chart" style=" width:100%; aspect-ratio: 1;"></div>
                     </div>
@@ -64,87 +75,85 @@
     </section>
 </template>
 <script>
-// import { getPayees } from '../firebase.js'
-import { collection, getDocs, query, orderBy, onSnapshot } from "firebase/firestore";
-import { db, getPayees, updatePayee } from "@/firebase.js"
+import { ref, onBeforeMount, onMounted, computed, nextTick, onErrorCaptured } from 'vue'
+// import { getPayees } from "@/firebase.js"
+import { db } from '@/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import * as echarts from 'echarts';
 
 export default {
+    setup() {
 
-    name: 'Dashboard',
+        let payees = ref([])
+        let msg = ref(null)
+        let total = ref(0)
+        let pending = ref(0)
+        let bad = ref(0)
+        let recovered = ref(0)
+        const loading = ref(true);
+        const error = ref(null);
 
-    data() {
-        return {
-            payees: [],
-            msg: "",
-            /*total: 0,
-            pending: 0,
-            bad: 0,*/
-        }
-    },
+        const totalUdhaar = computed(() => {
+            return payees.value.reduce((accumulator, item) => accumulator + parseInt(item.udhaar.total), 0);
+            // return payees.length
+        });
 
-    computed: {
-        total() {
-            return this.payees.reduce((a, b) => a + b.amount, 0)
-        },
-        pending() {
-            return this.payees.reduce((a, b) => a + b.pending, 0)
-        },
-        bad() {
-            // return this.payees.reduce((a, b) => b.bad ? a + b.pending : 0 }, 0)
-            let b = 0
-            this.payees.forEach((bad) => {
-                if (bad.bad) {
-                    b += bad.pending
-                }
-            })
-            return b
-        },
-        recovered() {
-            return this.total - (this.pending)
-        }
-    },
-
-    mounted() {
-        console.log('dashboard mounted')
-        const q = query(collection(db, "payees"), orderBy("name"));
-        let payees = []
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const cities = [];
-            querySnapshot.docs.map(doc => {
-                cities.push(doc.data());
-                // console.log('loop->',doc.data());
-            });
-            // console.log("Current payees ", cities);
-            this.payees = cities
-            this.renderChart()
+        onBeforeMount(() => {
+            console.log("before mount")
         })
 
-        /*getPayees()
-            .then(p => {
-                this.payees = p
-                this.payees.map((elem) => {
-                    // return something;
-                    // console.log(elem.amount)
-                    this.total += elem.amount
-                    this.pending += elem.pending
-                    this.bad += elem.bad ? elem.pending : 0
-                })
-                this.renderChart()
-            })
-            .catch(e => console.log(e))*/
-    },
-    methods: {
+        onMounted(() => {
+            payees.value = []
+            console.log('on mounted')
 
-        closeModal() {
-            this.msg = null
-        },
-        autocloseModal(duration = 3500) {
-            setTimeout(() => {
-                this.msg = null
-            }, duration)
-        },
-        renderChart() {
+            /*getPayees()
+                .then(p => {
+                    // console.log(p)
+                    payees.value = p
+                    // total.value = p.reduce((a, c) => a + c.udhaar.total, 0)
+                    p.map(function(index, elem) {
+                        console.log(elem.udhaar.total)
+                    })
+                    // this.renderChart()
+                })
+                .catch(e => {
+                    console.error('Error fetching payees:', e);
+                });*/
+            fetchData()
+        })
+
+        onErrorCaptured((e) => {
+            console.log(e)
+        })
+
+        const fetchData = async () => {
+            try {
+                // let pp = []
+                const querySnapshot = await getDocs(collection(db, 'payees'));
+                querySnapshot.docs.map(async (doc) => {
+                    // console.log(doc.id)
+                    let u = { total: 0, data: [] }
+                    const query = await getDocs(collection(db, "payees", doc.id, "udhaar"));
+
+                    query.forEach((doc) => {
+                        // console.log(doc.data().amount)
+                        u.data.push({ id: doc.id, ...doc.data() })
+                        u.total += doc.data().amount
+                    });
+                    total.value += u.total
+                    // pp.push({ id: doc.id, ...doc.data(), udhaar: u })
+                    payees.value.push({ id: doc.id, ...doc.data(), udhaar: u })
+                });
+                // payees.value = pp
+                // console.log(pp)
+            } catch (err) {
+                error.value = err.message;
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        const renderChart = () => {
             const chartDom = document.getElementById('chart');
             let myChart = echarts.init(chartDom);
             let option = {
@@ -216,7 +225,7 @@ export default {
                                 fontWeight: 'bold',
                                 lineHeight: 20,
                             },
-                            d:{
+                            d: {
                                 color: "#657892",
                                 fontWeight: 'light',
                                 lineHeight: 16
@@ -234,10 +243,22 @@ export default {
 
             option && myChart.setOption(option);
         }
-
+        return {
+            payees,
+            msg,
+            total,
+            pending,
+            bad,
+            recovered,
+            loading,
+            error,
+            totalUdhaar,
+        }
     }
 }
 </script>
 <style lang="css" scoped>
-    #chart { max-width:720px; }
+#chart {
+    max-width: 720px;
+}
 </style>

@@ -1,20 +1,17 @@
 <template>
-    <div class="container p-2">
-        <div class="columns">
-            <div class="col-6 column col-mx-auto">
-                <div class="panel">
-                    <div class="panel-header">
-                        Edit Payee
-                    </div>
-                    <div class="panel-body">
-                        <edit-payee-form v-on:submit-form=""></edit-payee-form>
-                    </div>
-                    <div class="panel-footer">
-                        <!-- <button class="btn btn-primary" @click="addPayee">Submit</button> -->
-                    </div>
-                </div>
+    <div class="container ">
+        <div class="border-slate-500 shadow p-5">
+            <div class="text-base font-bold text-orange-500 border-b-2 border-orange-500 pb-3 mb-5">
+                Edit Payee
+            </div>
+            <div class="panel-body">
+                <edit-payee-form ></edit-payee-form>
+            </div>
+            <div class="panel-footer">
+                <!-- <button class="btn btn-primary" @click="addPayee">Submit</button> -->
             </div>
         </div>
+        
     </div>
 </template>
 <script>

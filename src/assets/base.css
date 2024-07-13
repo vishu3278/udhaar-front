@@ -48,7 +48,7 @@
 @tailwind components;
 @layer components {
     
-    .btn { @apply border border-blue-500 text-blue-500 bg-white rounded-full px-4 py-1 }
+    .btn { @apply inline-block border border-blue-500 text-blue-500 bg-white rounded-full px-4 py-1 }
     .btn-sm { @apply px-3 py-0.5 text-sm }
     .btn:hover { @apply text-white bg-blue-500 }
     .btn:active { @apply ring ring-blue-200 }

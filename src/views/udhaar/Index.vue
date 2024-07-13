@@ -236,7 +236,8 @@ import axios from "axios"
 import Modal from "@/components/Modal.vue"
 import Transactions from "@/components/udhaar/Transactions.vue"
 // import { collection, getDocs } from "firebase/firestore";
-import { getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact } from "@/firebase.js";
+import { db, /*getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact*/ } from "@/firebase.js";
+import { collection, getDocs } from 'firebase/firestore';
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
 
@@ -284,18 +285,12 @@ export default {
                 this.payees = res.data.data
                 this.loading = false
             }).catch(err => console.warn(err))*/
-        getPayees()
+        /*getPayees()
             .then((p) => {
                 console.log(p)
                 this.payees = p;
-                /*this.payees.map((elem) => {
-                    // console.log(elem.amount)
-                    this.total += elem.amount;
-                    this.pending += elem.pending;
-                    this.bad += elem.bad ? elem.pending : 0;
-                });*/
             })
-            .catch((e) => console.log(e));
+            .catch((e) => console.log(e));*/
     },
     methods: {
         calcAmount(udhaars){
@@ -428,14 +423,14 @@ export default {
                 this.udhaarModal = false
             })*/
 
-            addUdhaar(this.udhaar.payee, { amount: this.udhaar.amount, date: this.udhaar.date})
+            // addUdhaar(this.udhaar.payee, { amount: this.udhaar.amount, date: this.udhaar.date})
         },
         getPeopleDetail(people){
             // console.log(people)
-            getUdhaarTransact(people.id).then(data => {
+            /*getUdhaarTransact(people.id).then(data => {
                 // console.log(data)
                 this.detail = data
-            }).catch(e => console.warn(e))
+            }).catch(e => console.warn(e))*/
             /*axios.get(
                 import.meta.env.VITE_API_URL + "/people/detail/" + id).then(p => {
                 // console.log(p.data)

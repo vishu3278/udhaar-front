@@ -1,58 +1,59 @@
 <template>
-    <form action="" class="columns p-relative">
-        <div class="column col-6">
-            <div class="form-group">
-                <label class="form-label">Name</label>
-                <input class="form-input" type="text" v-model="form.name" placeholder="Name">
-            </div>
-            <div class="form-group">
+    <div class="grid grid-cols-2 divide-x-2">
+        <div class="grid grid-cols-2 gap-x-4">
+            <div class="column ">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input class="form-input" type="text" v-model="form.name" placeholder="Name">
+                </div>
+                <!-- <div class="form-group">
                 <label class="form-label">Due Date</label>
                 <input class="form-input" type="date" v-model="form.duedate" placeholder="25-04-2022">
-            </div>
-            <div class="form-group">
+            </div> -->
+                <!-- <div class="form-group">
                 <label class="form-label">Amount</label>
                 <input class="form-input" type="number" v-model="form.amount" placeholder="10xxx.xx">
+            </div> -->
             </div>
-        </div>
-        <div class="column col-6">
-            <div class="form-group">
-                <label class="form-label">Mobile</label>
-                <input class="form-input" type="number" v-model="form.mobile" placeholder="98xxxxxxxx">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Remarks</label>
-                <input class="form-input" type="text" v-model="form.remarks" placeholder="Some remark you want to add">
-            </div>
-            <div class="form-group">
+            <div class="column ">
+                <div class="form-group">
+                    <label class="form-label">Mobile</label>
+                    <input class="form-input" type="number" v-model="form.mobile" placeholder="98xxxxxxxx">
+                </div>
+                <!-- <div class="form-group">
                 <label class="form-label">Pending</label>
                 <input class="form-input" type="number" v-model="form.pending" disabled placeholder="10xxx.xx">
                 <p class="form-input-hint">You can add transaction to see calculated pending amount.</p>
+            </div> -->
+            </div>
+            <div class="form-group col-span-2">
+                <label class="form-label">Remarks</label>
+                <input class="form-input" type="text" v-model="form.remarks" placeholder="Some remark you want to add">
             </div>
         </div>
-        <div v-if="error" class="column col-12">
-            <div class="toast mt-2">
-                {{error}}
-            </div>
-            <div class="bar bar-sm mb-2">
-                <div class="bar-item" role="progressbar" :style="{'width':timeout+'%'}" :aria-valuenow="timeout" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-        </div>
-        <div class="column col-12 text-center mt-3">
-            <div class="columns col-gapless">
-                <div class="column col-auto col-ml-auto">
+        <div class="column mt-4">
+            <div class="grid grid-cols-2 place-items-center ">
+                <div class="column ">
                     <button v-if="formdata" class="btn btn-primary" v-on:click.prevent="editPayee">Submit</button>
                     <button v-else class="btn btn-primary" v-on:click.prevent="addNewPayee">Add</button>
                 </div>
-                <div class="divider-vert"></div>
-                <div class="column col-auto col-mr-auto">
-                    <router-link class="btn " to="/udhaar">Cancel</router-link>
+                <div class="column ">
+                    <router-link class="btn btn-info" to="/udhaar">Cancel</router-link>
                 </div>
             </div>
         </div>
-        <div v-show="loading" class=" loading-wrapper">
-            <div class="loading loading-lg"></div>
+    </div>
+    <div v-if="error" class="column ">
+        <div class="toast mt-2">
+            {{error}}
         </div>
-    </form>
+        <div class="bar bar-sm mb-2">
+            <div class="bar-item" role="progressbar" :style="{'width':timeout+'%'}" :aria-valuenow="timeout" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+    <div v-show="loading" class=" loading-wrapper">
+        <div class="loading loading-lg"></div>
+    </div>
 </template>
 <script>
 // import { collection, getDocs } from "firebase/firestore";
