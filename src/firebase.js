@@ -81,20 +81,20 @@ const getUdhaar = async (id) => {
 }
 
 const getUdhaarTransact = async (id) => {
-    let u = { total: 0, udhaar: [] }
-    const p = await getPayeeById(id)
+    let udh = { total: 0, udhaar: [] }
+    // const payee = await getPayeeById(id)
     const query = await getDocs(collection(db, "payees", id, "udhaar"));
-    query.forEach(async (doc, index) => {
+    query.forEach(async (doc) => {
         // doc.data() is never undefined for query doc snapshots
         // console.log(doc.id, " => ", doc.data());
-        let ent = { ...p, id, ...doc.data(), transaction: [] }
-        const t = await getTransactions(id, doc.id)
-        ent.transaction.push(t)
-        u.udhaar.push(ent)
-        u.total += doc.data().amount
-        // u.tt += t.amount
+        let ent = { id, ...doc.data(), transaction: [] }
+        const trs = await getTransactions(id, doc.id)
+        ent.transaction.push(trs)
+        udh.udhaar.push(ent)
+        // udh.total += doc.data().amount
     });
-    return u
+    
+    return udh
 }
 
 const addTransaction = async (id, payload) => {
@@ -110,19 +110,18 @@ const addTransaction = async (id, payload) => {
     return upd
 }
 
-const getTransactions = async (pId, uId) => {
+const getTransactions = async (payeepId, udhaarId) => {
     // var payeeRef = doc(db, 'payees', id);
     let t = []
-    const query = await getDocs(collection(db, "payees", pId, "udhaar", uId, "transaction"));
+    const query = await getDocs(collection(db, "payees", payeepId, "udhaar", udhaarId, "transaction"));
     query.forEach(doc => {
         // console.log(doc.id, doc.data())
-        t.push(doc.data())
+        t.push({...doc.data(), id: doc.id})
     })
-    // console.log(query)
     return t
 }
 
-
+// expense
 const getExpense = async () => {
     let exp = []
 
@@ -190,6 +189,7 @@ export {
     getPayeeById,
     updatePayee,
     addUdhaar,
+    getUdhaar,
     addTransaction,
     getUdhaarTransact,
     getTransactions,

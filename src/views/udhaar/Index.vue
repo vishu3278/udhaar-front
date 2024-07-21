@@ -236,7 +236,7 @@ import axios from "axios"
 import Modal from "@/components/Modal.vue"
 import Transactions from "@/components/udhaar/Transactions.vue"
 // import { collection, getDocs } from "firebase/firestore";
-import { db, /*getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact*/ } from "@/firebase.js";
+import { db, /*getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact*/ } from "@/firebase";
 import { collection, getDocs } from 'firebase/firestore';
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
