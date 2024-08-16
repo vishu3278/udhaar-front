@@ -1,12 +1,13 @@
 <template>
     <section class="bg-secondary p-2 mb-3">
         <div class="d-flex align-center gap-1">
-            <h3 class="mb-0">Movies</h3>
+            <h3 class="text-center text-sky-800 font-bold">Movies</h3>
             <div class="search-wrapper">
-                <div class="input-group">
-                    <span class="input-group-addon">Search by Title</span>
-                    <input type="text" class="form-input" v-model="query" placeholder="...">
-                    <button class="btn btn-primary input-group-btn" @click="searchMovie">Search</button>
+                <div class="input-group flex  items-center gap-2">
+                    <span class="">Search by Title</span>
+                    <input type="search" class="form-input flex-grow" v-model="query" placeholder="...">
+                    <label ><input type="checkbox" v-model="adult"> Adult</label>
+                    <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
             </div>
             <!-- <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link> -->
@@ -20,13 +21,13 @@
                 <button class="btn btn-primary input-group-btn" @click="searchMovie">Search</button>
             </div>
         </div> -->
-        <h5 v-if="movies.results" class="text-center bg-primary"><span class="text-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
-        <div class="columns">
-            <div v-for="m in movies.results" class="column col-2">
+        <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 row-auto">
+            <div v-for="m in movies.results" class=" ">
                 <movie-card :movie="m"></movie-card>
             </div>
         </div>
-        <div v-show="!movies.results" class="empty">
+        <div v-show="movies.total_results == 0" class="empty">
             <div class="empty-icon">
                 <i class="ri-movie-2-line ri-5x"></i>
                 <!-- <i class="icon icon-people"></i> -->
@@ -38,12 +39,12 @@
             </div> -->
         </div>
         <hr>
-        <ul class="pagination mx-auto justify-center" style="max-width: 80rem;">
+        <ul class="flex items-center justify-center flex-wrap gap-1 my-5" >
             <!-- <li class="page-item disabled">
                 <a href="#" tabindex="-1">Previous</a>
             </li> -->
-            <li v-for="n in movies.total_pages" class="page-item" :class="{active: n == movies.page}">
-                <a href="#">{{n}}</a>
+            <li v-for="n in movies.total_pages"  >
+                <a class="py-1 px-2 border border-sky-600 rounded-md inline-block min-w-6 cursor-pointer hover:bg-sky-200 hover:text-sky-600" :class="{'text-white bg-sky-400 font-bold': n == movies.page}" @click.stop="searchPage(n)">{{n}}</a>
             </li>
             <!-- <li class="page-item active">
                 <a href="#">1</a>
@@ -57,7 +58,7 @@
         </ul>
         <hr>
     </div>
-    <div class="modal " :class="{'active': msg }">
+    <!-- <div class="modal " :class="{'active': msg }">
         <a href="#close" class="modal-overlay" aria-label="Close" @click="closeModal"></a>
         <div class="modal-container">
             <div class="modal-header">
@@ -67,14 +68,14 @@
             <div class="modal-body">
                 <div class="content">
                     {{msg}}
-                    <!-- content here -->
+                   
                 </div>
             </div>
-            <!-- <div class="modal-footer">
+            <div class="modal-footer">
                 ...
-            </div> -->
+            </div>
         </div>
-    </div>
+    </div> -->
 </template>
 <script>
 // import { getInvoices, getCompanies } from "@/firebase.js"
@@ -95,6 +96,8 @@ export default {
         return {
             movies: [],
             query: "",
+            page: 1,
+            adult: false,
             editCompany: null,
             msg: "",
             balance: 0,
@@ -121,16 +124,18 @@ export default {
         
         searchMovie() {
             // url: `${base_uri}/search/movie?api_key=${api_key}&query=${q}`,
-            axios.get(`${base_uri}/search/movie?api_key=${api_key}&query=${this.query}`)
+            axios.get(`${base_uri}/search/movie?api_key=${api_key}&include_adult=${this.adult}&query=${this.query}&page=${this.page}`)
                 .then(movies => {
-                    console.log(movies)
+                    // console.log(movies.data)
                     this.movies = movies.data
                 })
                 .catch(e => console.warn(e))
-            /*getCompanies().then(c => {
-                this.companies = c
-            }).catch(e => console.warn(e))*/
         },
+        searchPage(page){
+            this.page = page
+            // console.log(page)
+            this.searchMovie()
+        }
     }
 }
 </script>
@@ -138,6 +143,6 @@ export default {
 .search-wrapper {
     margin-block: 0.1rem;
     margin-inline: auto;
-    max-width: 50rem;
+    max-width: 30rem;
 }
 </style>

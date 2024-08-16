@@ -274,7 +274,6 @@ import Transactions from "@/components/udhaar/Transactions.vue"
 import { getPayees, updatePayee, addTransaction, addUdhaar } from "@/firebase.js";
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
-
 export default {
     name: "Udhaar",
     components: {

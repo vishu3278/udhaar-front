@@ -52,91 +52,84 @@
                 </div>
             </div>
             <div class="column ">
-                <div class="card p-3 rounded">
+                <div id="chart" style=" width:100%; aspect-ratio: 1 / 1;"></div>
+                <!-- <div class="card p-3 rounded">
                     <div class="card-header">
                         <div class="card-title font-bold text-blue-400">Total</div>
-                        <!-- <div class="card-subtitle font-black text-xl">{{totalUdhaar}}</div> -->
-                    </div>
-                    <hr>
-                    <div v-for="item in payees" :key="item.id">
-                        <div class="flex gap-3">
-                            <p class="font-semibold text-pink-500">{{item.name}}</p>
-                            <span> - {{item.mobile}}</span>
-                            <strong class="text-orange-600">{{item.total}}</strong>
-                            <pre>{{item.udhaar}}</pre>
-                        </div>
-                        <hr>
+                        <div class="card-subtitle font-black text-xl">{{totalUdhaar}}</div>
                     </div>
                     <div class="card-body">
-                        <div id="chart" style=" width:100%; aspect-ratio: 1;"></div>
+                        <div v-for="item in payees" :key="item.id">
+                            <div class="flex gap-3">
+                                <p class="font-semibold text-pink-500">{{item.name}}</p>
+                                <span> - {{item.mobile}}</span>
+                                <strong class="text-orange-600">{{item.total}}</strong>
+                                <pre>{{item.udhaar}}</pre>
+                            </div>
+                            <hr>
+                        </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
 </template>
 <script>
-import { ref, onBeforeMount, onMounted, computed, nextTick, onErrorCaptured } from 'vue'
-// import { getPayees } from "@/firebase.js"
-import { db, getUdhaar, getUdhaarTransact } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { ref, onBeforeMount, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
+
+// import { db } from '@/firebase';
+// import { collection, getDocs } from 'firebase/firestore';
+import { useStore } from 'vuex'
 import * as echarts from 'echarts';
 
 export default {
     setup() {
-
-        let payees = ref([])
+        const store = useStore()
+        // let payees = ref([])
         let msg = ref(null)
-        let total = ref(0)
-        let pending = ref(0)
-        let bad = ref(0)
-        let recovered = ref(0)
+        // let total = ref(0)
+        // let pending = ref(0)
+        // let bad = ref(0)
+        // let recovered = ref(0)
         const loading = ref(true);
         const error = ref(null);
 
+        const payees = computed(() => {
+            console.log('payees state updated')
+            return store.getters.getPayees
+        } )
+        const total = computed(() => store.getters.getTotal)
+        const recovered = computed(() => store.getters.getRecovered)
+        const bad = computed(() => store.getters.getBad)
         const totalUdhaar = computed(() => {
             return payees.value.reduce((accumulator, item) => accumulator + parseInt(item.total), 0);
             // return payees.length
         });
+        const pending = computed(() => total.value - (recovered.value + bad.value))
 
-        /*const recovered = computed(() => {
-            return payees.value.map((index, payee) => {
-                payee.udhaar.forEach((udh) => {
-
-                })
-            })
+        /*onBeforeMount(() => {
+            console.log("before mount")
         })*/
 
-        onBeforeMount(() => {
-            console.log("before mount")
+        onMounted(() => {
+            loading.value = true
+            // console.log('on mounted')
+
+            // fetchData()
+            store.dispatch("fetchData").then(() => {
+                loading.value = false
+            })
         })
 
-        onMounted(() => {
-            payees.value = []
-            loading.value = true
-            console.log('on mounted')
-
-            /*getPayees()
-                .then(p => {
-                    // console.log(p)
-                    payees.value = p
-                    // total.value = p.reduce((a, c) => a + c.udhaar.total, 0)
-                    p.map(function(index, elem) {
-                        console.log(elem.udhaar.total)
-                    })
-                    // this.renderChart()
-                })
-                .catch(e => {
-                    console.error('Error fetching payees:', e);
-                });*/
-            fetchData()
+        onUpdated(() => {
+            renderChart()
         })
 
         onErrorCaptured((e) => {
             console.log(e)
         })
 
-        const fetchData = async () => {
+        /*const fetchData = async () => {
             try {
                 const querySnapshot = await getDocs(collection(db, 'payees'));
                 
@@ -144,12 +137,12 @@ export default {
                     const udh = { id: doc.id, ...doc.data(), total: 0, udhaar: [] }
                     const query = await getDocs(collection(db, "payees", doc.id, "udhaar"));
                     query.forEach(async (docU) => {
-                        console.log(docU.id, " => ", docU.data(), udh);
+                        // console.log(docU.id, " => ", docU.data(), udh);
                         udh.total += docU.data().amount
                         let ent = { id: docU.id, ...docU.data(), transaction: [] }
                         const queryT = await getDocs(collection(db, "payees", doc.id, "udhaar", docU.id, "transaction"));
                         queryT.forEach(docT => {
-                            // console.log(docT.id, docT.data())
+                            console.log(docT.id, docT.data())
                             ent.transaction.push({...docT.data(), id: docT.id})
                             recovered.value += docT.data().amount
                             
@@ -162,12 +155,15 @@ export default {
                     // console.log("udhaar w/transact", udh)
                     payees.value.push({ id: doc.id, ...doc.data(), ...udh })
                 })
+
+                this.$store.dispatch('setPayees', payees.value)
+
             } catch (err) {
                 error.value = err.message;
             } finally {
                 loading.value = false;
             }
-        };
+        };*/
 
         const renderChart = () => {
             const chartDom = document.getElementById('chart');
@@ -185,7 +181,8 @@ export default {
                 },
                 legend: {
                     // show: false,
-                    bottom: 0,
+                    top: 20,
+                    // bottom: 20,
                     left: 'center',
                     // icon: "pin",
                     itemGap: 20,
@@ -249,9 +246,9 @@ export default {
                         }
                     },
                     data: [
-                        { value: this.pending, name: 'Pending' },
-                        { value: this.bad, name: 'Bad' },
-                        { value: this.recovered, name: 'Recovered' },
+                        { value: pending.value, name: 'Pending' },
+                        { value: bad.value, name: 'Bad' },
+                        { value: recovered.value, name: 'Recovered' },
                     ],
                     color: ['rgb(234, 179, 8)', 'rgb(220,38,38)', 'rgb(22, 163, 74)'],
                 }]
