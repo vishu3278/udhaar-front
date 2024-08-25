@@ -52,7 +52,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Amount</th>
-                            <th>Udhaar</th>
+                            <!-- <th>Udhaar</th> -->
                             <!-- <th>Return Date</th> -->
                             <th>Remarks</th>
                             <th>Status</th>
@@ -64,23 +64,18 @@
                             <td>{{ p.id }}</td>
                             <td>{{ p.name }}</td>
                             <td class="text-right">
-                                {{ p.udhaar?.total }}
+                                {{ p?.total }}
                             </td>
-                            <td class="text-center">
-                                <!-- <span :class="{
-                                        'text-red-500 font-bold': p.pending > 0 && !p.bad,
-                                    }">{{ p.pending }}</span> -->
-                                <button class="btn btn-sm" @click="openUdhaarModal(p)">Add</button>
-                            </td>
+                            
                             <!-- <td>
                                 {{ humanDate(p.duedate) }} -
                                 <span v-html="status(p.duedate)"></span>
                             </td> -->
                             <td>{{ p.remarks }}</td>
                             <td class="text-center">
-                                <!-- <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span>
-                                <span v-show="!p.bad && p.pending > 0" class="text-xs px-2 rounded-full bg-blue-300 mr-1">Pending</span>
-                                <span v-show="p.bad" class="text-xs px-2 rounded-full bg-rose-300 mr-1">Bad</span> -->
+                                <!-- <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span> -->
+                                <!-- <span v-show="!p.bad && p.pending > 0" class="text-xs px-2 rounded-full bg-blue-300 mr-1">Pending</span> -->
+                                <span v-show="p.udhaar[0]?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 mr-1">Bad</span>
                             </td>
                             <td>
                                 <div class="btn-group">
@@ -90,13 +85,9 @@
                                     <!-- <div v-if="p.pending != 0" > -->
                                     <!-- <button class="btn btn-primary btn-sm" @click="donePayee(p)">Done</button> -->
                                     <!-- <router-link :to="'/editpayee/' + p.id" class="btn bg-amber-200 btn-sm border-amber-400 hover:bg-amber-400 text-amber-900 hover:text-amber-900 mr-1">Edit/Update</router-link> -->
-                                    <button v-if="!p.bad" class="btn bg-rose-200 border-rose-200 text-rose-900 hover:bg-rose-400 hover:border-rose-400 btn-sm mr-1" @click="addBadPayee(p.id)">
-                                        Mark Bad
-                                    </button>
-                                    <button v-else class="btn bg-purple-200 border-purple-200 text-purple-900 hover:bg-purple-400 hover:border-purple-400 btn-sm mr-1" @click="markNotBad(p.id)">Not Bad</button>
-                                    <!-- </div> -->
                                     
                                     <button class="btn btn-sm" @click="getPeopleDetail(p)">Details</button>
+                                    <button class="btn btn-sm" >Add</button>
                                 </div>
                             </td>
                         </tr>
@@ -106,15 +97,15 @@
             <div class="flex-auto w-1/3">
                 <aside class="bg-slate-200 rounded p-3">
                     <template v-if="detail">
-                        <h4 class="text-indigo-500 mb-0 flex gap-3 items-center">{{detail.name}} <small class="bg-indigo-400 text-white w-6 h-6 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
-                        <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
+                        <h4 class="text-indigo-500 mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} <small class="bg-indigo-400 text-white w-6 h-6 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
+                        <!-- <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p> -->
                         <div v-for="item in detail.udhaar" class="flex gap-5 flex-wrap border border-indigo-300 py-1 px-1">
                             <small>{{item.id}}</small>
-                            <p class="udhaar"><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{humanDate(item.date)}}</p>
+                            <p class="udhaar"><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{item.date}}</p>
                             <div class="emi">
-                                <div v-for="trs in detail.transaction">
+                                <!-- <div v-for="trs in detail.transaction">
                                     <p>&rarr; <i class="ri-refund-line"></i> {{trs.amount}} - <i class="ri-calendar-line"></i> {{humanDate(trs.date)}}</p>
-                                </div>
+                                </div> -->
                                 <!-- <pre>{{item.amount}} == {{calcAmount(detail.transaction)}}</pre>
                                 <div v-if="item.amount > calcAmount(detail.transaction)"><button class="btn-sm" @click="showTrnzForm(detail.id, item.id)">Add transaction</button></div> -->
                             </div>
@@ -193,7 +184,7 @@
                 </div>
             </template>
         </Modal> -->
-        <Modal v-show="udhaarModal" @close="closeUdhaarModal" :title="`Add Udhaar for ${payee?.name}`">
+        <!-- <Modal v-show="udhaarModal" @close="closeUdhaarModal" :title="`Add Udhaar for ${payee?.name}`">
             <template v-slot:content>
                 <div class="content">
                     <div class="grid grid-cols-2 gap-2">
@@ -205,13 +196,7 @@
                             <label class="form-label">Date</label>
                             <input class="form-input input-sm" type="date" v-model="udhaar.date" placeholder="Due date" />
                         </div>
-                        <!-- <div class="form-group">
-                            <label class="form-label">{{payee?.name}}</label>
-                            <input class="form-input input-sm" type="number" v-model="udhaar.people_id" placeholder="People id" readonly />
-                        </div> -->
-                        <!-- <button class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="submitTransaction">
-                            Add
-                        </button> -->
+                        
                     </div>
                 </div>
             </template>
@@ -220,21 +205,24 @@
                     <button class="btn" @click="closeUdhaarModal">
                         Cancel
                     </button>
-                    <!-- <progress v-show="loading" class="progress" max="100"></progress> -->
+                    
                     <button class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="addUdhaar">
                         Add
                     </button>
                 </div>
                 
             </template>
-        </Modal>
+        </Modal> -->
         
     </div>
 </template>
 <script>
+import { ref, onBeforeMount, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
+import { useStore } from 'vuex'
+
 import axios from "axios"
-import Modal from "@/components/Modal.vue"
-import Transactions from "@/components/udhaar/Transactions.vue"
+// import Modal from "@/components/Modal.vue"
+// import Transactions from "@/components/udhaar/Transactions.vue"
 
 import { db, /*getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact*/ } from "@/firebase";
 import { collection, getDocs } from 'firebase/firestore';
@@ -242,13 +230,50 @@ import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
 
 export default {
-    name: "Udhaar",
+    setup(){
+        const store = useStore()
+        const detail = ref({})
+        const payees = computed(() => {
+            return store.getters.getPayees
+        } )
+        const total = computed(() => store.getters.getTotal)
+        const recovered = computed(() => store.getters.getRecovered)
+        const bad = computed(() => store.getters.getBad)
+        const totalUdhaar = computed(() => {
+            return payees.value.reduce((accumulator, item) => accumulator + parseInt(item.total), 0);
+            // return payees.length
+        });
+        const pending = computed(() => total.value - (recovered.value + bad.value))
+
+        onErrorCaptured((e) => {
+            console.log(e)
+        })
+
+        function getPeopleDetail(p) {
+            detail.value = p
+         } 
+
+        return {
+            payees,
+            // msg,
+            total,
+            pending,
+            bad,
+            recovered,
+            // loading,
+            // error,
+            totalUdhaar,
+            detail,
+            getPeopleDetail,
+        }
+    }
+    /*name: "Udhaar",
     components: {
         Transactions,
         Modal,
-    },
+    },*/
 
-    data() {
+    /*data() {
         return {
             payees: [],
             payee: null,
@@ -274,25 +299,25 @@ export default {
             udhaarModal: false,
             detail: null,
         };
-    },
+    },*/
 
-    mounted() {
+    /*mounted() {
         // console.log('mounted')
         
-        /*axios.get(
+        axios.get(
                 import.meta.env.VITE_API_URL + "/people").then(res => {
                 // console.log(res.data)
                 this.payees = res.data.data
                 this.loading = false
-            }).catch(err => console.warn(err))*/
-        /*getPayees()
+            }).catch(err => console.warn(err))
+        getPayees()
             .then((p) => {
                 console.log(p)
                 this.payees = p;
             })
-            .catch((e) => console.log(e));*/
-    },
-    methods: {
+            .catch((e) => console.log(e));
+    },*/
+    /*methods: {
         calcAmount(udhaars){
             // const udhrs = [...udhaars]
             // console.log(udhaars)
@@ -309,7 +334,7 @@ export default {
             } 
         },
         addBadPayee(id) {
-            /*updatePayee(id, { bad: true })
+            updatePayee(id, { bad: true })
                 .then((res) => {
                     console.log(res);
                     this.msg = "Success";
@@ -318,14 +343,14 @@ export default {
                 .catch((e) => {
                     console.log(e);
                     this.msg = e;
-                });*/
+                });
         },
         markNotBad(id) {
             console.log('not bad')
         },
         donePayee(payee) {
             // console.log(payee)
-            /*updatePayee(payee.id, { pending: 0, bad: false })
+            updatePayee(payee.id, { pending: 0, bad: false })
                 .then(() => {
                     // console.log(res)
                     this.msg = "Success";
@@ -334,7 +359,7 @@ export default {
                 .catch((e) => {
                     console.log(e);
                     this.msg = e;
-                });*/
+                });
         },
         closeModal() {
             this.msg = null;
@@ -369,7 +394,7 @@ export default {
             this.payee = null
             this.udhaarModal = false
         },
-        /*async openTransaction(payee) {
+        async openTransaction(payee) {
             // console.log(payee)
             this.payee = payee;
             const udh = await axios.get(import.meta.env.VITE_API_URL + "/transact/people/" + payee.id)
@@ -383,14 +408,8 @@ export default {
             this.transactionModal = true;
             this.transaction.people_id = payee.id;
             this.transaction.udhaar_id = this.payee.udhaars.at(-1).id
-        },*/
-        /*closeTransaction() {
-            this.transactionModal = false;
-            this.$nextTick(() => {
-                this.transaction = {};
-                this.payee = null;
-            })
-        },*/
+        },
+        
         showTrnzForm(people, udhaar){
             this.transaction.people_id = people
             this.transaction.udhaar_id = udhaar
@@ -414,32 +433,32 @@ export default {
             })
         },
         addUdhaar(){
-            /*axios.post(
+            axios.post(
                 import.meta.env.VITE_API_URL + "/udhaar", { amount: this.udhaar.amount, date: this.udhaar.date, people_id: this.udhaar.people_id }).then((res) => {
                 console.log(res.data)
                 // this.transactions.push(res.data)
                 this.loading = false
                 this.udhaar = {}
                 this.udhaarModal = false
-            })*/
+            })
 
             // addUdhaar(this.udhaar.payee, { amount: this.udhaar.amount, date: this.udhaar.date})
         },
         getPeopleDetail(people){
             // console.log(people)
-            /*getUdhaarTransact(people.id).then(data => {
+            getUdhaarTransact(people.id).then(data => {
                 // console.log(data)
                 this.detail = data
-            }).catch(e => console.warn(e))*/
-            /*axios.get(
+            }).catch(e => console.warn(e))
+            axios.get(
                 import.meta.env.VITE_API_URL + "/people/detail/" + id).then(p => {
                 // console.log(p.data)
                 this.detail = p.data
                 
-            }).catch(err => console.warn(err))*/
+            }).catch(err => console.warn(err))
         },
 
-    },
+    },*/
 };
 </script>
 <style lang="css" scoped></style>

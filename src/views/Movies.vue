@@ -4,9 +4,11 @@
             <h3 class="text-center text-sky-800 font-bold">Movies</h3>
             <div class="search-wrapper">
                 <div class="input-group flex  items-center gap-2">
-                    <span class="">Search by Title</span>
+                    <span class="">Search by </span>
+                    <label><input type="radio" name="param" value="movie" v-model="queryType" checked> Title</label>
+                    <label><input type="radio" name="param" value="keyword" v-model="queryType"> Keyword</label>
                     <input type="search" class="form-input flex-grow" v-model="query" placeholder="...">
-                    <label ><input type="checkbox" v-model="adult"> Adult</label>
+                    <label v-show="queryType=='movie'"><input type="checkbox" v-model="adult"> Adult</label>
                     <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
             </div>
@@ -24,7 +26,7 @@
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 row-auto">
             <div v-for="m in movies.results" class=" ">
-                <movie-card :movie="m"></movie-card>
+                <movie-card :movie="m" @show-detail="showDetail"></movie-card>
             </div>
         </div>
         <div v-show="movies.total_results == 0" class="empty">
@@ -58,29 +60,15 @@
         </ul>
         <hr>
     </div>
-    <!-- <div class="modal " :class="{'active': msg }">
-        <a href="#close" class="modal-overlay" aria-label="Close" @click="closeModal"></a>
-        <div class="modal-container">
-            <div class="modal-header">
-                <a href="#close" class="btn btn-clear float-right" @click="closeModal" aria-label="Close"></a>
-                <div class="modal-title h5">Modal title</div>
-            </div>
-            <div class="modal-body">
-                <div class="content">
-                    {{msg}}
-                   
-                </div>
-            </div>
-            <div class="modal-footer">
-                ...
-            </div>
-        </div>
-    </div> -->
+    <article v-if="sidePanel" class="side-panel fixed bg-sky-100 inset-y-0 right-0 z-10 shadow">
+        <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
+    </article>
 </template>
 <script>
 // import { getInvoices, getCompanies } from "@/firebase.js"
 import { format, formatDistanceToNow, compareAsc } from 'date-fns'
 import MovieCard from "@/components/movie/MovieCard.vue"
+import MovieDetail from "@/components/movie/MovieDetail.vue"
 // import AddCompanyForm from '@/components/AddCompanyForm.vue'
 // import * as echarts from 'echarts';
 import { api_key, base_uri, img_uri, profile_uri } from '../constants.js'
@@ -90,10 +78,12 @@ export default {
     name: 'MoviesView',
     components: {
         MovieCard,
+        MovieDetail,
         // AddCompanyForm,
     },
     data() {
         return {
+            queryType: "movie",
             movies: [],
             query: "",
             page: 1,
@@ -104,6 +94,8 @@ export default {
             totalDebit: 0,
             totalCredit: 0,
             activeInvoice: null,
+            detail: null,
+            sidePanel: false,
         }
     },
 
@@ -124,12 +116,31 @@ export default {
         
         searchMovie() {
             // url: `${base_uri}/search/movie?api_key=${api_key}&query=${q}`,
-            axios.get(`${base_uri}/search/movie?api_key=${api_key}&include_adult=${this.adult}&query=${this.query}&page=${this.page}`)
-                .then(movies => {
-                    // console.log(movies.data)
-                    this.movies = movies.data
-                })
-                .catch(e => console.warn(e))
+            if (this.queryType == "movie") {
+                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&include_adult=${this.adult}&query=${this.query}&page=${this.page}`)
+                    .then(movies => {
+                        this.movies = movies.data
+                    })
+                    .catch(e => console.warn(e))
+            }
+
+            if (this.queryType == "keyword") {
+                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
+                    .then(movies => {
+                        this.movies = movies.data
+                    })
+                    .catch(e => console.warn(e))
+            }
+        },
+        showDetail(movie){
+            // console.log(movie)
+            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits`)
+              .then(response => {
+                // console.log(response)
+                this.detail = response.data
+                this.sidePanel = true
+            })
+              .catch(err => console.error(err));
         },
         searchPage(page){
             this.page = page
@@ -143,6 +154,10 @@ export default {
 .search-wrapper {
     margin-block: 0.1rem;
     margin-inline: auto;
-    max-width: 30rem;
+    max-width: 40rem;
+}
+.side-panel {
+    width: 33vw;
+    min-width: 560px;
 }
 </style>
