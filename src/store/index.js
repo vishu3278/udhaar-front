@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 // import payees from './payees'
 import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, getDoc } from 'firebase/firestore';
 
 export default createStore({
 	state: {
@@ -35,6 +35,11 @@ export default createStore({
 		},
 		add_payees(state, payload){
 			state.payees.push(payload)
+		},
+		update_payee(state, payload){
+			let idx = state.payees.findIndex(p => p.id == payload.id)
+			// console.log(payload, idx)
+			state[idx] = payload
 		},
 		set_recovered(state, payload){
 			state.recovered = payload
@@ -111,8 +116,43 @@ export default createStore({
             }*/
         },
 
-		setPayees({commit}, payload){
-			commit('set_payees', payload)
+		async fetchSinglePayee({commit}, payload){
+			try {
+
+				const docRef = doc(db, "payees", payload);
+				const payeeSnap = await getDoc(docRef);
+				
+                const udh = { id: payeeSnap.id, ...payeeSnap.data(), total: 0, udhaar: [] }
+                const udhaarSnapshot = await getDocs(collection(db, "payees", payload, "udhaar"));
+                udhaarSnapshot.forEach(async (docU) => {
+                    // console.log(docU.id, " => ", docU.data(), udh);
+                    if (docU.data().bad) commit("add_bad", docU.data().amount)
+                    udh.total += docU.data().amount
+                    let ent = { id: docU.id, ...docU.data(), transaction: [] }
+                    const txnSnapshot = await getDocs(collection(db, "payees", payload, "udhaar", docU.id, "transaction"));
+                    txnSnapshot.forEach(docT => {
+                        // console.log(docT.id, docT.data())
+                        ent.transaction.push({...docT.data(), id: docT.id})
+                        // recovered += docT.data().amount
+                        // console.log("recovered", recovered)
+                        // commit("add_recovered", docT.data().amount)
+                    })
+                    udh.udhaar.push(ent)
+                    // total += docU.data().amount
+                    // console.log("total", total)
+                    // commit("add_total", docU.data().amount)
+                });
+                
+                // payees.push({ id: doc.id, ...doc.data(), ...udh })
+                // console.log("payees", doc.data(), udh)
+                commit("update_payee", udh)
+                return udh
+                
+			} catch(e) {
+				// statements
+				console.log(e);
+			}
+			
 		}
 	}
 })

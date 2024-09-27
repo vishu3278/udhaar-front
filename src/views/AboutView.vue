@@ -2,7 +2,7 @@
     <div class="about container">
         <h2 class="text-3xl text-center py-5">About</h2>
         <hr>
-        <div class="grid grid-cols-2 gap-5 my-4">
+        <div class="grid grid-cols-3 gap-5 my-4">
             <main>
                 <section class="p-3 flex gap-4 bg-slate-100 rounded mb-2">
                     <h5 class="mt-0 mb-3 text-teal-600">Udhaar</h5>
@@ -56,6 +56,9 @@
                     <input type="email" v-model="email" placeholder="Email">
                 </div>
                 <button @click="addPeople">Add</button>
+            </aside>
+            <aside>
+                <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="455" height="212" frameborder="0" allowtransparency="true"></iframe>
             </aside>
         </div>
     </div>

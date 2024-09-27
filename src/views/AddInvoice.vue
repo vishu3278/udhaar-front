@@ -1,10 +1,9 @@
 <template>
-    <div class="container p-2">
-        <div class="columns">
-            <div class="col-10 col-mx-auto">
-                <add-invoice-form v-on:submit-form=""></add-invoice-form>
-            </div>
-        </div>
+    <div class="container ">
+        <section class="bg-cyan-200 px-4 py-2 my-4 rounded">
+            <h3 class="text-cyan-800 font-bold">Add invoice</h3>
+        </section>
+        <add-invoice-form v-on:submit-form=""></add-invoice-form>
     </div>
 </template>
 <script>

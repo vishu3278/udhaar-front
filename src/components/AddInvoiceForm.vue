@@ -1,6 +1,6 @@
 <template>
-    <form action="" class="columns p-relative">
-        <div class="column col-4">
+    <div class="grid grid-cols-5 gap-4 p-relative">
+        <div class="column col-span-2">
             <!-- <div class="form-group">
                 <label class="form-label">Type</label>
                 <select class="form-select" v-model="form.type">
@@ -17,38 +17,38 @@
                     <input type="radio" name="type" value="Debit" v-model="form.type"><i class="form-icon"></i> Debit
                 </label>
             </div> -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">Add Invoice --> {{no}}</div>
+            <div class="panel border border-cyan-200 bg-cyan-50 rounded ">
+                <div class="panel-header bg-cyan-200 p-2">
+                    <h6 class="panel-title text-base font-semibold">{{no}}</h6>
                 </div>
-                <div class="panel-body">
-                    <div class="form-body">
+                <div class="panel-body p-4">
+                    <div class="form-group">
                         <label class="form-label">To </label>
-                        <select class="form-select" v-model="to">
+                        <select class="form-select block w-full" v-model="to">
                             <option value="" selected>Select Name | Company</option>
-                            <option v-for="comp in companies" :value="comp.id">{{comp.name || 'no name'}} | {{comp.company || 'no name'}}</option>
+                            <option v-for="comp in companies" :value="comp.id">{{comp.name || 'no name'}} -- {{comp.company || 'no name'}}</option>
                         </select>
                     </div>
-                    <div v-if="to" class="card mt-2">
-                        <div class="card-header">
-                            <div class="card-title h5 text-primary">{{company.name}}</div>
-                            <div class="card-subtitle text-bold">{{company.company}}</div>
+                    <div v-if="to" class="card border border-cyan-200 rounded p-2 my-4">
+                        <div class="card-header text-cyan-600">
+                            <div class="card-title text-lg font-semibold ">{{company.name}}</div>
+                            <div class="card-subtitle text-base font-medium ">{{company.company}}</div>
                         </div>
                         <div class="card-body">
-                            Address: {{company.address}}<br>
-                            Phone: {{company.phone}}<br>
-                            Email: {{company.email}}<br>
-                            GST: {{company.gst}} <br>
-                            PAN: {{company.pan}}
+                            <span class="font-medium text-cyan-800 mr-2">Address:</span> {{company.address}}<br>
+                            <span class="font-medium text-cyan-800 mr-2">Phone:</span> {{company.phone}}<br>
+                            <span class="font-medium text-cyan-800 mr-2">Email:</span> {{company.email}}<br>
+                            <span class="font-medium text-cyan-800 mr-2">GST:</span> {{company.gst}} <br>
+                            <span class="font-medium text-cyan-800 mr-2">PAN:</span> {{company.pan}}
                         </div>
                     </div>
                     <template v-else>
                         <div class="form-group">
-                            <label class="form-label">From</label>
-                            <textarea class="form-input" v-model="form.to" cols="30" rows="3"></textarea>
+                            <label class="form-label">To</label>
+                            <textarea class="form-input resize-y" v-model="form.to" cols="30" rows="3"></textarea>
                             <!-- <input class="form-input" type="text" v-model="form.debit" placeholder="abc"> -->
                         </div>
-                        <div class="columns">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="column">
                                 <div class="form-group">
                                     <label class="form-label">Email</label>
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="columns">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="column">
                                 <div class="form-group">
                                     <label class="form-label">GST No.</label>
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </template>
-                    <div class="columns">
+                    <div class="grid grid-cols-2 gap-4">
                         <div class="column ">
                             <div class="form-group">
                                 <label class="form-label">Subject line</label>
@@ -93,9 +93,9 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">From</label>
-                        <textarea class="form-input" v-model="form.from" cols="30" rows="3"></textarea>
+                        <textarea class="form-input resize-y" v-model="form.from" cols="30" rows="3"></textarea>
                     </div>
-                    <div class="columns">
+                    <div class="grid grid-cols-2 gap-4">
                         <div class="column">
                             <div class="form-group">
                                 <label class="form-label">Place</label>
@@ -105,7 +105,7 @@
                         <div class="column">
                             <div class="form-group">
                                 <label class="form-label">Mode</label>
-                                <select class="form-select" v-model="form.payment_mode">
+                                <select class="form-select w-full" v-model="form.payment_mode">
                                     <option>Choose mode</option>
                                     <option value="Neft">Neft</option>
                                     <option value="Imps">Imps</option>
@@ -122,7 +122,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Payment Mode Detail</label>
-                        <textarea v-model="form.payment_detail" cols="30" rows="3" class="form-input"></textarea>
+                        <textarea v-model="form.payment_detail" cols="30" rows="3" class="form-input resize-y"></textarea>
                         <!-- <input class="form-input" type="text" v-model="form.detail" placeholder="Detail of transaction"> -->
                     </div>
                 </div>
@@ -131,10 +131,10 @@
                 Choose type of expense
             </div> -->
         </div>
-        <div class="column col-8">
+        <div class="column col-span-3">
             <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">Items Description --> {{no}}</div>
+                <div class="panel-header bg-zinc-200 p-2 mb-2 rounded">
+                    <h6 class="panel-title text-base font-semibold">Items Description </h6>
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped">
@@ -158,11 +158,11 @@
                             </tr> -->
                             <tr v-for="(item, index) in items">
                                 <td>{{index + 1}}</td>
-                                <td><input type="text" class="form-input" v-model="item.description" autofocus></td>
-                                <td><input type="number" class="form-input" v-model="item.time"></td>
-                                <td><input type="number" class="form-input" v-model="item.rate"></td>
+                                <td><input type="text" class="form-input w-fit" v-model="item.description" autofocus></td>
+                                <td><input type="number" class="form-input w-16" v-model="item.time"></td>
+                                <td><input type="number" class="form-input w-24" v-model="item.rate"></td>
                                 <td>{{item.time * item.rate}}</td>
-                                <td><button v-if="index > 0" class="btn btn-sm btn-action btn-error" @click.prevent="removeRow(index)"><i class="icon icon-cross "></i></button></td>
+                                <td><button v-if="index > 0" class="btn btn-sm btn-action btn-error" @click.prevent="removeRow(index)"><i class="ri-subtract-line"></i></button></td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -172,7 +172,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><button class="btn btn-sm btn-action" @click.prevent="newRow"><i class="icon icon-plus"></i></button></td>
+                                <td><button class="btn btn-sm btn-action" @click.prevent="newRow"><i class="ri-add-line"></i></button></td>
                             </tr>
                             <tr>
                                 <th></th>
@@ -181,18 +181,18 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td colspan="5" align="right">In words ({{number2words(total)}})</td>
+                                <td colspan="5" align="right">In words ({{number2words(total)}} rupees only)</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                <div class="panel-footer">
-                    <div class="columns col-gapless">
-                        <div class="column col-auto col-ml-auto">
+                <div class="panel-footer mt-6">
+                    <div class="flex justify-between">
+                        <div class="column ">
                             <button class="btn btn-primary" v-on:click.prevent="addNewInvoice">Add</button>
                         </div>
-                        <div class="divider-vert"></div>
-                        <div class="column col-auto col-mr-auto">
+                        <!-- <div class="divider-vert"></div> -->
+                        <div class="column ">
                             <router-link class="btn " to="/invoice">Cancel</router-link>
                         </div>
                     </div>
@@ -223,7 +223,7 @@
         <div v-show="loading" class=" loading-wrapper">
             <div class="loading loading-lg"></div>
         </div>
-    </form>
+    </div>
 </template>
 <script>
 import { addInvoice, getCompanies } from "@/firebase.js"
@@ -236,7 +236,7 @@ export default {
             // payee: {},
             form: {
                 // type: "Credit",
-                phone: 0,
+                phone: null,
                 email: "",
                 from: "",
                 to: "",
@@ -249,7 +249,7 @@ export default {
                 payment_detail: "",
             },
             companies: [],
-            from: "",
+            // from: "",
             to: "",
             loading: false,
             error: false,
@@ -268,12 +268,26 @@ export default {
         no() {
             let d = this.form.date.toString()
             // console.log(d.replaceAll('-', ''))
-            let initial = this.form.from ? this.form.from.splice(0, 2) : ""
-            initial = this.company ? this.company.initial : "SS"
+            // let initial = this.form.from ? this.form.from.splice(0, 2) : ""
+            let initial = this.company ? this.company.initial : "SS"
             return `${initial}/${d.replaceAll('-', '')}/000`
         },
         company() {
-            return this.companies.find(c => c.id == this.from)
+            let c = this.companies.find(c => c.id == this.to)
+            if (c) {
+                this.form.to = `${c.name}<br>${c.company}<br>${c.address}`
+                this.form.phone = c.phone
+                this.form.email = c.email
+                this.form.gst = c.gst
+                this.form.pan = c.pan
+            } else {
+                this.form.to = ""
+                this.form.phone = null
+                this.form.email = null
+                this.form.gst = null
+                this.form.pan = null
+            }
+            return c
         },
     },
     mounted() {
@@ -309,7 +323,7 @@ export default {
                 gst: this.company.gst || this.form.gst,
                 pan: this.company.pan || this.form.pan,
             }
-            console.log({ ...formdata, items: this.items, total: this.total, no: this.no })
+            // console.log({ ...formdata, items: this.items, total: this.total, no: this.no })
             addInvoice({ ...this.form, items: this.items, total: this.total, no: this.no })
             .then(s => {
                 console.log(s)
@@ -321,4 +335,8 @@ export default {
 }
 </script>
 <style lang="css" scoped>
+    .form-label {
+        color: rgb(14 116 144);
+        font-weight: 500;
+    }
 </style>

@@ -128,42 +128,6 @@ export default {
             console.log(e)
         })
 
-        /*const fetchData = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, 'payees'));
-                
-                querySnapshot.forEach(async (doc) => {
-                    const udh = { id: doc.id, ...doc.data(), total: 0, udhaar: [] }
-                    const query = await getDocs(collection(db, "payees", doc.id, "udhaar"));
-                    query.forEach(async (docU) => {
-                        // console.log(docU.id, " => ", docU.data(), udh);
-                        udh.total += docU.data().amount
-                        let ent = { id: docU.id, ...docU.data(), transaction: [] }
-                        const queryT = await getDocs(collection(db, "payees", doc.id, "udhaar", docU.id, "transaction"));
-                        queryT.forEach(docT => {
-                            console.log(docT.id, docT.data())
-                            ent.transaction.push({...docT.data(), id: docT.id})
-                            recovered.value += docT.data().amount
-                            
-                        })
-                        udh.udhaar.push(ent)
-                        total.value += docU.data().amount
-                    });
-                    
-                    // return udh
-                    // console.log("udhaar w/transact", udh)
-                    payees.value.push({ id: doc.id, ...doc.data(), ...udh })
-                })
-
-                this.$store.dispatch('setPayees', payees.value)
-
-            } catch (err) {
-                error.value = err.message;
-            } finally {
-                loading.value = false;
-            }
-        };*/
-
         const renderChart = () => {
             const chartDom = document.getElementById('chart');
             let myChart = echarts.init(chartDom);

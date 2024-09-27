@@ -1,13 +1,11 @@
 <template>
     <div v-if="invoice">
-        <div class="d-flex justify-center my-1">
-            <div class="btn-group ">
-                <button class="btn btn-sm" @click="closePreview"><i class="ri-close-line"></i> Close</button>
-                <button class="btn btn-sm"><i class="ri-download-line"></i> Download</button>
-                <button class="btn btn-sm" @click="printInvoice"><i class="ri-printer-line"></i> Print</button>
-            </div>
+        <div class="flex justify-center gap-2 my-1">
+            <button class="btn " @click="closePreview"><i class="ri-close-line"></i> Close</button>
+            <button class="btn "><i class="ri-download-line"></i> Download</button>
+            <button class="btn " @click="printInvoice"><i class="ri-printer-line"></i> Print</button>
         </div>
-        <br>
+        
     </div>
     <div id="print">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -45,7 +43,11 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="white" style="max-width: 600px;">
                         <tr>
                             <td valign="top" style="padding: 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>To: </strong>
-                                <div v-html="invoice.to.replace(/\n/g, ', ')"></div><strong>GST: </strong>{{invoice.gst}}<br><strong>PAN: </strong>{{invoice.pan}}
+                                <div v-html="invoice.to"></div>
+                                <strong>Phone: </strong>{{invoice.phone}}<br>
+                                <strong>Email: </strong>{{invoice.email}}<br>
+                                <strong>GST: </strong>{{invoice.gst}}<br>
+                                <strong>PAN: </strong>{{invoice.pan}}
                             </td>
                             <td valign="top" style="padding: 2mm 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>Place of supply:</strong><br>{{invoice.place}}</td>
                             <td valign="top" style="padding: 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>Invoice No.</strong><br>{{invoice.no}}<br><strong>Date:</strong><br>{{invoice.date}}</td>
@@ -109,7 +111,7 @@
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td colspan="4" align="right" style="padding: 1mm; font-size: 10pt; color: gray;">In words ({{number2words(invoice.total)}})</td>
+                                            <td colspan="4" align="right" style="padding: 1mm; font-size: 10pt; color: gray;">In words ({{number2words(invoice.total)}} rupees only)</td>
                                             <!-- <td></td> -->
                                         </tr>
                                     </tfoot>
@@ -208,6 +210,7 @@ export default {
         printInvoice() {
             var printwin = window.open("");
             printwin.document.write(document.getElementById("print").innerHTML);
+            printwin.document.title = this.invoice.no
             printwin.stop();
             printwin.print();
             printwin.close();

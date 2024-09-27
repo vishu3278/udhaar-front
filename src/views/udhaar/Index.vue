@@ -1,6 +1,6 @@
 <template>
     <section class="container my-4">
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-3 gap-3">
             <div class="column">
                 <div class="card bg-gradient-to-br from-blue-200 to-blue-400 rounded p-4">
                     <div class="card-header text-blue-800">
@@ -52,167 +52,93 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Amount</th>
-                            <!-- <th>Udhaar</th> -->
-                            <!-- <th>Return Date</th> -->
-                            <th>Remarks</th>
+                            <!-- <th>Remarks</th> -->
+                            <th>Pending</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(p, index) in payees" :key="index">
-                            <td>{{ p.id }}</td>
-                            <td>{{ p.name }}</td>
+                        <template v-for="p in payees">
+                            <table-row :fields="fields" :row-data="p" @show-detail="getPeopleDetail(p)"></table-row>
+                        </template>
+                        <!-- <tr v-for="(p, index) in payees" :key="index" :class="{'selected': p.id == detail.id}" @click.stop="getPeopleDetail(p)">
+                            <td>{{ p.name }} - <span class="text-slate-500">{{ p.id }}</span></td>
                             <td class="text-right">
                                 {{ p?.total }}
                             </td>
                             
-                            <!-- <td>
-                                {{ humanDate(p.duedate) }} -
-                                <span v-html="status(p.duedate)"></span>
-                            </td> -->
                             <td>{{ p.remarks }}</td>
+                            <td>
+                                <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span>
+                            </td>
                             <td class="text-center">
-                                <!-- <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span> -->
-                                <!-- <span v-show="!p.bad && p.pending > 0" class="text-xs px-2 rounded-full bg-blue-300 mr-1">Pending</span> -->
                                 <span v-show="p.udhaar[0]?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 mr-1">Bad</span>
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <!-- <button class="btn btn-sm btn-info mr-1" @click="openTransaction(p)">
-                                        Transactions
-                                    </button> -->
-                                    <!-- <div v-if="p.pending != 0" > -->
-                                    <!-- <button class="btn btn-primary btn-sm" @click="donePayee(p)">Done</button> -->
-                                    <!-- <router-link :to="'/editpayee/' + p.id" class="btn bg-amber-200 btn-sm border-amber-400 hover:bg-amber-400 text-amber-900 hover:text-amber-900 mr-1">Edit/Update</router-link> -->
-                                    
-                                    <button class="btn btn-sm" @click="getPeopleDetail(p)">Details</button>
-                                    <button class="btn btn-sm" >Add</button>
-                                </div>
+                                <button class="btn btn-sm" >Details</button>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
             <div class="flex-auto w-1/3">
-                <aside class="bg-slate-200 rounded p-3">
+                <aside class="bg-stone-100 rounded p-3">
                     <template v-if="detail">
-                        <h4 class="text-indigo-500 mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} <small class="bg-indigo-400 text-white w-6 h-6 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">Close</button></h4>
+                        <h4 class="text-indigo-500 mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} <small class="bg-indigo-200 text-indigo-800 h-6 px-3 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">x</button></h4>
                         <!-- <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p> -->
-                        <div v-for="item in detail.udhaar" class="flex gap-5 flex-wrap border border-indigo-300 py-1 px-1">
-                            <small>{{item.id}}</small>
-                            <p class="udhaar"><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{item.date}}</p>
-                            <div class="emi">
-                                <!-- <div v-for="trs in detail.transaction">
-                                    <p>&rarr; <i class="ri-refund-line"></i> {{trs.amount}} - <i class="ri-calendar-line"></i> {{humanDate(trs.date)}}</p>
-                                </div> -->
-                                <!-- <pre>{{item.amount}} == {{calcAmount(detail.transaction)}}</pre>
-                                <div v-if="item.amount > calcAmount(detail.transaction)"><button class="btn-sm" @click="showTrnzForm(detail.id, item.id)">Add transaction</button></div> -->
+                        <div v-for="item in detail.udhaar" class="flex gap-2 border border-indigo-300 rounded py-1 px-1 mt-2">
+                            <div class="mr-auto">
+                                <small>{{item.id}}</small>
+                                <p class="udhaar "><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{item.date}}</p>
+                                <span v-show="item?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 ">Bad</span>
+                                <span v-show="udharComplete(item) == 'pending'" class="text-xs px-2 rounded-full bg-amber-300 text-red-800 ">Pending</span>
+                                <div v-for="trx in item.transaction" :key="trx.id" class="ml-8">&bull; {{trx.amount}} - {{trx.date}}</div>
                             </div>
-                            <!-- <div v-if="item.id == transaction.udhaar_id" class=" basis-full  mb-2">
-                                <p>Add transaction for this udhaar</p>
-                                <div class="flex gap-2 items-center">
-                                    <div class="form-group mb-0">
-                                        
-                                        <input class="form-input input-sm" type="number" v-model="transaction.amount" placeholder="Amount" />
+                            <div class="basis-40 shrink-0">
+                                <button v-if="transactionForm != item.id && udharComplete(item) == 'pending'" class="btn-sm" @click="showTrnzForm(item.id)">Add transaction</button>
+                                <span v-else class="text-sm px-4 rounded-full border border-green-400 bg-green-200 text-green-800">Complete</span>
+                                <template v-if="transactionForm == item.id">
+                                    <div class="form-group">
+                                        <label class="form-label">Amount</label>
+                                        <input class="form-input input-sm" type="number" v-model="transactionAmount" placeholder="Amount" />
                                     </div>
-                                    <div class="form-group mb-0">
-                                        
-                                        <input class="form-input input-sm" type="date" v-model="transaction.date" placeholder="Date" />
+                                    <div class="form-group">
+                                        <label class="form-label">Date</label>
+                                        <input class="form-input input-sm" type="date" v-model="transactionDate" placeholder="Date" />
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <input type="text" class="form-input input-sm" v-model="transaction.udhaar_id" placeholder="Udhaar Id" readonly>
+                                    <div class="form-group flex justify-between">
+                                        <button class="btn-sm " @click="transactionForm = null">Close</button>
+                                        <button class="btn-sm" @click="submitTransaction(detail.id, item.id)">Add</button>
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <input class="form-input input-sm" type="number" v-model="transaction.people_id" placeholder="People id" readonly />
-                                    </div>
-                                    <button class="btn" @click="closeTransaction">
-                                        <i class="ri-close-line"></i>
-                                    </button>
-                                    <button v-if="transaction.amount && transaction.date" class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="submitTransaction">
-                                        Add
-                                    </button>
-                                </div>
-                            </div> -->
+                                </template>
+                            </div>
                         </div>
 
+                        <!-- <button class="btn">Add new udhaar</button> -->
+                        <div class="content mt-6">
+                            <h5 class="text-indigo-500">Add udhaar</h5>
+                            <div class="flex gap-2">
+                                <div class="form-group grow">
+                                    <label class="form-label">Amount</label>
+                                    <input class="form-input input-sm" type="number" v-model="udhaarAmount" placeholder="Amount" />
+                                </div>
+                                <div class="form-group grow">
+                                    <label class="form-label">Date</label>
+                                    <input class="form-input input-sm" type="date" v-model="udhaarDate" placeholder="Due date" />
+                                </div>
+                                <div class="form-group shrink">
+                                    <label class="form-label">&nbsp;</label><br>
+                                    <button class="btn" @click="addUdhaar">Add</button>
+                                </div>
+                            </div>
+                        </div>
                     </template>
                         
                     
                 </aside>
             </div>
         </div>
-        
-        <!-- <Modal v-show="transactionModal" @close="closeTransaction" title="Transactions">
-            <template v-slot:content>
-                <div class="content">
-                    <Transactions :payee="payee" :transactions="transactions"></Transactions>
-                    <hr>
-                    <h6 class="py-2 font-bold">Add transaction</h6>
-                    <div class="grid grid-cols-4 gap-2">
-                        <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <input class="form-input input-sm" type="number" v-model="transaction.amount" placeholder="Amount" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Date</label>
-                            <input class="form-input input-sm" type="date" v-model="transaction.date" placeholder="Date" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Udhaar ID</label>
-                            <input type="text" class="form-input input-sm" v-model="transaction.udhaar_id" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">{{payee?.name}}</label>
-                            <input class="form-input input-sm" type="number" v-model="transaction.people_id" placeholder="People id" readonly />
-                        </div>
-                    </div>
-                </div>
-            </template>
-            <template v-slot:footer>
-                <div v-if="transaction.people_id" class="flex items-center justify-between">
-                    <button class="btn" @click="closeTransaction">
-                        Cancel
-                    </button>
-                    
-                    <button v-if="transaction.amount && transaction.date" class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="submitTransaction">
-                        Add
-                    </button>
-                </div>
-                <div v-else>
-                    <button class="btn" @click="closeTransaction">Close</button>
-                </div>
-            </template>
-        </Modal> -->
-        <!-- <Modal v-show="udhaarModal" @close="closeUdhaarModal" :title="`Add Udhaar for ${payee?.name}`">
-            <template v-slot:content>
-                <div class="content">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <input class="form-input input-sm" type="number" v-model="udhaar.amount" placeholder="Amount" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Date</label>
-                            <input class="form-input input-sm" type="date" v-model="udhaar.date" placeholder="Due date" />
-                        </div>
-                        
-                    </div>
-                </div>
-            </template>
-            <template v-slot:footer>
-                <div class="flex items-center justify-between">
-                    <button class="btn" @click="closeUdhaarModal">
-                        Cancel
-                    </button>
-                    
-                    <button class="btn bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600" @click="addUdhaar">
-                        Add
-                    </button>
-                </div>
-                
-            </template>
-        </Modal> -->
         
     </div>
 </template>
@@ -223,19 +149,29 @@ import { useStore } from 'vuex'
 import axios from "axios"
 // import Modal from "@/components/Modal.vue"
 // import Transactions from "@/components/udhaar/Transactions.vue"
+import TableRow from '@/components/TableRow.vue'
 
-import { db, /*getPayees, updatePayee, addTransaction, addUdhaar, getUdhaarTransact*/ } from "@/firebase";
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from "@/firebase";
+import { collection, doc, getDocs, addDoc } from 'firebase/firestore';
 import { format, formatDistanceToNow, compareAsc } from "date-fns";
 // import * as echarts from 'echarts';
 
 export default {
+    components: {
+        TableRow
+    },
     setup(){
         const store = useStore()
+        const fields = ["id", 'name', "total",  "pending", "status", "action"]
         const detail = ref({})
+        const udhaarAmount = ref(0)
+        const udhaarDate = ref(null)
+        const transactionForm = ref(null)
+        const transactionAmount = ref(0)
+        const transactionDate = ref(null)
         const payees = computed(() => {
             return store.getters.getPayees
-        } )
+        })
         const total = computed(() => store.getters.getTotal)
         const recovered = computed(() => store.getters.getRecovered)
         const bad = computed(() => store.getters.getBad)
@@ -253,7 +189,62 @@ export default {
             detail.value = p
          } 
 
+        async function addUdhaar () {
+            if(detail.value.id){
+                // console.log(detail.value.id, udhaarAmount.value, udhaarDate.value)
+
+                const udh = await addDoc(collection(db, "payees", detail.value.id, "udhaar"), {
+                  amount: udhaarAmount.value,
+                  date: udhaarDate.value
+                });
+
+                // console.log("document created", udh.id)
+                udhaarAmount.value = 0
+                udhaarDate.value = null
+
+                const newUdh = await store.dispatch("fetchSinglePayee", detail.value.id)
+                // console.log(newUdh)
+                detail.value = newUdh
+                
+                // detail.value = null
+            }
+        }
+
+        function showTrnzForm(udhaarId){
+            // console.log(...arguments)
+            transactionForm.value = udhaarId
+        }
+
+        function udharComplete (udhaar) {
+            let initV = 0
+            let trxTotal = udhaar.transaction.reduce((acc, curr) => acc + curr.amount, initV)
+            // console.log(trxTotal, udhaar.amount)
+            if (trxTotal == udhaar.amount) {
+                return "complete"
+            } else {
+                return "pending"
+            }
+        }
+
+        async function submitTransaction(payeeId, udhaarId){
+            try {
+                const txn = await addDoc(collection(db, "payees", payeeId, "udhaar", udhaarId, "transaction"), {
+                    amount: transactionAmount.value,
+                    date: transactionDate.value
+                });
+
+                console.log("trx added",txn.id)
+                transactionAmount.value = 0
+                transactionDate.value = null
+                transactionForm.value = null
+                
+            } catch(e) {
+                console.warn(e);
+            }
+        }
+
         return {
+            fields,
             payees,
             // msg,
             total,
@@ -264,7 +255,16 @@ export default {
             // error,
             totalUdhaar,
             detail,
+            udhaarAmount,
+            udhaarDate,
             getPeopleDetail,
+            addUdhaar,
+            showTrnzForm,
+            transactionForm,
+            transactionAmount,
+            transactionDate,
+            submitTransaction,
+            udharComplete,
         }
     }
     /*name: "Udhaar",

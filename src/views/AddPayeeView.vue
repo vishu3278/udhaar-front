@@ -1,10 +1,10 @@
 <template>
     <div class="container ">
-        <div class="border-slate-500 shadow p-5">
+        <div class="">
             <div class="text-base font-bold text-orange-500 border-b-2 border-orange-500 pb-3 mb-5">
-                Edit Payee
+                Add / Edit Payee
             </div>
-            <div class="panel-body">
+            <div class="panel-body ">
                 <edit-payee-form ></edit-payee-form>
             </div>
             <div class="panel-footer">

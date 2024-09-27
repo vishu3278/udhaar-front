@@ -1,5 +1,5 @@
 <template>
-    <form action="" class="columns p-relative">
+    <div class="grid grid-cols-3 gap-4 p-relative">
         <div class="column ">
             <div class="form-group">
                 <label class="form-label">Contact Name *</label>
@@ -40,11 +40,12 @@
                         <label class="form-label">Initial *</label><input type="text" class="form-input" v-model="form.initial">
                     </div>
                 </div>
-                <div class="column ">
+                <div class="flex justify-between ">
                     <div class="form-group">
-                        <label class="form-label">&nbsp;</label>
                         <button v-if="formdata" class="btn btn-primary" v-on:click.prevent="updateCompany">Update</button>
                         <button v-else class="btn btn-primary" v-on:click.prevent="addCompany">Add</button>
+                    </div>
+                    <div class="form-group">
                         <button v-if="formdata" class="btn " @click.prevent="$emit('clear-update')">Cancel</button>
                         <router-link v-else class="btn " to="/udhaar">Cancel</router-link>
                     </div>
@@ -65,7 +66,7 @@
         <div v-show="loading" class=" loading-wrapper">
             <div class="loading loading-lg"></div>
         </div>
-    </form>
+    </div>
 </template>
 <script>
 import { collection, getDocs } from "firebase/firestore";
