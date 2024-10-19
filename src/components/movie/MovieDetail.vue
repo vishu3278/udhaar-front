@@ -40,15 +40,15 @@
                     {{detail.overview}}
                 </p>
             </div>
-            <p class="text-base text-slate-500">Posters</p>
+            <p v-show="posters.length > 0" class="text-base text-slate-500 font-semibold">Posters</p>
             <div class="images flex gap-2 overflow-x-auto mb-3">
                 <img v-for="im in posters" :src="img_uri+im.file_path" class="w-48 h-64 object-contain" alt="">
             </div>
-            <p class="text-base text-slate-500">Backdrops</p>
+            <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-semibold">Backdrops</p>
             <div class="images flex gap-2 overflow-x-auto mb-3">
                 <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-96 h-56 object-contain" alt="">
             </div>
-            <p class="text-base text-slate-500">Logos</p>
+            <p v-show="logos.length > 0" class="text-base text-slate-500 font-semibold">Logos</p>
             <div class="images flex gap-2 overflow-x-auto mb-3">
                 <img v-for="im in logos" :src="img_uri+im.file_path" class="w-48 h-48 object-contain bg-slate-200" alt="">
             </div>
@@ -224,18 +224,24 @@ export default {
                 "vote_average": 6,
                 "vote_count": 65
             },
-            posters: [],
-            logos: [],
-            backgdrops: [],
         }
     },
     computed: {
-        images() {
+        /*images() {
             if (this.detail?.id) {
                 this.fetchImages()
             }
             return true
-        }
+        }*/
+        posters(){
+            return this.detail?.images.posters
+            },
+        logos(){
+            return this.detail?.images.logos
+        },
+        backdrops(){
+            return this.detail?.images.backdrops
+        },
     },
     methods: {
         fetchImages(){

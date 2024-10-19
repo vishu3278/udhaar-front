@@ -12,6 +12,10 @@
                     <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
             </div>
+            <div class="flex align-center gap-2 mt-2">
+                <h5>Genres</h5>
+                <button v-for="g in genres" :key="g.id" class="btn-sm">{{g.name}}</button>
+            </div>
             <!-- <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link> -->
         </div>
     </section>
@@ -23,8 +27,22 @@
                 <button class="btn btn-primary input-group-btn" @click="searchMovie">Search</button>
             </div>
         </div> -->
+        <h5 class="font-bold text-sky-800">Popular</h5>
+        <section class="flex gap-5 overflow-auto mb-5">
+            
+            <article v-for="p in popular" :key="p.id" class="flex gap-2 shrink-0 border border-sky-200">
+                <figure>
+                    <img :src="img_uri+p.poster_path" alt="" height="200" class="h-60" >
+                </figure>
+                <div class="w-48 h-60 overflow-clip p-2">
+                    <h6 class="text-sky-600 font-semibold">{{p.title}}</h6>
+                    <p>{{p.overview}}</p>
+                </div>
+            </article>
+            
+        </section>
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 row-auto">
+        <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 row-auto">
             <div v-for="m in movies.results" class=" ">
                 <movie-card :movie="m" @show-detail="showDetail"></movie-card>
             </div>
@@ -83,6 +101,7 @@ export default {
     },
     data() {
         return {
+            img_uri,
             queryType: "movie",
             movies: [],
             query: "",
@@ -96,11 +115,22 @@ export default {
             activeInvoice: null,
             detail: null,
             sidePanel: false,
+            genres: [],
+            popular: [],
         }
     },
 
     mounted() {
         // console.log('mounted')
+        axios.get(`${base_uri}/genre/movie/list?api_key=${api_key}`).then(res => {
+            // console.log(res.data)
+            this.genres = res.data.genres
+        })
+
+        axios.get(`${base_uri}/movie/popular?api_key=${api_key}`).then(res => {
+            // console.log(res.data)
+            this.popular = res.data.results
+        })
 
     },
     methods: {
@@ -125,7 +155,7 @@ export default {
             }
 
             if (this.queryType == "keyword") {
-                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
+                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}&append_to_response=images`)
                     .then(movies => {
                         this.movies = movies.data
                     })
@@ -134,7 +164,7 @@ export default {
         },
         showDetail(movie){
             // console.log(movie)
-            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits`)
+            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images`)
               .then(response => {
                 // console.log(response)
                 this.detail = response.data
@@ -145,6 +175,9 @@ export default {
         searchPage(page){
             this.page = page
             // console.log(page)
+            const elm = document.getElementById("movieWrapper")
+            // console.log(elm.offsetTop)
+            window.scrollTo({top: elm.offsetTop, left: 0, behavior: 'smooth'})
             this.searchMovie()
         }
     }

@@ -1,14 +1,14 @@
 <template>
-    <section class="container bg-zinc-200 px-4 py-2 my-4 rounded ">
+    <section class="container bg-teal-100 px-4 py-2 my-4 rounded border border-teal-200 ">
         <div class="flex items-center gap-8">
-            <h3 class="mb-0 font-bold">Invoices</h3>
+            <h3 class="mb-0 font-bold text-teal-600">Invoices</h3>
             <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link>
         </div>
     </section>
     <div class="container">
         <div class="grid grid-cols-3 gap-2">
             <div class="column col-span-2">
-                <table class="table compact table-striped table-hover">
+                <table class="table compact table-striped table-hover mb-5">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -48,9 +48,10 @@
                         </tr>
                     </tfoot> -->
                 </table>
-                <div class="border-2 border-zinc-400 my-4"></div>
-                <h5>Companies</h5>
-                <table class="table compact table-striped table-hover">
+                <!-- <div class="border-2 border-teal-200 my-4"></div> -->
+                <h5 class="text-teal-500">Companies</h5>
+                <div class="border border-teal-400 my-2"></div>
+                <table class="table compact table-striped table-hover mb-5">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -70,11 +71,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="border-2 border-zinc-400 my-4"></div>
-                <h5>Add Company</h5>
+                <!-- <div class="border-2 border-teal-200 my-4"></div> -->
+                <h5 class="text-teal-500">Add / Edit company</h5>
+                <div class="border border-teal-400 my-2"></div>
                 <add-company-form :formdata="editCompany" @clear-update="() => {editCompany = null}" @get-companies="fetchCompanies()"></add-company-form>
             </div>
-            <div class="column bg-zinc-200 rounded" >
+            <div class="column bg-teal-50 rounded" >
                 <!-- <div v-if="activeInvoice">
                     <div class="d-flex justify-center my-1">
                         <div class="btn-group ">
@@ -89,13 +91,13 @@
                     <invoice-template :invoice="activeInvoice" :key="activeInvoice.id" @close-preview="activeInvoice = null"></invoice-template>
                 </template>
                 <div v-else>
-                    <div class="flex items-center gap-4 bg-zinc-300 p-2 m-2 ">
-                        <div class="empty-icon text-zinc-400 text-5xl">
+                    <div class="flex items-center gap-4 bg-teal-100 p-2 ">
+                        <div class="empty-icon text-teal-400 text-5xl">
                             <i class="ri-error-warning-line"></i>
                         </div>
                         <div>
-                            <p class="empty-title text-lg">You have not selected any Invoice</p>
-                            <p class="empty-subtitle text-zinc-600">Click the preview button to start.</p>
+                            <p class="empty-title text-lg text-teal-700">You have not selected any Invoice</p>
+                            <p class="empty-subtitle text-teal-600">Click the preview button to start.</p>
                             <div class="empty-action my-2">
                                 <button class="btn btn-primary" @click="setActiveInvoice(invoices[0].id)">Preview 1</button>
                             </div>

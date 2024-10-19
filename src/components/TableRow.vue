@@ -53,12 +53,12 @@ export default {
             		}
             	})
     		} else {
-    			totalAmount.value = props.rowData.udhaar[0]?.amount
-            	totalTrxn.value = props.rowData.udhaar[0]?.transaction.reduce((acc, curr) => acc + curr.amount, 0)
+    			totalAmount.value = props.rowData?.udhaar[0]?.amount
+            	totalTrxn.value = props.rowData?.udhaar[0]?.transaction.reduce((acc, curr) => acc + curr.amount, 0)
     		}
-            // console.log(totalAmount.value, totalTrxn.value, udhaar)
-
-            return totalAmount.value - totalTrxn.value
+            // console.log(totalAmount?.value, totalTrxn?.value, udhaar)
+            
+            return isNaN(totalAmount?.value - totalTrxn?.value) ? 0 : totalAmount?.value - totalTrxn?.value
 
     	})
 
