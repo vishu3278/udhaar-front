@@ -58,7 +58,8 @@
                 <button @click="addPeople">Add</button>
             </aside>
             <aside>
-                <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="455" height="212" frameborder="0" allowtransparency="true"></iframe>
+                <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="100%" height="212" frameborder="0" allowtransparency="true"></iframe>
+                <hr>
             </aside>
         </div>
     </div>
