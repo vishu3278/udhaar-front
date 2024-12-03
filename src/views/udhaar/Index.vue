@@ -43,8 +43,7 @@
         </div>
     </section>
     <div class="container">
-        <div class="flex gap-3">
-            <div class="flex-1 basis-2/3">
+            <div :class="{'w-4/5': detail}">
                 
                 <table class="table compact table-striped table-hover w-full">
                     <thead>
@@ -82,41 +81,54 @@
                     </tbody>
                 </table>
             </div>
-            <div class="flex-auto w-1/3">
-                <aside class="bg-stone-100 rounded p-3">
+        
+            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-200 to-neutral-400 udhaar-panel drop-shadow-md top-0 right-0 bottom-0 z-50">
+                <aside class="p-5 max-h-dvh overflow-y-auto">
                     <template v-if="detail">
-                        <h4 class="text-indigo-500 mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} <small class="bg-indigo-200 text-indigo-800 h-6 px-3 justify-center items-center inline-flex text-sm rounded-3xl">{{detail.id}}</small> <button @click="detail = null" class="ml-auto text-sm">x</button></h4>
+                        <h4 class="text-indigo-500 font-bold mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} 
+                            <button @click="detail = null" class="ml-auto px-3 text-sm ">x</button>
+                        </h4>
+                        <small class=" text-indigo-600 inline-flex text-sm ">{{detail.id}}</small> 
+                        <hr>
                         <!-- <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p> -->
-                        <div v-for="item in detail.udhaar" class="flex gap-2 border border-indigo-300 rounded py-1 px-1 mt-2">
+                        <div v-for="item in detail.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
                             <div class="mr-auto">
                                 <small>{{item.id}}</small>
-                                <p class="udhaar "><i class="ri-wallet-line"></i> {{item.amount}}<br><i class="ri-calendar-line"></i> {{item.date}}</p>
-                                <span v-show="item?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 ">Bad</span>
-                                <span v-show="udharComplete(item) == 'pending'" class="text-xs px-2 rounded-full bg-amber-300 text-red-800 ">Pending</span>
-                                <div v-for="trx in item.transaction" :key="trx.id" class="ml-8">&bull; {{trx.amount}} - {{trx.date}}</div>
+                                <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
+                                    <span class="text-center font-bold w-24"><i class="ri-wallet-line text-2xl text-indigo-400"></i> <br>{{item.amount}}</span>
+                                    <span class="text-center min-w-24"><i class="ri-calendar-line text-2xl text-indigo-400"></i> <br>{{item.date}}</span>
+                                    <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-red-800 text-3xl">B</span>
+                                    <span v-show="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-200 text-red-500 text-3xl">P</span>
+                                </div>
+                                <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{trx.date}}</div>
                             </div>
-                            <div class="basis-40 shrink-0">
+                            <div class="mb-2 mt-2 pt-2 border-t border-indigo-300 border-solid">
                                 <button v-if="transactionForm != item.id && udharComplete(item) == 'pending'" class="btn-sm" @click="showTrnzForm(item.id)">Add transaction</button>
-                                <span v-else class="text-sm px-4 rounded-full border border-green-400 bg-green-200 text-green-800">Complete</span>
+                                <span v-else class=" px-4 rounded-full border border-green-400 bg-green-200 text-green-800">Complete</span>
                                 <template v-if="transactionForm == item.id">
-                                    <div class="form-group">
-                                        <label class="form-label">Amount</label>
-                                        <input class="form-input input-sm" type="number" v-model="transactionAmount" placeholder="Amount" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Date</label>
-                                        <input class="form-input input-sm" type="date" v-model="transactionDate" placeholder="Date" />
-                                    </div>
-                                    <div class="form-group flex justify-between">
-                                        <button class="btn-sm " @click="transactionForm = null">Close</button>
-                                        <button class="btn-sm" @click="submitTransaction(detail.id, item.id)">Add</button>
+                                    <div class="flex gap-2 items-end">
+                                        <div class="form-group">
+                                            <label class="form-label">Amount</label>
+                                            <input class="form-input input-sm" type="number" v-model="transactionAmount" placeholder="Amount" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Date</label>
+                                            <input class="form-input input-sm" type="date" v-model="transactionDate" placeholder="Date" />
+                                        </div>
+                                        <div class="form-group flex gap-2">
+                                            <button class="btn-sm " @click="transactionForm = null">Close</button>
+                                            <button class="btn-sm" @click="submitTransaction(detail.id, item.id)">Add</button>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
                         </div>
 
                         <!-- <button class="btn">Add new udhaar</button> -->
-                        <div class="content mt-6">
+                        <br>
+                        <hr>
+                        
+                        <div class="content bg-neutral-100 drop-shadow rounded p-2 mt-6">
                             <h5 class="text-indigo-500">Add udhaar</h5>
                             <div class="flex gap-2">
                                 <div class="form-group grow">
@@ -138,7 +150,6 @@
                     
                 </aside>
             </div>
-        </div>
         
     </div>
 </template>
@@ -461,4 +472,8 @@ export default {
     },*/
 };
 </script>
-<style lang="css" scoped></style>
+<style lang="scss" scoped>
+.udhaar-panel {
+    width: 30rem;
+}
+</style>
