@@ -59,7 +59,7 @@
                     </thead>
                     <tbody>
                         <template v-for="p in payees">
-                            <table-row :fields="fields" :row-data="p" @show-detail="getPeopleDetail(p)"></table-row>
+                            <table-row :fields="fields" :row-data="p" :active="detail?.id" @show-detail="getPeopleDetail(p)"></table-row>
                         </template>
                         <!-- <tr v-for="(p, index) in payees" :key="index" :class="{'selected': p.id == detail.id}" @click.stop="getPeopleDetail(p)">
                             <td>{{ p.name }} - <span class="text-slate-500">{{ p.id }}</span></td>
@@ -174,7 +174,7 @@ export default {
     setup(){
         const store = useStore()
         const fields = ["id", 'name', "total",  "pending", "status", "action"]
-        const detail = ref({})
+        const detail = ref(null)
         const udhaarAmount = ref(0)
         const udhaarDate = ref(null)
         const transactionForm = ref(null)
