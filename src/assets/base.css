@@ -57,7 +57,7 @@
     .form-group label { @apply inline-block mb-1 }
     .form-group .form-input { @apply block w-full }
 
-    .table-striped tr:nth-child(even) td { @apply bg-slate-100 border-slate-200 }
+    .table-striped tr:nth-child(even) td { @apply bg-slate-200/50 border-slate-200 }
 
     .table tr.selected td { @apply bg-zinc-200 border-zinc-300 }
 
