@@ -1,5 +1,5 @@
 <template>
-	<tr>
+	<tr :class="{'active': active == rowData.id}">
 		<template v-for="(f, index) in fields">
 			<!-- <td v-if="key == fields[index]">{{value}}</td> -->
 			<td v-if="f == 'id' || f == 'name' || f == 'total'">{{rowData[f]}}</td>
@@ -12,28 +12,12 @@
 	        </td>	
 		</template>
 	</tr>
-    <!-- <tr v-for="(p, index) in payees" :key="index" :class="{'selected': p.id == detail.id}" @click.stop="getPeopleDetail(p)">
-        <td>{{ p.name }} - <span class="text-slate-500">{{ p.id }}</span></td>
-        <td class="text-right">
-            {{ p?.total }}
-        </td>
-        <td>{{ p.remarks }}</td>
-        <td>
-            <span v-show="p.pending == 0" class="text-xs px-2 rounded-full bg-green-300 mr-1">Done</span>
-        </td>
-        <td class="text-center">
-            <span v-show="p.udhaar[0]?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 mr-1">Bad</span>
-        </td>
-        <td>
-            <button class="btn btn-sm">Details</button>
-        </td>
-    </tr> -->
 </template>
 <script>
 import { ref, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
 
 export default {
-	props: ['fields','rowData'],
+	props: ['fields','rowData', 'active'],
     setup(props){
     	// console.log(props.rowData)
     	const totalAmount = ref(0)
@@ -85,5 +69,10 @@ export default {
     
 }
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
+    tr {
+        &.active {
+            background-color: khaki;
+        }
+    }
 </style>
