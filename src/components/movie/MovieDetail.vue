@@ -41,7 +41,7 @@
                 </p>
             </div>
             <p v-show="posters.length > 0" class="text-base text-slate-500 font-semibold">Posters</p>
-            <div class="images flex gap-2 overflow-x-auto mb-3">
+            <div class="images flex gap-2 overflow-x-auto mb-3" >
                 <img v-for="im in posters" :src="img_uri+im.file_path" class="w-48 h-64 object-contain" alt="">
             </div>
             <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-semibold">Backdrops</p>
@@ -59,7 +59,7 @@
     </div>
 </template>
 <script>
-import { api_key, base_uri, img_uri, logo_uri, profile_uri } from '../../constants.js'
+import { api_key, base_uri, img_uri, logo_uri, profile_uri } from '@/constants.js'
 import axios from 'axios'
 export default {
 
@@ -243,6 +243,10 @@ export default {
             return this.detail?.images.backdrops
         },
     },
+    mounted() {
+        // const scrollContainer = document.querySelector("overflow-x-auto");
+
+    },
     methods: {
         fetchImages(){
             axios.get(`${base_uri}/movie/${this.detail.id}/images?api_key=${api_key}`)
@@ -255,6 +259,13 @@ export default {
                 .catch(err => console.error(err));
 
         },
+        /*hscroll(scrollContainer){
+            scrollContainer.addEventListener("wheel", (evt) => {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            });
+
+        },*/
     }
 
 }

@@ -28,18 +28,9 @@
             </div>
         </div> -->
         <h5 class="font-bold text-sky-800">Popular</h5>
-        <section class="flex gap-5 overflow-auto mb-5">
-            
-            <article v-for="p in popular" :key="p.id" class="flex gap-2 shrink-0 border border-sky-200">
-                <figure>
-                    <img :src="img_uri+p.poster_path" alt="" height="200" class="h-60" >
-                </figure>
-                <div class="w-48 h-60 overflow-clip p-2">
-                    <h6 class="text-sky-600 font-semibold">{{p.title}}</h6>
-                    <p>{{p.overview}}</p>
-                </div>
-            </article>
-            
+        <section id="movieScroll" class="flex gap-5 overflow-auto mb-5">
+            <movie-card-small v-for="p in popular" :key="p.id" :movie="p" @show-detail="showDetail">
+            </movie-card-small>
         </section>
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
         <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 row-auto">
@@ -59,11 +50,11 @@
             </div> -->
         </div>
         <hr>
-        <ul class="flex items-center justify-center flex-wrap gap-1 my-5" >
+        <ul class="flex items-center justify-center flex-wrap gap-1 my-5">
             <!-- <li class="page-item disabled">
                 <a href="#" tabindex="-1">Previous</a>
             </li> -->
-            <li v-for="n in movies.total_pages"  >
+            <li v-for="n in movies.total_pages">
                 <a class="py-1 px-2 border border-sky-600 rounded-md inline-block min-w-6 cursor-pointer hover:bg-sky-200 hover:text-sky-600" :class="{'text-white bg-sky-400 font-bold': n == movies.page}" @click.stop="searchPage(n)">{{n}}</a>
             </li>
             <!-- <li class="page-item active">
@@ -85,16 +76,18 @@
 <script>
 // import { getInvoices, getCompanies } from "@/firebase.js"
 import { format, formatDistanceToNow, compareAsc } from 'date-fns'
+import MovieCardSmall from "@/components/movie/MovieCardSmall.vue"
 import MovieCard from "@/components/movie/MovieCard.vue"
 import MovieDetail from "@/components/movie/MovieDetail.vue"
 // import AddCompanyForm from '@/components/AddCompanyForm.vue'
 // import * as echarts from 'echarts';
-import { api_key, base_uri, img_uri, profile_uri } from '../constants.js'
+import { api_key, base_uri, img_uri, profile_uri } from '@/constants.js'
 import axios from 'axios'
 export default {
 
     name: 'MoviesView',
     components: {
+        MovieCardSmall,
         MovieCard,
         MovieDetail,
         // AddCompanyForm,
@@ -132,6 +125,13 @@ export default {
             this.popular = res.data.results
         })
 
+        const scrollContainer = document.getElementById("movieScroll");
+
+        scrollContainer.addEventListener("wheel", (evt) => {
+            evt.preventDefault();
+            scrollContainer.scrollLeft += evt.deltaY;
+        });
+
     },
     methods: {
 
@@ -143,7 +143,7 @@ export default {
                 this.msg = null
             }, duration)
         },
-        
+
         searchMovie() {
             // url: `${base_uri}/search/movie?api_key=${api_key}&query=${q}`,
             if (this.queryType == "movie") {
@@ -162,22 +162,22 @@ export default {
                     .catch(e => console.warn(e))
             }
         },
-        showDetail(movie){
+        showDetail(movie) {
             // console.log(movie)
             axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images`)
-              .then(response => {
-                // console.log(response)
-                this.detail = response.data
-                this.sidePanel = true
-            })
-              .catch(err => console.error(err));
+                .then(response => {
+                    // console.log(response)
+                    this.detail = response.data
+                    this.sidePanel = true
+                })
+                .catch(err => console.error(err));
         },
-        searchPage(page){
+        searchPage(page) {
             this.page = page
             // console.log(page)
             const elm = document.getElementById("movieWrapper")
             // console.log(elm.offsetTop)
-            window.scrollTo({top: elm.offsetTop, left: 0, behavior: 'smooth'})
+            window.scrollTo({ top: elm.offsetTop, left: 0, behavior: 'smooth' })
             this.searchMovie()
         }
     }
@@ -189,6 +189,7 @@ export default {
     margin-inline: auto;
     max-width: 40rem;
 }
+
 .side-panel {
     width: 33vw;
     min-width: 560px;
