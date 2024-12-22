@@ -12,7 +12,7 @@
                     <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
             </div>
-            <div class="flex align-center gap-2 mt-2">
+            <div class="flex align-center flex-wrap gap-2 mt-2">
                 <h5>Genres</h5>
                 <button v-for="g in genres" :key="g.id" class="btn-sm">{{g.name}}</button>
             </div>
@@ -69,7 +69,7 @@
         </ul>
         <hr>
     </div>
-    <article v-if="sidePanel" class="side-panel fixed bg-sky-100 inset-y-0 right-0 z-10 shadow">
+    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow-md">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
     </article>
 </template>
@@ -183,7 +183,7 @@ export default {
     }
 }
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .search-wrapper {
     margin-block: 0.1rem;
     margin-inline: auto;

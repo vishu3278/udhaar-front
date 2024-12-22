@@ -6,7 +6,7 @@
             <div class="card-subtitle text-lg text-sky-600 mb-4">Original title: {{detail.original_title}}</div>
             <!-- <figure class="avatar avatar-sm text-uppercase " :data-initial="detail.original_language"></figure> -->
             <div class="flex gap-4">
-                <span class="border border-amber-500 rounded-full px-2 h-6 text-amber-600">{{detail.release_date}}</span>
+                <span class="border border-amber-500 rounded-full px-2 h-6 text-amber-600">{{formattedDate(detail.release_date)}}</span>
                 <span class="border border-amber-500 text-amber-600 rounded-full size-6 text-center">{{detail.original_language}}</span>
                 <span class="border border-amber-400 text-amber-600 rounded-full px-2 h-6">{{detail.runtime}} min</span>
             </div>
@@ -15,9 +15,9 @@
             <figure v-if="detail.poster_path" class="card-image p-4">
                 <img :src="img_uri+detail.poster_path" class="">
             </figure>
-            <figure v-if="detail.backdrop_path" class="">
+            <!-- <figure v-if="detail.backdrop_path" class="">
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
-            </figure>
+            </figure> -->
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
                 <div class="">
                     <span class="text-slate-500">Genres: </span>
@@ -27,9 +27,40 @@
                     <span class="text-slate-500">Country of origin: </span>
                     <span v-for="c in detail.origin_country" class="text-indigo-500">{{c}}</span>
                 </div>
-                <div class="">
-                    <span class="text-slate-500">Production companies: </span>
-                    <div v-for="c in detail.production_companies" :key="c.id" class="text-indigo-500 border border-indigo-300 rounded px-2 py-1 mt-1"><img :src="logo_uri+c.logo_path" alt=""> {{c.name}} </div>
+                <!-- cast -->
+                <div v-if="detail.credits.cast.length > 0">
+                    <h6 class="text-slate-500 font-semibold">Cast</h6>
+                    <div class="flex gap-4 overflow-x-auto py-1">
+                        <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-indigo-600 w-48 shrink-0 border border-indigo-200 text-center">
+                            <img v-if="cast.profile_path" :src="profile_uri+cast.profile_path" :alt="cast.name">
+                            <img v-else src="/400x600.svg" :alt="cast.name">
+                            <figcaption class="font-semibold">{{cast.name}}</figcaption>
+                            <figcaption class="text-slate-500">({{cast.character}})</figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <!-- crew -->
+                <div v-if="detail.credits.crew.length > 0">
+                    <h6 class="text-slate-500 font-semibold">Crew</h6>
+                    <div class="flex gap-4 overflow-x-auto py-1">
+                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-indigo-600 w-48 shrink-0 border border-indigo-200 text-center">
+                            <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name">
+                            <img v-else src="/400x600.svg" :alt="crew.name">
+                            <figcaption class="font-semibold">{{crew.name}}</figcaption>
+                            <figcaption class="text-slate-600">{{crew.job}}</figcaption>
+                            <figcaption class="text-slate-400">{{crew.department}}</figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <div v-if="detail.production_companies.length > 0" >
+                    <h6 class="text-slate-500">Production companies </h6>
+                    <div class="flex gap-4 overflow-x-auto py-1">
+                        <figure v-for="c in detail.production_companies" :key="c.id" class="text-indigo-500 border border-indigo-200 shrink-0 w-56 text-center">
+                            <img v-if="c.logo_path" :src="logo_uri+c.logo_path" :alt="c.name">
+                            <img v-else src="/600x400.svg" :alt="c.name">
+                            <figcaption>{{c.name}}</figcaption>
+                        </figure>
+                    </div>
                 </div>
                 <div class="">
                     <span class="text-slate-500">Spoken language: </span>
@@ -40,17 +71,19 @@
                     {{detail.overview}}
                 </p>
             </div>
-            <p v-show="posters.length > 0" class="text-base text-slate-500 font-semibold">Posters</p>
-            <div class="images flex gap-2 overflow-x-auto mb-3" >
-                <img v-for="im in posters" :src="img_uri+im.file_path" class="w-48 h-64 object-contain" alt="">
-            </div>
-            <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-semibold">Backdrops</p>
-            <div class="images flex gap-2 overflow-x-auto mb-3">
-                <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-96 h-56 object-contain" alt="">
-            </div>
-            <p v-show="logos.length > 0" class="text-base text-slate-500 font-semibold">Logos</p>
-            <div class="images flex gap-2 overflow-x-auto mb-3">
-                <img v-for="im in logos" :src="img_uri+im.file_path" class="w-48 h-48 object-contain bg-slate-200" alt="">
+            <div class="p-4">
+                <p v-show="posters.length > 0" class="text-base text-slate-500 font-bold">Posters</p>
+                <div class="images flex gap-2 overflow-x-auto mb-3" >
+                    <img v-for="im in posters" :src="img_uri+im.file_path" class="w-48 h-64 object-contain" alt="">
+                </div>
+                <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-bold">Backdrops</p>
+                <div class="images flex gap-2 overflow-x-auto mb-3">
+                    <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-96 h-56 object-contain" alt="">
+                </div>
+                <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
+                <div class="images flex gap-2 overflow-x-auto mb-3">
+                    <img v-for="im in logos" :src="img_uri+im.file_path" class="w-48 h-48 object-contain bg-slate-200" alt="">
+                </div>
             </div>
         </div>
         <!-- <div class="card-footer">
@@ -59,8 +92,11 @@
     </div>
 </template>
 <script>
-import { api_key, base_uri, img_uri, logo_uri, profile_uri } from '@/constants.js'
+import { api_key, base_uri, img_uri, logo_uri, profile_uri, no_profile, no_img, date_format } from '@/constants.js'
 import axios from 'axios'
+import { format } from "date-fns";
+/*const no_profile ="@/assets/400x600.svg"
+const no_img ="@/assets/600x400.svg"*/
 export default {
 
     name: 'MovieDetail',
@@ -70,6 +106,11 @@ export default {
     data() {
         return {
             img_uri,
+            logo_uri,
+            profile_uri,
+            no_profile,
+            no_img,
+            date_format,
             movie: {
                 "adult": false,
                 "backdrop_path": "/4VFRn5xcD8o3qUMrSShm3I6zpfl.jpg",
@@ -244,7 +285,15 @@ export default {
         },
     },
     mounted() {
-        // const scrollContainer = document.querySelector("overflow-x-auto");
+        const scrollContainer = document.querySelectorAll(".overflow-x-auto");
+        console.log(scrollContainer)
+        for(let x of scrollContainer){
+            // console.log(x)
+            x.addEventListener("wheel", (evt) => {
+                evt.preventDefault();
+                x.scrollLeft += evt.deltaY;
+            });
+        }
 
     },
     methods: {
@@ -259,7 +308,11 @@ export default {
                 .catch(err => console.error(err));
 
         },
-        /*hscroll(scrollContainer){
+        formattedDate(datestring){
+            return format(new Date(datestring), this.date_format)
+        }
+        /*hscroll(id){
+            document.getElementById(id)
             scrollContainer.addEventListener("wheel", (evt) => {
                 evt.preventDefault();
                 scrollContainer.scrollLeft += evt.deltaY;

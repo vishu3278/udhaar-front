@@ -1,12 +1,12 @@
 <template>
-    <article class="flex gap-2 shrink-0 border border-sky-200">
+    <article class="flex gap-2 shrink-0 bg-gradient-to-tl to-yellow-50 from-sky-200 shadow-md">
         <figure>
-            <img :src="img_uri+movie.poster_path" alt="" height="200" class="h-60">
+            <img :src="img_uri+movie.poster_path" alt="" height="200" class="h-64">
         </figure>
-        <div class="w-48 h-60 overflow-clip p-2">
-            <h6 class="text-sky-600 font-semibold">{{movie.title}}</h6>
-            <p>{{movie.overview}}</p>
-            <button @click="$emit('show-detail', this.movie)">detail</button>
+        <div class="w-48 h-64 overflow-clip p-2">
+            <h5 class="text-sky-600 font-bold">{{movie.title}}</h5>
+            <p class="line-clamp-6">{{movie.overview}}</p>
+            <button @click="$emit('show-detail', this.movie)">Detail</button>
         </div>
     </article>
 </template>
