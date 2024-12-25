@@ -1,15 +1,25 @@
 <template>
-    <div class="card h-full grid grid-cols-1">
+    <div class="card h-full grid grid-cols-1 outline outline-zinc-300 ">
         <div class="card-header p-4">
             <button class="absolute right-4 top-4 z-10 cursor-pointer" @click="$emit('close-panel')">x</button>
             <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}</div>
             <div class="card-subtitle text-lg text-sky-600 mb-4">Original title: {{detail.original_title}}</div>
             <!-- <figure class="avatar avatar-sm text-uppercase " :data-initial="detail.original_language"></figure> -->
-            <div class="flex gap-4">
-                <span class="border border-amber-500 rounded-full px-2 h-6 text-amber-600">{{formattedDate(detail.release_date)}}</span>
-                <span class="border border-amber-500 text-amber-600 rounded-full size-6 text-center">{{detail.original_language}}</span>
-                <span class="border border-amber-400 text-amber-600 rounded-full px-2 h-6">{{detail.runtime}} min</span>
+            <div class="flex items-center justify-between">
+                <div class="flex gap-4">
+                    <span class="border border-amber-500 rounded-full px-2 h-6 text-amber-600">{{formattedDate(detail.release_date)}}</span>
+                    <span class="border border-amber-500 text-amber-600 rounded-full size-6 text-center">{{detail.original_language}}</span>
+                    <span class="border border-amber-400 text-amber-600 rounded-full px-2 h-6">{{detail.runtime}} min</span>
+                </div>
+                <div class="inline-flex items-center gap-2">
+                    <div class="w-40 border border-sky-600 rounded-full overflow-clip" style="padding: 1px;">
+                        <span class="inline-block bg-gradient-to-br from-sky-300 to-sky-600 text-white rounded-full" :style="{width: avg+'%'}">&nbsp;</span>
+                    </div>
+                    <span class="text-slate-500 rounded-full border border-slate-400 px-2" title="Avg. vote">{{detail.vote_average}}</span>
+                    <span class="rounded-full border border-sky-600 text-sky-600 px-2" title="Votes">{{detail.vote_count}}</span>
+                </div>
             </div>
+
         </div>
         <div class="overflow-auto">
             <figure v-if="detail.poster_path" class="card-image p-4">
@@ -21,17 +31,17 @@
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
                 <div class="">
                     <span class="text-slate-500">Genres: </span>
-                    <span v-for="g in detail.genres" :key="g.id" class="border border-indigo-300 rounded-full px-2 text-indigo-500 ml-1">{{g.name}}</span>
+                    <span v-for="g in detail.genres" :key="g.id" class="border border-sky-400 rounded-full px-2 text-sky-600 ml-1">{{g.name}}</span>
                 </div>
                 <div class="">
                     <span class="text-slate-500">Country of origin: </span>
-                    <span v-for="c in detail.origin_country" class="text-indigo-500">{{c}}</span>
+                    <span v-for="c in detail.origin_country" class="text-sky-600">{{c}}</span>
                 </div>
                 <!-- cast -->
                 <div v-if="detail.credits.cast.length > 0">
                     <h6 class="text-slate-500 font-semibold">Cast</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-indigo-600 w-48 shrink-0 border border-indigo-200 text-center">
+                        <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-sky-600 w-48 shrink-0 bg-sky-100 text-center shadow">
                             <img v-if="cast.profile_path" :src="profile_uri+cast.profile_path" :alt="cast.name">
                             <img v-else src="/400x600.svg" :alt="cast.name">
                             <figcaption class="font-semibold">{{cast.name}}</figcaption>
@@ -43,7 +53,7 @@
                 <div v-if="detail.credits.crew.length > 0">
                     <h6 class="text-slate-500 font-semibold">Crew</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-indigo-600 w-48 shrink-0 border border-indigo-200 text-center">
+                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-48 shrink-0 bg-sky-100 text-center shadow">
                             <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name">
                             <img v-else src="/400x600.svg" :alt="crew.name">
                             <figcaption class="font-semibold">{{crew.name}}</figcaption>
@@ -53,9 +63,9 @@
                     </div>
                 </div>
                 <div v-if="detail.production_companies.length > 0" >
-                    <h6 class="text-slate-500">Production companies </h6>
+                    <h6 class="text-slate-500 font-semibold">Production companies </h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="c in detail.production_companies" :key="c.id" class="text-indigo-500 border border-indigo-200 shrink-0 w-56 text-center">
+                        <figure v-for="c in detail.production_companies" :key="c.id" class="text-sky-600 border flex flex-col justify-between border-sky-200 shrink-0 w-56 text-center">
                             <img v-if="c.logo_path" :src="logo_uri+c.logo_path" :alt="c.name">
                             <img v-else src="/600x400.svg" :alt="c.name">
                             <figcaption>{{c.name}}</figcaption>
@@ -64,7 +74,7 @@
                 </div>
                 <div class="">
                     <span class="text-slate-500">Spoken language: </span>
-                    <span v-for="l in detail.spoken_languages" class="text-slate-700">{{l.english_name}} - {{l.name}}, </span>
+                    <span v-for="l in detail.spoken_languages" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
                 </div>
                 <p class="text-slate-700">
                     <span class="text-slate-500">Overview:</span><br>
@@ -274,6 +284,9 @@ export default {
             }
             return true
         }*/
+        avg(){
+            return (this.detail.vote_average/10)*100
+        },
         posters(){
             return this.detail?.images.posters
             },
@@ -286,7 +299,7 @@ export default {
     },
     mounted() {
         const scrollContainer = document.querySelectorAll(".overflow-x-auto");
-        console.log(scrollContainer)
+        // console.log(scrollContainer)
         for(let x of scrollContainer){
             // console.log(x)
             x.addEventListener("wheel", (evt) => {
@@ -297,7 +310,7 @@ export default {
 
     },
     methods: {
-        fetchImages(){
+        /*fetchImages(){
             axios.get(`${base_uri}/movie/${this.detail.id}/images?api_key=${api_key}`)
                 .then(response => {
                     // console.log(response.data)
@@ -307,9 +320,13 @@ export default {
                 })
                 .catch(err => console.error(err));
 
-        },
+        },*/
         formattedDate(datestring){
-            return format(new Date(datestring), this.date_format)
+            if(datestring){
+                return format(new Date(datestring), this.date_format)
+            } else {
+                return "No date"
+            }
         }
         /*hscroll(id){
             document.getElementById(id)

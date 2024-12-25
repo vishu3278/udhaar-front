@@ -12,10 +12,10 @@
                     <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
             </div>
-            <div class="flex align-center flex-wrap gap-2 mt-2">
+            <!-- <div class="flex align-center flex-wrap gap-2 mt-2">
                 <h5>Genres</h5>
                 <button v-for="g in genres" :key="g.id" class="btn-sm">{{g.name}}</button>
-            </div>
+            </div> -->
             <!-- <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link> -->
         </div>
     </section>
@@ -35,7 +35,8 @@
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
         <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 row-auto">
             <div v-for="m in movies.results" class=" ">
-                <movie-card :movie="m" @show-detail="showDetail"></movie-card>
+                <movie-card v-if="queryType == 'movie'" :movie="m" @show-detail="showDetail"></movie-card>
+                <div v-if="queryType == 'keyword'" class="shadow">{{m.id}} - {{m.name}} <br><button class="btn btn-sm" @click="showDetail(m)">detail</button></div>
             </div>
         </div>
         <div v-show="movies.total_results == 0" class="empty">
@@ -69,7 +70,7 @@
         </ul>
         <hr>
     </div>
-    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow-md">
+    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
     </article>
 </template>
@@ -108,17 +109,17 @@ export default {
             activeInvoice: null,
             detail: null,
             sidePanel: false,
-            genres: [],
+            // genres: [],
             popular: [],
         }
     },
 
     mounted() {
         // console.log('mounted')
-        axios.get(`${base_uri}/genre/movie/list?api_key=${api_key}`).then(res => {
+        /*axios.get(`${base_uri}/genre/movie/list?api_key=${api_key}`).then(res => {
             // console.log(res.data)
             this.genres = res.data.genres
-        })
+        })*/
 
         axios.get(`${base_uri}/movie/popular?api_key=${api_key}`).then(res => {
             // console.log(res.data)
@@ -155,7 +156,7 @@ export default {
             }
 
             if (this.queryType == "keyword") {
-                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}&append_to_response=images`)
+                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
                     .then(movies => {
                         this.movies = movies.data
                     })
