@@ -12,19 +12,24 @@
                     <span class="border border-amber-400 text-amber-600 rounded-full px-2 h-6">{{detail.runtime}} min</span>
                 </div>
                 <div class="inline-flex items-center gap-2">
-                    <div class="w-40 border border-sky-600 rounded-full overflow-clip" style="padding: 1px;">
-                        <span class="inline-block bg-gradient-to-br from-sky-300 to-sky-600 text-white rounded-full" :style="{width: avg+'%'}">&nbsp;</span>
+                    <div class="w-40 border  rounded-full overflow-clip" :class="`border-${avg.color}`" style="padding: 1px;">
+                        <span class="inline-block bg-gradient-to-br text-white rounded-full" :class="avg.class" :style="{width: avg.percent+'%'}">&nbsp;</span>
                     </div>
-                    <span class="text-slate-500 rounded-full border border-slate-400 px-2" title="Avg. vote">{{detail.vote_average}}</span>
-                    <span class="rounded-full border border-sky-600 text-sky-600 px-2" title="Votes">{{detail.vote_count}}</span>
+                    <span class=" rounded-full border px-2" :class="[`border-${avg.color}`, `text-${avg.color}`]" title="Avg. vote">{{detail.vote_average}}</span>
+                    <span class="rounded-full border px-2" :class="[`border-${avg.color}`, `text-${avg.color}`]" title="Votes">{{detail.vote_count}}</span>
                 </div>
             </div>
 
         </div>
         <div class="overflow-auto">
             <figure v-if="detail.poster_path" class="card-image p-4">
-                <img :src="img_uri+detail.poster_path" class="">
+                <img :src="img_uri+detail.poster_path" class="float-left mr-4">
+                <p class="text-slate-700 text-base">
+                    <span class="text-sky-600 font-bold">Overview:</span><br>
+                    {{detail.overview}}
+                </p>
             </figure>
+            <hr class="clear-both">
             <!-- <figure v-if="detail.backdrop_path" class="">
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
             </figure> -->
@@ -37,11 +42,15 @@
                     <span class="text-slate-500">Country of origin: </span>
                     <span v-for="c in detail.origin_country" class="text-sky-600">{{c}}</span>
                 </div>
+                <div class="">
+                    <span class="text-slate-500">Spoken language: </span>
+                    <span v-for="l in detail.spoken_languages" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
+                </div>
                 <!-- cast -->
                 <div v-if="detail.credits.cast.length > 0">
                     <h6 class="text-slate-500 font-semibold">Cast</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-sky-600 w-48 shrink-0 bg-sky-100 text-center shadow">
+                        <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-sky-600 w-40 shrink-0 bg-sky-100 text-center shadow">
                             <img v-if="cast.profile_path" :src="profile_uri+cast.profile_path" :alt="cast.name">
                             <img v-else src="/400x600.svg" :alt="cast.name">
                             <figcaption class="font-semibold">{{cast.name}}</figcaption>
@@ -53,7 +62,7 @@
                 <div v-if="detail.credits.crew.length > 0">
                     <h6 class="text-slate-500 font-semibold">Crew</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-48 shrink-0 bg-sky-100 text-center shadow">
+                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-36 shrink-0 bg-sky-100 text-center shadow">
                             <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name">
                             <img v-else src="/400x600.svg" :alt="crew.name">
                             <figcaption class="font-semibold">{{crew.name}}</figcaption>
@@ -65,21 +74,13 @@
                 <div v-if="detail.production_companies.length > 0" >
                     <h6 class="text-slate-500 font-semibold">Production companies </h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="c in detail.production_companies" :key="c.id" class="text-sky-600 border flex flex-col justify-between border-sky-200 shrink-0 w-56 text-center">
+                        <figure v-for="c in detail.production_companies" :key="c.id" class="text-sky-600 border flex flex-col justify-between border-sky-200 shrink-0 w-40 text-center">
                             <img v-if="c.logo_path" :src="logo_uri+c.logo_path" :alt="c.name">
                             <img v-else src="/600x400.svg" :alt="c.name">
                             <figcaption>{{c.name}}</figcaption>
                         </figure>
                     </div>
                 </div>
-                <div class="">
-                    <span class="text-slate-500">Spoken language: </span>
-                    <span v-for="l in detail.spoken_languages" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
-                </div>
-                <p class="text-slate-700">
-                    <span class="text-slate-500">Overview:</span><br>
-                    {{detail.overview}}
-                </p>
             </div>
             <div class="p-4">
                 <p v-show="posters.length > 0" class="text-base text-slate-500 font-bold">Posters</p>
@@ -92,7 +93,7 @@
                 </div>
                 <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">
-                    <img v-for="im in logos" :src="img_uri+im.file_path" class="w-48 h-48 object-contain bg-slate-200" alt="">
+                    <img v-for="im in logos" :src="img_uri+im.file_path" class="w-36 h-36 object-contain bg-slate-200" alt="">
                 </div>
             </div>
         </div>
@@ -285,7 +286,27 @@ export default {
             return true
         }*/
         avg(){
-            return (this.detail.vote_average/10)*100
+            let percent = (this.detail.vote_average/10)*100
+
+            if(this.detail.vote_average > 0.1 && this.detail.vote_average < 2.9){
+                return {class: 'from-fuchsia-300 to-fuchsia-600', color: "fuchsia-600", percent }
+            }
+            if(this.detail.vote_average > 3 && this.detail.vote_average < 4.6){
+                return {class: 'from-rose-300 to-rose-600', color: "rose-600", percent }
+            }
+            if(this.detail.vote_average > 4.5 && this.detail.vote_average < 6.1){
+                return {class: 'from-amber-300 to-amber-600', color: "amber-600", percent }
+            }
+            if(this.detail.vote_average > 6 && this.detail.vote_average < 7.6){
+                return {class: 'from-sky-300 to-sky-600', color: "sky-600", percent }
+            }
+            if(this.detail.vote_average > 7.5 && this.detail.vote_average < 8.9){
+                return {class: 'from-teal-300 to-teal-600', color: "teal-600", percent }
+            }
+            if(this.detail.vote_average > 8.8 ){
+                return {class: 'from-green-300 to-green-600', color: "green-600", percent }
+            }
+            return { class: 'from-zinc-300 to-zinc-600', color: "zinc-600", percent: 0}
         },
         posters(){
             return this.detail?.images.posters

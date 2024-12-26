@@ -19,21 +19,15 @@
             <!-- <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link> -->
         </div>
     </section>
-    <div class="container">
-        <!-- <div class="search-wrapper">
-            <div class="input-group">
-                <span class="input-group-addon">Search</span>
-                <input type="text" class="form-input" v-model="query" placeholder="...">
-                <button class="btn btn-primary input-group-btn" @click="searchMovie">Search</button>
-            </div>
-        </div> -->
+    <div class="px-10" :class="{'side-panel-open': sidePanel}">
+        
         <h5 class="font-bold text-sky-800">Popular</h5>
         <section id="movieScroll" class="flex gap-5 overflow-auto mb-5">
             <movie-card-small v-for="p in popular" :key="p.id" :movie="p" @show-detail="showDetail">
             </movie-card-small>
         </section>
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
-        <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 row-auto">
+        <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 row-auto">
             <div v-for="m in movies.results" class=" ">
                 <movie-card v-if="queryType == 'movie'" :movie="m" @show-detail="showDetail"></movie-card>
                 <div v-if="queryType == 'keyword'" class="shadow">{{m.id}} - {{m.name}} <br><button class="btn btn-sm" @click="showDetail(m)">detail</button></div>
@@ -192,7 +186,9 @@ export default {
 }
 
 .side-panel {
-    width: 33vw;
-    min-width: 560px;
+    width: 560px;
+    &-open {
+        padding-right: 600px;
+    }
 }
 </style>

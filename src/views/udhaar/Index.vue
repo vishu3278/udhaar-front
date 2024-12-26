@@ -101,9 +101,9 @@
                                     <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
                                         <span class="text-center font-bold w-24"><i class="ri-wallet-line text-2xl text-indigo-400"></i> <br>{{item.amount}}</span>
                                         <span class="text-center min-w-24"><i class="ri-calendar-line text-2xl text-indigo-400"></i> <br>{{humanDate(item.date)}}</span>
-                                        <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-red-800 text-3xl">B</span>
-                                        <span v-if="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-rose-600 text-3xl">P</span>
-                                        <span v-else class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-200 text-emerald-600 text-3xl">C</span>
+                                        <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rose-100 to-rose-300 text-rose-600 text-3xl font-bold shadow">B</span>
+                                        <span v-if="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-amber-300 text-amber-600 font-bold text-3xl shadow">P</span>
+                                        <span v-else class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-300 text-emerald-600 font-bold text-3xl shadow">C</span>
                                     </div>
                                     <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{humanDate(trx.date)}}</div>
                                 </div>
