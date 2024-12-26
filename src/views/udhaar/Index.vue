@@ -82,53 +82,58 @@
                 </table>
             </div>
         
-            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-200 to-neutral-400 udhaar-panel drop-shadow-md top-0 right-0 bottom-0 z-50">
-                <aside class="p-5 max-h-dvh overflow-y-auto">
+            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-100 to-neutral-300 udhaar-panel outline outline-neutral-300 top-0 right-0 bottom-0 z-50">
+                <aside class="p-4 h-full flex flex-col justify-between">
                     <template v-if="detail">
-                        <h4 class="text-indigo-500 font-bold mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} 
-                            <button @click="detail = null" class="ml-auto px-3 text-sm ">x</button>
-                        </h4>
-                        <small class=" text-indigo-600 inline-flex text-sm ">{{detail.id}}</small> 
-                        <hr>
-                        <!-- <p class="mb-3"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p> -->
-                        <div v-for="item in detail.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
-                            <div class="mr-auto">
-                                <small>{{item.id}}</small>
-                                <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
-                                    <span class="text-center font-bold w-24"><i class="ri-wallet-line text-2xl text-indigo-400"></i> <br>{{item.amount}}</span>
-                                    <span class="text-center min-w-24"><i class="ri-calendar-line text-2xl text-indigo-400"></i> <br>{{item.date}}</span>
-                                    <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-red-800 text-3xl">B</span>
-                                    <span v-show="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-200 text-red-500 text-3xl">P</span>
-                                </div>
-                                <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{trx.date}}</div>
-                            </div>
-                            <div class="mb-2 mt-2 pt-2 border-t border-indigo-300 border-solid">
-                                <button v-if="transactionForm != item.id && udharComplete(item) == 'pending'" class="btn-sm" @click="showTrnzForm(item.id)">Add transaction</button>
-                                <span v-else class=" px-4 rounded-full border border-green-400 bg-green-200 text-green-800">Complete</span>
-                                <template v-if="transactionForm == item.id">
-                                    <div class="flex gap-2 items-end">
-                                        <div class="form-group">
-                                            <label class="form-label">Amount</label>
-                                            <input class="form-input input-sm" type="number" v-model="transactionAmount" placeholder="Amount" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Date</label>
-                                            <input class="form-input input-sm" type="date" v-model="transactionDate" placeholder="Date" />
-                                        </div>
-                                        <div class="form-group flex gap-2">
-                                            <button class="btn-sm " @click="transactionForm = null">Close</button>
-                                            <button class="btn-sm" @click="submitTransaction(detail.id, item.id)">Add</button>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
+                        <div>
+                            <h4 class="text-indigo-500 font-bold mb-0 flex gap-3 flex-wrap items-center">{{detail.name}} 
+                                <button @click="detail = null" class="ml-auto px-3 text-sm ">x</button>
+                            </h4>
+                            <small class=" text-indigo-600 inline-flex text-sm ">{{detail.id}}</small> 
+                            <p class="mb-2"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
+                            <hr>
                         </div>
+                        <div class="mb-4 overflow-y-auto">
+                            
+                            <div v-for="item in detail.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
+                                <div class="mr-auto">
+                                    <small>{{item.id}}</small>
+                                    <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
+                                        <span class="text-center font-bold w-24"><i class="ri-wallet-line text-2xl text-indigo-400"></i> <br>{{item.amount}}</span>
+                                        <span class="text-center min-w-24"><i class="ri-calendar-line text-2xl text-indigo-400"></i> <br>{{humanDate(item.date)}}</span>
+                                        <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-red-800 text-3xl">B</span>
+                                        <span v-if="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-200 text-rose-600 text-3xl">P</span>
+                                        <span v-else class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-200 text-emerald-600 text-3xl">C</span>
+                                    </div>
+                                    <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{humanDate(trx.date)}}</div>
+                                </div>
+                                <div class="mb-2 mt-2 pt-2 border-t border-indigo-300 border-solid">
+                                    <button v-if="transactionForm != item.id && udharComplete(item) == 'pending'" class="btn-sm" @click="showTrnzForm(item.id)">Add transaction</button>
+                                    <template v-if="transactionForm == item.id">
+                                        <div class="flex gap-2 items-end">
+                                            <div class="form-group">
+                                                <label class="form-label">Amount</label>
+                                                <input class="form-input input-sm" type="number" v-model="transactionAmount" placeholder="Amount" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Date</label>
+                                                <input class="form-input input-sm" type="date" v-model="transactionDate" placeholder="Date" />
+                                            </div>
+                                            <div class="form-group flex gap-2">
+                                                <button class="btn-sm " @click="transactionForm = null">Close</button>
+                                                <button class="btn-sm" @click="submitTransaction(detail.id, item.id)">Add</button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
 
                         <!-- <button class="btn">Add new udhaar</button> -->
-                        <br>
-                        <hr>
+                        </div>
+                        <!-- <br> -->
+                        <!-- <hr> -->
                         
-                        <div class="content bg-neutral-100 drop-shadow rounded p-2 mt-6">
+                        <div class="content bg-neutral-100 drop-shadow rounded p-2 mt-auto">
                             <h5 class="text-indigo-500">Add udhaar</h5>
                             <div class="flex gap-2">
                                 <div class="form-group grow">
@@ -164,7 +169,8 @@ import TableRow from '@/components/TableRow.vue'
 
 import { db } from "@/firebase";
 import { collection, doc, getDocs, addDoc } from 'firebase/firestore';
-import { format, formatDistanceToNow, compareAsc } from "date-fns";
+import { format, isValid, formatDistanceToNow, compareAsc } from "date-fns";
+import { date_format } from '@/constants.js'
 // import * as echarts from 'echarts';
 
 export default {
@@ -254,6 +260,14 @@ export default {
             }
         }
 
+        function humanDate(d) {
+            if (d && isValid(new Date(d))) {
+                return format(new Date(d), "dd-MMM-yyyy");
+            } else {
+                return "-";
+            }
+        }
+
         return {
             fields,
             payees,
@@ -276,6 +290,7 @@ export default {
             transactionDate,
             submitTransaction,
             udharComplete,
+            humanDate,
         }
     }
     /*name: "Udhaar",
