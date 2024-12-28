@@ -90,7 +90,7 @@
                                 <button @click="detail = null" class="ml-auto px-3 text-sm ">x</button>
                             </h4>
                             <small class=" text-indigo-600 inline-flex text-sm ">{{detail.id}}</small> 
-                            <p class="mb-2"><i class="ri-phone-line"></i> {{detail.phone}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
+                            <p class="mb-2"><i class="ri-phone-line"></i> {{detail.mobile}} - <i class="ri-mail-line"></i>{{detail.email}}</p>
                             <hr>
                         </div>
                         <div class="mb-4 overflow-y-auto">
@@ -198,6 +198,11 @@ export default {
         });
         const pending = computed(() => total.value - (recovered.value + bad.value))
 
+        onMounted(() => {
+            // console.log('on mounted', store.getters.getPayees.length < 1)
+            if(store.getters.getPayees.length < 1) store.dispatch("fetchData")
+        })
+
         onErrorCaptured((e) => {
             console.log(e)
         })
@@ -254,6 +259,7 @@ export default {
                 transactionAmount.value = 0
                 transactionDate.value = null
                 transactionForm.value = null
+                store.dispatch("fetchData")
                 
             } catch(e) {
                 console.warn(e);

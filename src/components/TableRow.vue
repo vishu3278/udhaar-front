@@ -9,6 +9,7 @@
 	        </td>
 			<td v-if="f == 'action'">
 	            <button class="btn btn-sm" @click="$emit('show-detail')">Details</button>
+	            <router-link class="btn btn-sm ml-1" :to="`/editpayee/${rowData.id}`">Edit</router-link>
 	        </td>	
 		</template>
 	</tr>
