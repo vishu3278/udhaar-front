@@ -1,5 +1,5 @@
 <template>
-    <div class="card h-full grid grid-cols-1 outline outline-zinc-300 ">
+    <div class="card h-full grid grid-cols-1 outline outline-4 outline-zinc-300 ">
         <div class="card-header p-4">
             <button class="absolute right-4 top-4 z-10 cursor-pointer" @click="$emit('close-panel')">x</button>
             <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}</div>
@@ -150,132 +150,8 @@ export default {
                 "vote_average": 6.9,
                 "vote_count": 41
             },
-            movie2: {
-                "adult": false,
-                "backdrop_path": "/j6yFkB8dO9dWHdZzVDK4yRbBo6W.jpg",
-                "belongs_to_collection": null,
-                "budget": 0,
-                "genres": [{
-                        "id": 16,
-                        "name": "Animation"
-                    },
-                    {
-                        "id": 35,
-                        "name": "Comedy"
-                    }
-                ],
-                "homepage": "",
-                "id": 234328,
-                "imdb_id": "tt0060557",
-                "origin_country": [
-                    "US"
-                ],
-                "original_language": "en",
-                "original_title": "Jerry, Jerry, Quite Contrary",
-                "overview": "Jerry keeps sleepwalking and doing things unknowingly to Tom. He becomes aware of this and tries to stay awake.",
-                "popularity": 2.334,
-                "poster_path": "/ehs1bN08gQihkLNKt7vbp3OXqHQ.jpg",
-                "production_companies": [],
-                "production_countries": [{
-                    "iso_3166_1": "US",
-                    "name": "United States of America"
-                }],
-                "release_date": "1966-02-17",
-                "revenue": 0,
-                "runtime": 7,
-                "spoken_languages": [{
-                    "english_name": "No Language",
-                    "iso_639_1": "xx",
-                    "name": "No Language"
-                }],
-                "status": "Released",
-                "tagline": "",
-                "title": "Jerry, Jerry, Quite Contrary",
-                "video": false,
-                "vote_average": 6.1,
-                "vote_count": 20
-            },
-            movie1: {
-                "adult": false,
-                "backdrop_path": "/mQ4lYhaLZPoqI1xrn82XsHNQECd.jpg",
-                "belongs_to_collection": null,
-                "budget": 10000000,
-                "genres": [{
-                        "id": 18,
-                        "name": "Drama"
-                    },
-                    {
-                        "id": 80,
-                        "name": "Crime"
-                    }
-                ],
-                "homepage": "http://www.bacfilms.com/site/nipournicontre/",
-                "id": 11958,
-                "imdb_id": "tt0298082",
-                "origin_country": [
-                    "FR"
-                ],
-                "original_language": "fr",
-                "original_title": "Ni pour, ni contre (bien au contraire)",
-                "overview": "\"Ni Pour, Ni Contre\" tracks the fall of a young TV camerawoman, Caty, after she becomes involved with a group of petty criminals and their enigmatic leader, Jean. The gang lives hand-to-mouth until the day Jean plans a daring bank robbery. Although other gang members feel out of their league, Jean persuades them to take part and Caty finds herself in a hellish world of betrayal, violence and murder.",
-                "popularity": 16.09,
-                "poster_path": "/rgd2DStNLE8zblUPJcez6r3Y3b5.jpg",
-                "production_companies": [{
-                        "id": 2756,
-                        "logo_path": null,
-                        "name": "Vertigo Productions",
-                        "origin_country": "FR"
-                    },
-                    {
-                        "id": 1115,
-                        "logo_path": "/ntH7T5gsN6wtyrfHGHJDTuneQ7o.png",
-                        "name": "M6 Films",
-                        "origin_country": "FR"
-                    },
-                    {
-                        "id": 10572,
-                        "logo_path": null,
-                        "name": "Ce Qui Me Meut Motion Pictures",
-                        "origin_country": "FR"
-                    },
-                    {
-                        "id": 6586,
-                        "logo_path": null,
-                        "name": "TPS Star",
-                        "origin_country": "FR"
-                    },
-                    {
-                        "id": 11261,
-                        "logo_path": "/g7p4vSwqsIo6zYptyN3hoDxFp7y.png",
-                        "name": "M6",
-                        "origin_country": "FR"
-                    }
-                ],
-                "production_countries": [{
-                    "iso_3166_1": "FR",
-                    "name": "France"
-                }],
-                "release_date": "2003-03-05",
-                "revenue": 0,
-                "runtime": 111,
-                "spoken_languages": [{
-                        "english_name": "French",
-                        "iso_639_1": "fr",
-                        "name": "Français"
-                    },
-                    {
-                        "english_name": "English",
-                        "iso_639_1": "en",
-                        "name": "English"
-                    }
-                ],
-                "status": "Released",
-                "tagline": "The wrong path is often the best.",
-                "title": "Not For, or Against (Quite the Contrary)",
-                "video": false,
-                "vote_average": 6,
-                "vote_count": 65
-            },
+            movie2: {},
+            movie1: {},
         }
     },
     computed: {
@@ -349,14 +225,7 @@ export default {
                 return "No date"
             }
         }
-        /*hscroll(id){
-            document.getElementById(id)
-            scrollContainer.addEventListener("wheel", (evt) => {
-                evt.preventDefault();
-                scrollContainer.scrollLeft += evt.deltaY;
-            });
-
-        },*/
+        
     }
 
 }

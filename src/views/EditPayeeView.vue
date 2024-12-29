@@ -7,9 +7,9 @@
                         Edit Payee
                     </div>
 
-                    <div class="panel-body mt-2 shadow">
+                    <div v-if="form" class="panel-body mt-2 shadow">
                         <!-- <edit-payee-form :formdata="form" v-on:submit-form=""></edit-payee-form> -->
-                        <!-- <div class="grid grid-cols-2 "> -->
+                        
                             <div class="grid grid-cols-2 gap-x-8 gap-y-4 bg-orange-50 border rounded border-orange-200 p-5">
                                 <div class="column ">
                                     <div class="form-group">
@@ -70,10 +70,10 @@
                                     </div>
                                 </div> -->
                             </div>
-                        <!-- </div> -->
+                        
                     </div>
-                    <div class="panel-footer">
-                        <!-- <button class="btn btn-primary" @click="addPayee">Submit</button> -->
+                    <div v-else class="text-rose-600 font-semibold border-l-4 border-rose-400 bg-gradient-to-r from-rose-100 to-rose-200 rounded my-2 py-2 px-4">
+                        Something is wrong
                     </div>
                 </div>
             </div>
@@ -83,10 +83,11 @@
                     <div class="panel-header text-indigo-600  text-lg pb-1 border-b border-indigo-400">
                         <div class="panel-title font-bold">Past transactions</div>
                     </div>
-                    <div class="panel-body">
+                    <div v-if="form" class="panel-body">
                         <transactions :payee="form"></transactions>
                     </div>
-                    <div class="panel-footer">
+                    <div v-else class="text-rose-600 font-semibold border-l-4 border-rose-400 bg-gradient-to-r from-rose-100 to-rose-200 rounded my-2 py-2 px-4">
+                        Something is wrong
                     </div>
                 </div>
             </div>
@@ -99,7 +100,7 @@ import Transactions from '@/components/udhaar/Transactions.vue'
 import { db } from "@/firebase";
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getPayeeById, updatePayee } from '@/firebase.js'
-import { format, isValid } from 'date-fns'
+// import { format, isValid } from 'date-fns'
 export default {
 
     name: 'EditPayeeView',

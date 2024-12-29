@@ -11,8 +11,8 @@
             </div> -->
         </div>
         <template v-else>
-            
-            <div v-for="item in payee.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
+            <udhaar-transaction :udhaar="payee.udhaar"></udhaar-transaction>
+            <!-- <div v-for="item in payee.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
                 <div class="mr-auto">
                     <small>{{item.id}}</small>
                     <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
@@ -25,7 +25,7 @@
                     <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{humanDate(trx.date)}}</div>
                 </div>
                 
-            </div>
+            </div> -->
         </template>
         <!-- <table v-else class="table table-striped table-hover w-full">
             <thead>
@@ -60,11 +60,16 @@
     </div>
 </template>
 <script>
-import { format, isValid } from 'date-fns'
+    import UdhaarTransaction from '@/components/udhaar/UdhaarTransaction.vue'
+
+// import { format, isValid } from 'date-fns'
 import { mapGetters } from 'vuex'
 
 export default {
     name: "Transactions",
+    components: {
+        UdhaarTransaction,
+    },
     props: {
         // payee: Object,
         // transactions: Array,
@@ -91,24 +96,5 @@ export default {
             return tt
         }*/
     },
-    methods: {
-        humanDate(d) {
-            if (d && isValid(new Date(d))) {
-                return format(new Date(d), 'dd-MMM-yyyy')
-            } else {
-                return "-"
-            }
-        },
-        udharComplete (udhaar) {
-            let initV = 0
-            let trxTotal = udhaar.transaction.reduce((acc, curr) => acc + curr.amount, initV)
-            // console.log(trxTotal, udhaar.amount)
-            if (trxTotal == udhaar.amount) {
-                return "complete"
-            } else {
-                return "pending"
-            }
-        }
-    }
 }
 </script>

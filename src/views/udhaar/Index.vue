@@ -82,7 +82,7 @@
                 </table>
             </div>
         
-            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-100 to-neutral-300 udhaar-panel outline outline-neutral-300 top-0 right-0 bottom-0 z-50">
+            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-100 to-neutral-300 udhaar-panel outline outline-4 outline-neutral-300 top-0 right-0 bottom-0 z-50">
                 <aside class="p-4 h-full flex flex-col justify-between">
                     <template v-if="detail">
                         <div>
@@ -170,7 +170,7 @@ import TableRow from '@/components/TableRow.vue'
 import { db } from "@/firebase";
 import { collection, doc, getDocs, addDoc } from 'firebase/firestore';
 import { format, isValid, formatDistanceToNow, compareAsc } from "date-fns";
-import { date_format } from '@/constants.js'
+// import { date_format } from '@/constants.js'
 // import * as echarts from 'echarts';
 
 export default {
