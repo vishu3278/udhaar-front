@@ -2,7 +2,9 @@
     <div class="card h-full grid grid-cols-1 outline outline-4 outline-zinc-300 ">
         <div class="card-header p-4">
             <button class="absolute right-4 top-4 z-10 cursor-pointer" @click="$emit('close-panel')">x</button>
-            <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}</div>
+            <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}
+            </div>
+            <p class="text-sky-600">{{detail.tagline}}</p>
             <div class="card-subtitle text-lg text-sky-600 mb-4">Original title: {{detail.original_title}}</div>
             <!-- <figure class="avatar avatar-sm text-uppercase " :data-initial="detail.original_language"></figure> -->
             <div class="flex items-center justify-between">
@@ -34,20 +36,24 @@
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
             </figure> -->
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
-                <div class="">
+                <div id="genres">
                     <span class="text-slate-500">Genres: </span>
                     <span v-for="g in detail.genres" :key="g.id" class="border border-sky-400 rounded-full px-2 text-sky-600 ml-1">{{g.name}}</span>
                 </div>
-                <div class="">
+                <div v-show="detail.keywords.keywords.length > 0" id="keywords " class="inline-flex flex-wrap gap-1">
+                    <span class="text-slate-500">Keywords: </span>
+                    <span v-for="kw in detail.keywords.keywords" :key="kw.id" class="border border-sky-400 rounded-full px-2 text-sky-600 text-sm">{{kw.name}}</span>
+                </div>
+                <div id="country">
                     <span class="text-slate-500">Country of origin: </span>
                     <span v-for="c in detail.origin_country" class="text-sky-600">{{c}}</span>
                 </div>
-                <div class="">
+                <div id="language">
                     <span class="text-slate-500">Spoken language: </span>
                     <span v-for="l in detail.spoken_languages" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
                 </div>
                 <!-- cast -->
-                <div v-if="detail.credits.cast.length > 0">
+                <div v-if="detail.credits.cast.length > 0" id="cast">
                     <h6 class="text-slate-500 font-semibold">Cast</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
                         <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-sky-600 w-40 shrink-0 bg-sky-100 text-center shadow">
@@ -59,7 +65,7 @@
                     </div>
                 </div>
                 <!-- crew -->
-                <div v-if="detail.credits.crew.length > 0">
+                <div v-if="detail.credits.crew.length > 0" id="crew">
                     <h6 class="text-slate-500 font-semibold">Crew</h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
                         <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-36 shrink-0 bg-sky-100 text-center shadow">
@@ -67,11 +73,11 @@
                             <img v-else src="/400x600.svg" :alt="crew.name">
                             <figcaption class="font-semibold">{{crew.name}}</figcaption>
                             <figcaption class="text-slate-600">{{crew.job}}</figcaption>
-                            <figcaption class="text-slate-400">{{crew.department}}</figcaption>
+                            <!-- <figcaption class="text-slate-400">{{crew.department}}</figcaption> -->
                         </figure>
                     </div>
                 </div>
-                <div v-if="detail.production_companies.length > 0" >
+                <div v-if="detail.production_companies.length > 0" id="company" >
                     <h6 class="text-slate-500 font-semibold">Production companies </h6>
                     <div class="flex gap-4 overflow-x-auto py-1">
                         <figure v-for="c in detail.production_companies" :key="c.id" class="text-sky-600 border flex flex-col justify-between border-sky-200 shrink-0 w-40 text-center">
@@ -91,10 +97,10 @@
                 <div class="images flex gap-2 overflow-x-auto mb-3">
                     <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-96 h-56 object-contain" alt="">
                 </div>
-                <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
+                <!-- <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">
                     <img v-for="im in logos" :src="img_uri+im.file_path" class="w-36 h-36 object-contain bg-slate-200" alt="">
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- <div class="card-footer">

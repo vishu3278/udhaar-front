@@ -159,7 +159,7 @@ export default {
         },
         showDetail(movie) {
             // console.log(movie)
-            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images`)
+            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images,keywords`)
                 .then(response => {
                     // console.log(response)
                     this.detail = response.data
