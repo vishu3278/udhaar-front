@@ -38,7 +38,7 @@
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
                 <div id="genres">
                     <span class="text-slate-500">Genres: </span>
-                    <span v-for="g in detail.genres" :key="g.id" class="border border-sky-400 rounded-full px-2 text-sky-600 ml-1">{{g.name}}</span>
+                    <span v-for="g in detail.genres" :key="g.id" class="border border-blue-400 rounded-full px-2 text-blue-600 ml-1">{{g.name}}</span>
                 </div>
                 <div v-show="detail.keywords.keywords.length > 0" id="keywords " class="inline-flex flex-wrap gap-1">
                     <span class="text-slate-500">Keywords: </span>
