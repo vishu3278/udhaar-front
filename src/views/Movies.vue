@@ -1,16 +1,19 @@
 <template>
     <section class="bg-secondary p-2 mb-3">
-        <div class="d-flex align-center gap-1">
-            <h3 class="text-center text-sky-800 font-bold">Movies</h3>
+        <h3 class="text-center text-sky-800 font-bold">Movies</h3>
+        <div class="flex items-center gap-1">
             <div class="search-wrapper">
                 <div class="input-group flex  items-center gap-2">
                     <span class="">Search by </span>
                     <label><input type="radio" name="param" value="movie" v-model="queryType" checked> Title</label>
                     <label><input type="radio" name="param" value="keyword" v-model="queryType"> Keyword</label>
                     <input type="search" class="form-input flex-grow" v-model="query" placeholder="...">
-                    <label v-show="queryType=='movie'"><input type="checkbox" v-model="adult"> Adult</label>
+                    <label><input type="checkbox" v-model="adult"> Adult</label>
                     <button class="btn btn-primary " @click="searchMovie">Search</button>
                 </div>
+            </div>
+            <div class="account-info inline-flex items-center gap-2">
+                <img src="../assets/no-profile.jpeg" class="w-10 h-10 rounded-full" alt="avatar"> <span>Name</span> <span>(Username)</span>
             </div>
             <!-- <div class="flex align-center flex-wrap gap-2 mt-2">
                 <h5>Genres</h5>
@@ -29,17 +32,17 @@
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
         <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 row-auto">
             <div v-for="m in movies.results" class=" ">
-                <movie-card v-if="queryType == 'movie'" :movie="m" @show-detail="showDetail"></movie-card>
-                <div v-if="queryType == 'keyword'" class="shadow">{{m.id}} - {{m.name}} <br><button class="btn btn-sm" @click="showDetail(m)">detail</button></div>
+                <movie-card :movie="m" @show-detail="showDetail"></movie-card>
+                <!-- <div v-if="queryType == 'keyword'" class="shadow">{{m.id}} - {{m.name}} <br><button class="btn btn-sm" @click="showDetail(m)">detail</button></div> -->
             </div>
         </div>
-        <div v-show="movies.total_results == 0" class="empty">
-            <div class="empty-icon">
-                <i class="ri-movie-2-line ri-5x"></i>
+        <div v-show="movies.total_results == 0" class="empty rounded-md bg-gradient-to-br from-orange-100 to-orange-200 p-2 shadow-md max-w-fit text-center mx-auto my-4">
+            <div class="empty-icon text-orange-300">
+                <i class="ri-movie-2-line text-5xl "></i>
                 <!-- <i class="icon icon-people"></i> -->
             </div>
-            <p class="empty-title h4 text-error">No movies to show</p>
-            <p class="empty-subtitle">Search for a movie by entering keyword and click the Search button.</p>
+            <p class="empty-title text-xl font-bold text-orange-400 ">No movies to show</p>
+            <p class="empty-subtitle text-base">Search for a movie by entering keyword and click the Search button.</p>
             <!-- <div class="empty-action">
                 <button class="btn btn-primary">Send a message</button>
             </div> -->
@@ -76,7 +79,7 @@ import MovieCard from "@/components/movie/MovieCard.vue"
 import MovieDetail from "@/components/movie/MovieDetail.vue"
 // import AddCompanyForm from '@/components/AddCompanyForm.vue'
 // import * as echarts from 'echarts';
-import { api_key, base_uri, img_uri, profile_uri } from '@/constants.js'
+import { api_key, base_uri, img_uri, profile_uri, no_profile } from '@/constants.js'
 import axios from 'axios'
 export default {
 
@@ -90,6 +93,7 @@ export default {
     data() {
         return {
             img_uri,
+            no_profile,
             queryType: "movie",
             movies: [],
             query: "",
@@ -150,8 +154,10 @@ export default {
             }
 
             if (this.queryType == "keyword") {
-                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
+                // axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
+                axios.get(`${base_uri}/discover/movie?api_key=${api_key}&include_adult=${this.adult}&page=${this.page}&with_keywords=${this.query}`)
                     .then(movies => {
+                        // console.log(movies)
                         this.movies = movies.data
                     })
                     .catch(e => console.warn(e))

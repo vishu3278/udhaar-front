@@ -36,6 +36,10 @@
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
             </figure> -->
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
+                <div id="budget">
+                    <span class="text-slate-500">Budget: </span>
+                    <span class="text-blue-600"><i class="ri-money-dollar-circle-fill text-lg"></i> {{detail.budget}}</span>
+                </div>
                 <div id="genres">
                     <span class="text-slate-500">Genres: </span>
                     <span v-for="g in detail.genres" :key="g.id" class="border border-blue-400 rounded-full px-2 text-blue-600 ml-1">{{g.name}}</span>
