@@ -9,6 +9,8 @@
     </div>
     <div id="print">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                
             <!-- start logo -->
             <!-- <tr>
             <td align="center" bgcolor="#D2C7BA">
@@ -170,6 +172,7 @@
             </td>
         </tr> -->
             <!-- end footer -->
+            </tbody>
         </table>
     </div>
 </template>
