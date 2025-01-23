@@ -28,14 +28,17 @@
             <tr>
                 <td align="center">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                        <tr>
-                            <td align="center" bgcolor="#ffffff" style="padding: 5mm 5mm 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 12pt; ">
-                                <hr>
-                                <strong>INVOICE</strong>
-                                <hr>
-                                <!-- <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Thank you for your order!</h1> -->
-                            </td>
-                        </tr>
+                        <tbody>
+                            
+                            <tr>
+                                <td align="center" bgcolor="#ffffff" style="padding: 5mm 5mm 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 12pt; ">
+                                    <hr>
+                                    <strong>INVOICE</strong>
+                                    <hr>
+                                    <!-- <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Thank you for your order!</h1> -->
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </td>
             </tr>
@@ -43,6 +46,8 @@
             <tr>
                 <td align="center">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="white" style="max-width: 600px;">
+                        <tbody>
+                            
                         <tr>
                             <td valign="top" style="padding: 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>To: </strong>
                                 <div v-html="invoice.to"></div>
@@ -54,6 +59,7 @@
                             <td valign="top" style="padding: 2mm 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>Place of supply:</strong><br>{{invoice.place}}</td>
                             <td valign="top" style="padding: 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;"><strong>Invoice No.</strong><br>{{invoice.no}}<br><strong>Date:</strong><br>{{invoice.date}}</td>
                         </tr>
+                        </tbody>
                     </table>
                 </td>
             </tr>
@@ -61,6 +67,8 @@
             <tr>
                 <td align="center">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                        <tbody>
+                            
                         <!-- start copy -->
                         <tr>
                             <td align="left" bgcolor="#ffffff" style="padding: 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 12pt; line-height: 16pt;">
@@ -120,6 +128,7 @@
                                 </table>
                             </td>
                         </tr>
+                        </tbody>
                         <!-- end reeipt table -->
                     </table>
                 </td>
@@ -129,6 +138,8 @@
             <tr>
                 <td align="center" valign="top" width="100%">
                     <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                        <tbody>
+                            
                         <tr>
                             <td align="left" valign="top" style="padding: 2mm 0 2mm 5mm; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 11pt;">
                                 <hr>
@@ -149,6 +160,7 @@
                                 <hr>
                             </td>
                         </tr>
+                        </tbody>
                     </table>
                 </td>
             </tr>
