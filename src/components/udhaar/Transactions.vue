@@ -1,6 +1,6 @@
 <template>
     <div class="my-2">
-        <div v-if="!transactions" class="empty text-center">
+        <div v-if="payee.udhaar.length == 0" class="empty text-center">
             <div class="empty-icon animate-pulse text-amber-400 text-3xl">
                 <i class="ri-close-line "></i>
             </div>
@@ -10,7 +10,24 @@
                 <button class="btn btn-primary">Send a message</button>
             </div> -->
         </div>
-        <table v-else class="table table-striped table-hover w-full">
+        <template v-else>
+            <udhaar-transaction :udhaar="payee.udhaar"></udhaar-transaction>
+            <!-- <div v-for="item in payee.udhaar" class="bg-slate-100 border border-indigo-300 rounded drop-shadow py-1 px-2 mt-2">
+                <div class="mr-auto">
+                    <small>{{item.id}}</small>
+                    <div class="udhaar text-base flex items-center justify-between border-y border-solid border-indigo-300 py-2 mb-2">
+                        <span class="text-center font-bold w-24"><i class="ri-wallet-line text-2xl text-indigo-400"></i> <br>{{item.amount}}</span>
+                        <span class="text-center min-w-24"><i class="ri-calendar-line text-2xl text-indigo-400"></i> <br>{{humanDate(item.date)}}</span>
+                        <span v-show="item?.bad" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rose-100 to-rose-300 text-rose-600 text-3xl font-bold shadow">B</span>
+                        <span v-if="udharComplete(item) == 'pending'" class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-amber-300 text-amber-600 font-bold text-3xl shadow">P</span>
+                        <span v-else class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-300 text-emerald-600 font-bold text-3xl shadow">C</span>
+                    </div>
+                    <div v-for="trx in item.transaction" :key="trx.id" class="">&bull; {{trx.amount}} - {{humanDate(trx.date)}}</div>
+                </div>
+                
+            </div> -->
+        </template>
+        <!-- <table v-else class="table table-striped table-hover w-full">
             <thead>
                 <tr>
                     <th>Amount</th>
@@ -39,17 +56,23 @@
                     </td>
                 </tr>
             </tfoot>
-        </table>
+        </table> -->
     </div>
 </template>
 <script>
-import { format } from 'date-fns'
+    import UdhaarTransaction from '@/components/udhaar/UdhaarTransaction.vue'
+
+// import { format, isValid } from 'date-fns'
+import { mapGetters } from 'vuex'
 
 export default {
     name: "Transactions",
+    components: {
+        UdhaarTransaction,
+    },
     props: {
-        payee: Object,
-        transactions: Array,
+        // payee: Object,
+        // transactions: Array,
     },
     data() {
         return {
@@ -57,22 +80,21 @@ export default {
         }
     },
     computed: {
-        totalUdhaar(){
+        ...mapGetters({
+            payees: "getPayees"
+        }),
+
+        payee(){
+            return this.payees.filter(p => p.id == this.$route.params.id)[0]
+        },
+
+        /*totalUdhaar(){
             return this.payee.udhaars.reduce((a, c) => a + Number(c.amount), 0)
         },
         transactionTotal() {
             let tt = this.transactions.reduce((a, c) => a + Number(c.amount), 0)
             return tt
-        }
+        }*/
     },
-    methods: {
-        humanDate(d) {
-            if (d) {
-                return format(new Date(d), 'dd-MMM-yyyy')
-            } else {
-                return "-"
-            }
-        },
-    }
 }
 </script>

@@ -114,10 +114,11 @@ export default {
             loading.value = true
             // console.log('on mounted')
 
-            // fetchData()
-            store.dispatch("fetchData").then(() => {
-                loading.value = false
-            })
+            if(store.getters.getPayees.length < 1) {
+                store.dispatch("fetchData").then(() => {
+                    loading.value = false
+                })
+            }
         })
 
         onUpdated(() => {

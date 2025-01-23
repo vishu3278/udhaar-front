@@ -50,8 +50,18 @@
     
     .btn { @apply inline-block border border-blue-500 text-blue-500 bg-white rounded-full px-4 py-1 }
     .btn-sm { @apply px-2 py-0.5 text-sm }
-    .btn:hover { @apply text-white bg-blue-500 }
+    .btn:hover { @apply text-white bg-blue-400 }
     .btn:active { @apply ring ring-blue-200 }
+
+    .btn.danger { @apply border-rose-400 text-rose-600 }
+    .btn.danger:hover { @apply text-white bg-rose-500 }
+
+    .btn.warning { @apply border-amber-500 text-amber-600 }
+    .btn.warning:hover { @apply text-white bg-amber-400 }
+
+    .pill { @apply inline-flex rounded-full px-2 py-1 border }
+    .pill.danger { @apply border-rose-400 text-rose-600 }
+    .pill.info { @apply border-sky-400 text-sky-600 }
 
     .form-group { @apply mb-2 }
     .form-group label { @apply inline-block mb-1 }

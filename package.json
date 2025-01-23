@@ -12,6 +12,7 @@
     "echarts": "^5.3.3",
     "firebase": "^9.9.0",
     "remixicon": "^3.1.1",
+    "sass": "^1.83.0",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2",
     "vuex": "^4.0.2"
