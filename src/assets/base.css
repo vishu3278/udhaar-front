@@ -59,6 +59,12 @@
     .btn.warning { @apply border-amber-500 text-amber-600 }
     .btn.warning:hover { @apply text-white bg-amber-400 }
 
+    .btn-sm.danger { @apply border-rose-400 text-rose-600 }
+    .btn-sm.danger:hover { @apply text-white bg-rose-500 }
+
+    .btn-sm.warning { @apply border-amber-500 text-amber-600 }
+    .btn-sm.warning:hover { @apply text-white bg-amber-400 }
+
     .pill { @apply inline-flex rounded-full px-2 py-1 border }
     .pill.danger { @apply border-rose-400 text-rose-600 }
     .pill.info { @apply border-sky-400 text-sky-600 }

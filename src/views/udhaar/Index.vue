@@ -109,6 +109,7 @@
                                 </div>
                                 <div class="mb-2 mt-2 pt-2 border-t border-indigo-300 border-solid">
                                     <button v-if="transactionForm != item.id && udharComplete(item) == 'pending'" class="btn-sm" @click="showTrnzForm(item.id)">Add transaction</button>
+                                    <button v-if="!item.bad && udharComplete(item) == 'pending'" class="btn-sm danger ml-4" @click="markBad(item)">Mark Bad</button>
                                     <template v-if="transactionForm == item.id">
                                         <div class="flex gap-2 items-end">
                                             <div class="form-group">
@@ -169,7 +170,7 @@ import axios from "axios"
 import TableRow from '@/components/TableRow.vue'
 
 import { db } from "@/firebase";
-import { collection, doc, getDocs, addDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, addDoc, updateDoc } from 'firebase/firestore';
 import { format, isValid, formatDistanceToNow, compareAsc } from "date-fns";
 // import { date_format } from '@/constants.js'
 // import * as echarts from 'echarts';
@@ -275,6 +276,18 @@ export default {
             }
         }
 
+        async function markBad(u) {
+            // console.log(u)
+            try {
+                const payeeRef = doc(db, "payees", detail.value.id, "udhaar", u.id)
+                // const docSnap = await getDoc(payeeRef)
+                const bad = await updateDoc(payeeRef, { bad: true})
+                console.log(bad)
+            } catch(e) {
+                console.log(e);
+            }
+        }
+
         return {
             fields,
             payees,
@@ -298,6 +311,7 @@ export default {
             submitTransaction,
             udharComplete,
             humanDate,
+            markBad
         }
     }
     /*name: "Udhaar",
