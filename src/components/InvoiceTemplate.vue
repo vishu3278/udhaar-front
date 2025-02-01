@@ -1,9 +1,14 @@
 <template>
     <div v-if="invoice">
-        <div class="flex justify-center gap-2 border border-teal-200 bg-teal-100 p-2 my-1">
-            <button class="btn " @click="closePreview"><i class="ri-close-line"></i> Close</button>
-            <button class="btn "><i class="ri-download-line"></i> Download</button>
-            <button class="btn " @click="printInvoice"><i class="ri-printer-line"></i> Print</button>
+        <div class="border border-teal-200 bg-teal-100 p-2 text-center">
+            <p class="text-teal-700 mb-2">
+                {{invoice.id}}
+            </p>
+            <div class="flex justify-center gap-2 my-1">
+                <button class="btn " @click="closePreview"><i class="ri-close-line"></i> Close</button>
+                <button class="btn "><i class="ri-download-line"></i> Download</button>
+                <button class="btn " @click="printInvoice"><i class="ri-printer-line"></i> Print</button>
+            </div>
         </div>
         
     </div>

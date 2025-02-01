@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-3 gap-4 p-relative">
+    <div class="grid grid-cols-3 gap-4 p-relative p-2">
         <div class="column ">
             <div class="form-group">
                 <label class="form-label">Contact Name *</label>
@@ -53,7 +53,7 @@
                 <!-- <div class="divider-vert"></div> -->
             </div>
         </div>
-        <div v-if="error" class="column col-12">
+        <!-- <div v-if="error" class="column col-12">
             <div class="toast mt-2">
                 {{error}}
             </div>
@@ -65,7 +65,7 @@
         </div>
         <div v-show="loading" class=" loading-wrapper">
             <div class="loading loading-lg"></div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

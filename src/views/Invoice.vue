@@ -71,10 +71,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <div class="border-2 border-teal-200 my-4"></div> -->
-                <h5 class="text-teal-500">Add / Edit company</h5>
-                <div class="border border-teal-400 my-2"></div>
-                <add-company-form :formdata="editCompany" @clear-update="() => {editCompany = null}" @get-companies="fetchCompanies()"></add-company-form>
+                <div class="border-2 border-teal-400 my-4 rounded-md">
+                    <h5 class="text-teal-600 px-2 py-0 my-2">Add / Edit company</h5>
+                    <div class="border border-teal-400 "></div>
+                    <add-company-form :formdata="editCompany" @clear-update="() => {editCompany = null}" @get-companies="fetchCompanies()"></add-company-form>
+                </div>
             </div>
             <div class="column bg-teal-50 rounded" >
                 <!-- <div v-if="activeInvoice">
@@ -107,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="modal " :class="{'active': msg }">
+    <!-- <div class="modal " :class="{'active': msg }">
         <a href="#close" class="modal-overlay" aria-label="Close" @click="closeModal"></a>
         <div class="modal-container">
             <div class="modal-header">
@@ -117,14 +118,10 @@
             <div class="modal-body">
                 <div class="content">
                     {{msg}}
-                    <!-- content here -->
                 </div>
             </div>
-            <!-- <div class="modal-footer">
-                ...
-            </div> -->
         </div>
-    </div>
+    </div> -->
 </template>
 <script>
 import { getInvoices, getCompanies } from "@/firebase.js"
