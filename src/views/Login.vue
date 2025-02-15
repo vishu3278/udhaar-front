@@ -1,68 +1,65 @@
 <template>
     <main>
-        <div class="container">
-            <div class="columns">
-                <div class="column col-4">
+        <div class="container bottom-progress">
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="column p-8">
+                    <img src="mobile-login-concept.avif" alt="">
                 </div>
-                <div class="column col-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <ul class="tab tab-block">
-                                <li class="tab-item ">
-                                    <a href="#" @click="tab = 'login'" :class="{active: tab == 'login'}">Login</a>
-                                </li>
-                                <li class="tab-item">
-                                    <a href="#" @click="tab = 'register'" :class="{active: tab == 'register'}">Register</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <template v-if="tab == 'login'">
-                            <div class="card-body">
-                                <!-- <div class="card-title h5">Login</div>
-                                <div class="card-subtitle text-gray">to use the app</div> -->
-                                <form action="">
-                                    <div class="form-group">
-                                        <label class="form-label">Email</label>
-                                        <input class="form-input" type="email" v-model="email" placeholder="Enter email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Password</label>
-                                        <input class="form-input" type="password" v-model="password" placeholder="Password">
-                                    </div>
-                                </form>
-                                <div v-show="state.loginError" class="toast toast-error">
-                                    <!-- <button class="btn btn-clear float-right"></button> -->
-                                    {{state.loginError}}
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary" @click="login">Login</button>
-                            </div>
-                        </template>
-                        <template v-if="tab == 'register'">
-                            <div class="card-body">
-                                <!-- <div class="card-title h5">Register</div>
-                                <div class="card-subtitle text-gray">to use the app</div> -->
-                                <form action="">
-                                    <div class="form-group">
-                                        <label class="form-label">Email</label>
-                                        <input class="form-input" type="email" v-model="email" placeholder="Enter email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Password</label>
-                                        <input class="form-input" type="password" v-model="password" placeholder="Password">
-                                    </div>
-                                </form>
-                                <div v-show="state.regError" class="toast toast-error">
-                                    <!-- <button class="btn btn-clear float-right"></button> -->
-                                    {{state.regError}}
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary" @click="register">Register</button>
-                            </div>
-                        </template>
+                <div class="column p-4 ">
+                    <div class="tab flex gap-2 mb-4">
+                        
+                        <button @click="tab = 'login'" class="btn info" :class="{active: tab == 'login'}">Login</button>
+                    
+                        <button @click="tab = 'register'" class="btn info" :class="{active: tab == 'register'}">Register</button>
+                        
                     </div>
+                    <template v-if="tab == 'login'">
+                        <div class="card-body p-5 border rounded shadow">
+                            <!-- <div class="card-title h5">Login</div>
+                            <div class="card-subtitle text-gray">to use the app</div> -->
+                            <form action="">
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-input" type="email" v-model="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input class="form-input" type="password" v-model="password" placeholder="Password">
+                                </div>
+                            </form>
+                            <div v-show="state.loginError" class="toast bg-pink-100 px-4 py-2 rounded text-red-600 text-base">
+                                <!-- <button class="btn btn-clear float-right"></button> -->
+                                {{state.loginError}}
+                            </div>
+                            <div class="card-footer p-4">
+                                <button class="btn submit" @click="login">Login</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="tab == 'register'">
+                        <div class="card-body p-5 border rounded">
+                            <!-- <div class="card-title h5">Register</div>
+                            <div class="card-subtitle text-gray">to use the app</div> -->
+                            <form action="">
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-input" type="email" v-model="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input class="form-input" type="password" v-model="password" placeholder="Password">
+                                </div>
+                            </form>
+                            <div v-show="state.regError" class="toast bg-pink-100 px-4 py-2 rounded text-red-600 text-base">
+                                <!-- <button class="btn btn-clear float-right"></button> -->
+                                {{state.regError}}
+                            </div>
+                        </div>
+                        <div class="card-footer p-4">
+                            <button class="btn submit" @click="register">Register</button>
+                        </div>
+                    </template>
+                
                 </div>
             </div>
         </div>
@@ -117,7 +114,7 @@ const register = () => {
         });
 }
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
@@ -133,21 +130,46 @@ const register = () => {
 }
 
 main {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-    /*background-color: rgba(200,200,225,0.5);*/
     padding: 2rem;
     min-height: calc(100vh - 65px);
 }
+.bottom-progress {
+    &::after {
+        content: "";
+        height: 4px;
+        width: 100%;
+        display: block;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 25s ease infinite;
+    }
 
-.tab .tab-item a.active,
-.tab .tab-item.active a {
-    font-weight: bold;
 }
 
-.tab .tab-item a:focus {
-    outline: none;
-    box-shadow: none;
+.tab {
+    button {
+        @apply rounded text-lg;
+    }
+    button.active {
+        font-weight: bold;
+        @apply bg-blue-500 text-white;
+    }
+
+    button:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
+.form-group {
+    @apply mb-5;
+    label {
+        @apply mb-2 text-base;
+    }
+    .form-input {
+        @apply text-base px-4 py-2;
+    }
+}
+.submit {
+    @apply text-base font-medium;
 }
 </style>

@@ -205,15 +205,14 @@ export default {
         },
     },
     mounted() {
-        const scrollContainer = document.querySelectorAll(".overflow-x-auto");
+        // const scrollContainer = document.querySelectorAll(".overflow-x-auto");
         // console.log(scrollContainer)
-        for(let x of scrollContainer){
-            // console.log(x)
+        /*for(let x of scrollContainer){
             x.addEventListener("wheel", (evt) => {
                 evt.preventDefault();
                 x.scrollLeft += evt.deltaY;
             });
-        }
+        }*/
 
     },
     methods: {
