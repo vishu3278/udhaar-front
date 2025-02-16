@@ -1,5 +1,5 @@
 <template>
-    <div class="card h-full grid grid-cols-1 outline outline-4 outline-zinc-300 ">
+    <div class="card h-full grid grid-cols-1 outline outline-4 outline-zinc-300 " >
         <div class="card-header p-4">
             <button class="absolute right-4 top-4 z-10 cursor-pointer" @click="$emit('close-panel')">x</button>
             <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}

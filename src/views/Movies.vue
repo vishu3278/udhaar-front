@@ -67,7 +67,7 @@
         </ul>
         <hr>
     </div>
-    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow">
+    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow" v-click-outside="onClickOutside">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
     </article>
 </template>
@@ -81,6 +81,7 @@ import MovieDetail from "@/components/movie/MovieDetail.vue"
 // import * as echarts from 'echarts';
 import { api_key, base_uri, img_uri, profile_uri, no_profile } from '@/constants.js'
 import axios from 'axios'
+import vClickOutside from 'click-outside-vue3'
 export default {
 
     name: 'MoviesView',
@@ -89,6 +90,9 @@ export default {
         MovieCard,
         MovieDetail,
         // AddCompanyForm,
+    },
+    directives: {
+      clickOutside: vClickOutside.directive
     },
     data() {
         return {
@@ -133,7 +137,10 @@ export default {
 
     },
     methods: {
-
+        onClickOutside(event){
+            // console.log(event)
+            this.sidePanel = false
+        },
         closeModal() {
             this.msg = null
         },

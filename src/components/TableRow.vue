@@ -6,6 +6,7 @@
 	        <td v-if="f == 'pending'">{{pending}}</td>
 			<td v-if="f == 'status'" class="text-center">
 	            <span v-show="rowData['udhaar'][0]?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 mr-1">Bad</span>
+	            <span v-show="pending" class="text-xs px-2 rounded-full bg-yellow-200 text-amber-600 mr-1">Pending</span>
 	        </td>
 			<td v-if="f == 'action'">
 	            <button class="btn btn-sm" @click="$emit('show-detail')">Details</button>
