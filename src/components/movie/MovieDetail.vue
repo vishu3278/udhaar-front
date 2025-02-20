@@ -14,7 +14,7 @@
                     <span class="border border-amber-400 text-amber-600 rounded-full px-2 h-6">{{detail.runtime}} min</span>
                 </div>
                 <div class="inline-flex items-center gap-2">
-                    <div class="w-40 border  rounded-full overflow-clip" :class="`border-${avg.color}`" style="padding: 1px;">
+                    <div class="w-40 border rounded-full overflow-clip" :class="`border-${avg.color}`" style="padding: 1px;">
                         <span class="inline-block bg-gradient-to-br text-white rounded-full" :class="avg.class" :style="{width: avg.percent+'%'}">&nbsp;</span>
                     </div>
                     <span class=" rounded-full border px-2" :class="[`border-${avg.color}`, `text-${avg.color}`]" title="Avg. vote">{{detail.vote_average}}</span>
@@ -24,12 +24,13 @@
 
         </div>
         <div class="overflow-auto">
-            <figure v-if="detail.poster_path" class="card-image p-4">
-                <img :src="img_uri+detail.poster_path" class="float-left mr-4">
+            <figure v-if="detail.poster_path" class="card-image p-4 " :style="{'background-image': `linear-gradient(100deg, ${promColor[0]}, ${promColor[1]}, ${promColor[2]})`}" >
+                <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" @load="getPromColor()" >
                 <p class="text-slate-700 text-base">
                     <span class="text-sky-600 font-bold">Overview:</span><br>
                     {{detail.overview}}
                 </p>
+                <div class="clear-left"></div>
             </figure>
             <hr class="clear-both">
             <!-- <figure v-if="detail.backdrop_path" class="">
@@ -116,6 +117,8 @@
 import { api_key, base_uri, img_uri, logo_uri, profile_uri, no_profile, no_img, date_format } from '@/constants.js'
 import axios from 'axios'
 import { format } from "date-fns";
+import { prominent } from 'color.js'
+// import '/Vibrant.min.js'
 /*const no_profile ="@/assets/400x600.svg"
 const no_img ="@/assets/600x400.svg"*/
 export default {
@@ -162,6 +165,7 @@ export default {
             },
             movie2: {},
             movie1: {},
+            promColor: ["#667889", "#9abcde", "#ddeeff"],
         }
     },
     computed: {
@@ -171,6 +175,16 @@ export default {
             }
             return true
         }*/
+        /*promColor(){
+            if (this.detail.poster_path) {
+                prominent(img_uri + this.detail.poster_path, { format: "hex" }).then(color => {
+                  // console.log(color) // [241, 221, 63]
+                  return color
+                })
+            } else {
+                return ["#223344", "#778899", "#ddeeff"]
+            }
+        },*/
         avg(){
             let percent = (this.detail.vote_average/10)*100
 
@@ -233,7 +247,34 @@ export default {
             } else {
                 return "No date"
             }
-        }
+        },
+        getPromColor(){
+            /*if (this.detail.poster_path) {
+                prominent(this.img_uri + this.detail.poster_path, { format: "hex" }).then(color => {
+                  // console.log(color) // [241, 221, 63]
+                  this.promColor = color
+                })
+            } */
+            // var img = document.createElement('img');
+            // img.setAttribute('src', 'examples/octocat.png')
+            let img = document.getElementById("posterImg")
+            // img.addEventListener('load', function() {
+                var vibrant = new Vibrant(img);
+                var swatches = vibrant.swatches()
+                for (var swatch in swatches)
+                    if (swatches.hasOwnProperty(swatch) && swatches[swatch])
+                        console.log(swatch, swatches[swatch].getHex())
+
+                /*
+                 * Results into:
+                 * Vibrant #7a4426
+                 * Muted #7b9eae
+                 * DarkVibrant #348945
+                 * DarkMuted #141414
+                 * LightVibrant #f3ccb4
+                 */
+            // });
+        },
         
     }
 
