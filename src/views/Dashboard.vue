@@ -72,11 +72,12 @@
                 </div> -->
             </div>
         </div>
+        
     </section>
 </template>
 <script>
 import { ref, onBeforeMount, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
-
+import NewsCard from '@/components/NewsCard.vue'
 // import { db } from '@/firebase';
 // import { collection, getDocs } from 'firebase/firestore';
 import { useStore } from 'vuex'

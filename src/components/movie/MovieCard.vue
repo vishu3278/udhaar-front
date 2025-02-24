@@ -15,8 +15,8 @@
         <div class="card-body text-base px-2">
             <p class="line-clamp-6">{{movie.overview}}</p>
         </div>
-        <div class="card-footer py-1 px-2">
-            <button class="btn btn-sm btn-primary" @click="$emit('show-detail', this.movie)">More</button>
+        <div class="card-footer ">
+            <button class="btn btn-primary w-full" @click="$emit('show-detail', this.movie)">More</button>
         </div>
     </div>
 </template>

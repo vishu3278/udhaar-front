@@ -24,7 +24,7 @@
 
         </div>
         <div class="overflow-auto">
-            <figure v-if="detail.poster_path" class="card-image p-4 " :style="{'background-image': `linear-gradient(100deg, ${promColor[0]}, ${promColor[1]}, ${promColor[2]})`}" >
+            <figure v-if="detail.poster_path" class="card-image p-4 " >
                 <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" @load="getPromColor()" >
                 <p class="text-slate-700 text-base">
                     <span class="text-sky-600 font-bold">Overview:</span><br>
@@ -72,8 +72,8 @@
                 <!-- crew -->
                 <div v-if="detail.credits.crew.length > 0" id="crew">
                     <h6 class="text-slate-500 font-semibold">Crew</h6>
-                    <div class="flex gap-4 overflow-x-auto py-1">
-                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-36 shrink-0 bg-sky-100 text-center shadow">
+                    <div class="flex gap-2 overflow-x-auto py-1">
+                        <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-32 shrink-0 bg-sky-100 text-center shadow">
                             <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name">
                             <img v-else src="/400x600.svg" :alt="crew.name">
                             <figcaption class="font-semibold">{{crew.name}}</figcaption>
@@ -95,12 +95,12 @@
             </div>
             <div class="p-4">
                 <p v-show="posters.length > 0" class="text-base text-slate-500 font-bold">Posters</p>
-                <div class="images flex gap-2 overflow-x-auto mb-3" >
-                    <img v-for="im in posters" :src="img_uri+im.file_path" class="w-48 h-64 object-contain" alt="">
+                <div class="images grid grid-cols-3 gap-2 mb-3" >
+                    <img v-for="im in posters" :src="img_uri+im.file_path" class="" alt="">
                 </div>
                 <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-bold">Backdrops</p>
-                <div class="images flex gap-2 overflow-x-auto mb-3">
-                    <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-96 h-56 object-contain" alt="">
+                <div class="images flex flex-wrap gap-2 mb-3">
+                    <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-full h-auto object-contain" alt="">
                 </div>
                 <!-- <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">
@@ -117,10 +117,9 @@
 import { api_key, base_uri, img_uri, logo_uri, profile_uri, no_profile, no_img, date_format } from '@/constants.js'
 import axios from 'axios'
 import { format } from "date-fns";
-import { prominent } from 'color.js'
+// import { prominent } from 'color.js'
 // import '/Vibrant.min.js'
-/*const no_profile ="@/assets/400x600.svg"
-const no_img ="@/assets/600x400.svg"*/
+
 export default {
 
     name: 'MovieDetail',
@@ -259,11 +258,11 @@ export default {
             // img.setAttribute('src', 'examples/octocat.png')
             let img = document.getElementById("posterImg")
             // img.addEventListener('load', function() {
-                var vibrant = new Vibrant(img);
+                /*var vibrant = new Vibrant(img);
                 var swatches = vibrant.swatches()
                 for (var swatch in swatches)
                     if (swatches.hasOwnProperty(swatch) && swatches[swatch])
-                        console.log(swatch, swatches[swatch].getHex())
+                        console.log(swatch, swatches[swatch].getHex())*/
 
                 /*
                  * Results into:

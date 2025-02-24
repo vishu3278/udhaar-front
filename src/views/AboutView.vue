@@ -2,8 +2,8 @@
     <div class="about container">
         <h2 class="text-3xl text-center py-5">About</h2>
         <hr>
-        <div class="grid grid-cols-3 gap-5 my-4">
-            <main>
+        <div class="flex flex-row gap-5 my-4">
+            <main class="basis-[30%]">
                 <section class="p-3 flex gap-4 bg-slate-100 rounded mb-2">
                     <h5 class="mt-0 mb-3 text-teal-600">Udhaar</h5>
                     <ul class="list-disc list-inside">
@@ -31,7 +31,7 @@
                     </ul>
                 </section>
             </main>
-            <aside>
+            <aside class="basis-[20%]">
                 <p>Created using </p>
                 <ul class="list-inside list-disc">
                     <li>Vue js 3</li>
@@ -57,17 +57,22 @@
                 </div>
                 <button @click="addPeople">Add</button>
             </aside>
-            <aside>
-                <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="100%" height="212" frameborder="0" allowtransparency="true"></iframe>
-                <hr>
+            <aside class="basis-[50%]">
+                <!-- <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="100%" height="212" frameborder="0" allowtransparency="true"></iframe> -->
+                <!-- <hr> -->
+                <news-card></news-card>
             </aside>
         </div>
     </div>
 </template>
 <script>
 import axios from "axios"
+import NewsCard from '@/components/NewsCard.vue'
 export default {
     name: "About",
+    components: {
+        NewsCard,
+    },
     data() {
         return {
             users: [],

@@ -3,7 +3,7 @@
         <div class="container bottom-progress">
             <div class="grid sm:grid-cols-2 gap-4">
                 <div class="column p-8">
-                    <img src="mobile-login-concept.avif" alt="">
+                    <img src="/mobile-login-concept.avif" alt="">
                 </div>
                 <div class="column p-4 ">
                     <div class="tab flex gap-2 mb-4">

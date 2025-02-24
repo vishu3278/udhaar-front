@@ -3,7 +3,7 @@
     <img
       alt="Vue logo"
       class="logo"
-      src="@/assets/logo.svg"
+      src="/logo.svg"
       width="64"
       height="64"
     />

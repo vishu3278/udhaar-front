@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="account-info inline-flex items-center gap-2">
-                <img src="../assets/no-profile.jpeg" class="w-10 h-10 rounded-full" alt="avatar"> <span>Name</span> <span>(Username)</span>
+                <img src="/no-profile.jpeg" class="w-10 h-10 rounded-full" alt="avatar"> <span>Name</span> <span>(Username)</span>
             </div>
             <!-- <div class="flex align-center flex-wrap gap-2 mt-2">
                 <h5>Genres</h5>
