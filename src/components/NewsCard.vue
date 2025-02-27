@@ -6,17 +6,21 @@
                 <span class="text-3xl align-middle">&#x1F606;</span>
                 Random Joke</h4>
             <template v-if="joke.length > 0">
-                <div v-for="j of joke" class="bg-gradient-to-br from-slate-100 to-slate-300 p-2 my-6 rounded relative">
+                <!-- <div v-for="j of joke" class="bg-gradient-to-br from-slate-100 to-slate-300 p-2 my-6 rounded relative">
                     <span class="rounded-t-md bg-gradient-to-b from-slate-300 to-slate-100 px-2 text-slate-600 absolute -top-3 left-0">{{j.type}}</span>
                     <p class="text-teal-700 text-xl font-bold"> {{j.setup}}</p>
-                    <p class="text-teal-600 text-lg font-medium ">{{j.punchline}}</p>
+                    <p class="text-emerald-600 text-lg font-medium ">{{j.punchline}}</p>
+                </div> -->
+                <div class="bg-gradient-to-br from-slate-100 to-slate-300 p-2 my-6 rounded relative">
+                    <span class="rounded-t-md bg-gradient-to-b from-slate-300 to-slate-100 px-2 text-slate-600 absolute -top-3 left-0">{{joke[0].type}}</span>
+                    <a href="https://git.io/typing-svg"><img :src="typingText" alt="Typing SVG" /></a>
                 </div>
             </template>
             <template v-if="jokes.length > 0">
                 <div v-for="jk of jokes" class="bg-gradient-to-br from-slate-100 to-slate-300 p-2 my-6 rounded relative">
                     <span class="rounded-t-md bg-gradient-to-b from-slate-300 to-slate-100 px-2 text-slate-600 absolute -top-3 left-0">{{jk.category}}</span>
                     <p class="text-teal-700 text-xl font-bold"> {{jk.setup}}</p>
-                    <p class="text-teal-600 text-lg font-medium ">{{jk.delivery}}</p>
+                    <p class="text-emerald-600 text-lg font-medium ">{{jk.delivery}}</p>
                 </div>
             </template>
         </div>
@@ -44,7 +48,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { newsApi, jokeApi, jokeApi2, date_format } from '@/constants.js'
+import { newsApi, jokeApi, jokeApi2, date_format, typingApi } from '@/constants.js'
 import { format } from 'date-fns'
 export default {
 
@@ -57,9 +61,22 @@ export default {
             newsApi,
             news: {},
             date_format,
+            j1: {
+                setup: "",
+                punchline: ""
+            },
             joke: [],
             jokes: [],
+            typingApi,
+            option: "font=Nunito+Sans&weight=700&size=22&pause=1000&color=0f766e&center=false&vCenter=true&width=720&height=84&multiline=true&lines=",
         }
+    },
+    computed: {
+      typingText () {
+        this.j1.setup = encodeURI(this.joke[0].setup).replaceAll("%20", "+");
+        this.j1.punchline = encodeURI(this.joke[0].punchline).replaceAll("%20", "+");
+        return this.typingApi + this.option + this.j1.setup + ";" + this.j1.punchline;
+      }
     },
     mounted() {
         console.log("news card mounted ")
@@ -83,14 +100,9 @@ export default {
             console.info(n);
         })*/
 
-        // joke api 1
-        // Try /random_joke, /random_ten, /jokes/random, or /jokes/ten , /jokes/random/
-        const j = axios.get(`${jokeApi}jokes/random`).then(jo => {
-            // console.info(jo)
-            if (jo.status == 200) {
-                this.joke[0] = jo.data
-            }
-        })
+        setInterval(() => {
+            this.getRandomJoke()
+        }, 60000)
 
         // joke api 2
         /*Any? or Programming,Miscellaneous,Dark,Pun,Spooky,Christmas?
@@ -116,6 +128,16 @@ export default {
             } else {
                 return "No date"
             }
+        },
+        getRandomJoke(){
+            // joke api 1
+            // Try /random_joke, /random_ten, /jokes/random, or /jokes/ten , /jokes/random/
+            axios.get(`${jokeApi}jokes/random`).then(jo => {
+                // console.info(jo)
+                if (jo.status == 200) {
+                    this.joke[0] = jo.data
+                }
+            })
         },
     }
 }

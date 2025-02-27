@@ -30,21 +30,22 @@
                         <li>Get details of movie (in progress)</li>
                     </ul>
                 </section>
-            </main>
-            <aside class="basis-[20%]">
-                <p>Created using </p>
+                <h5>Created using </h5>
                 <ul class="list-inside list-disc">
                     <li>Vue js 3</li>
                     <li>Tailwind</li>
                     <li>Firebase</li>
+                    <li>External APIs</li>
                 </ul>
+            </main>
+            <aside class="basis-[20%]">
                 <hr>
-                <button @click="loadPeople">Load</button>
-                <p>People </p>
-                <ul class="list-inside list-disc">
+                <!-- <button @click="loadPeople">Load</button> -->
+                <!-- <p>People </p> -->
+                <!-- <ul class="list-inside list-disc">
                     <li v-for="u in users">{{u.name}} | {{u.phone}}</li>
-                </ul>
-                <h4>Add people</h4>
+                </ul> -->
+                <!-- <h4>Add people</h4>
 
                 <div class="form-group">
                     <input type="text" v-model="name" placeholder="Name">
@@ -55,9 +56,15 @@
                 <div class="form-group">
                     <input type="email" v-model="email" placeholder="Email">
                 </div>
-                <button @click="addPeople">Add</button>
+                <button @click="addPeople">Add</button> -->
+                <h5>Chart via api</h5>
+                <img src="https://image-charts.com/chart?chs=254x254&chd=t:60,40&cht=p3&chl=Hello%7CWorld&chan=1500">
+                <hr>
+                <h5>QR Code api</h5>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=128x128&format=svg&color=235410&bgcolor=ffeecc&margin=2&qzone=1" alt="qrcode" title="HelloWorld" />
             </aside>
             <aside class="basis-[50%]">
+                <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Nunito+Sans&weight=600&size=22&pause=1000&color=115e59&center=false&vCenter=true&width=480&height=48&lines=Random+joke+using+free+api+quickly;Using+two+different+APIs+to+get+data" alt="Typing SVG" /></a>
                 <!-- <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="100%" height="212" frameborder="0" allowtransparency="true"></iframe> -->
                 <!-- <hr> -->
                 <news-card></news-card>
@@ -81,32 +88,34 @@ export default {
             email: ""
         }
     },
-    mounted() {},
+    mounted() {
+        /*axios.get("https://evilinsult.com/generate_insult.php?lang=en&type=json", {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(insult => {
+            console.log(insult)
+        })*/
+    },
     methods: {
         loadPeople() {
             console.log('inside method')
-            const us = axios.get(
+            /*const us = axios.get(
                 import.meta.env.VITE_API_URL + "/people").then(res => {
                 console.log(res.data)
                 this.users = res.data
-            }).catch(err => console.warn(err))
+            }).catch(err => console.warn(err))*/
         },
-        addPeople() {
+        /*addPeople() {
             if (!this.name) return
             axios.post(
                 import.meta.env.VITE_API_URL + "/people", { name: this.name, phone: this.phone, email: this.email }).then((res) => {
                 console.log(res.data)
             })
-        }
+        }*/
     }
 }
 </script>
-<style>
-@media (min-width: 1024px) {
-    .about {
-        /*min-height: 100vh;*/
-        /*display: flex;*/
-        /*align-items: center;*/
-    }
-}
+<style lang="scss" scoped>
+
 </style>

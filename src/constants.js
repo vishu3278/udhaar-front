@@ -12,5 +12,6 @@ const date_format = "d MMM y"
 const newsApi = "https://inshorts.deta.dev/"
 const jokeApi = "https://official-joke-api.appspot.com/"
 const jokeApi2 = "https://v2.jokeapi.dev/joke/"
+const typingApi = "https://readme-typing-svg.demolab.com?"
 
-export { api_key, base_uri, img_uri, logo_uri, profile_uri, no_profile, no_img, date_format, newsApi, jokeApi, jokeApi2 }
+export { api_key, base_uri, img_uri, logo_uri, profile_uri, no_profile, no_img, date_format, newsApi, jokeApi, jokeApi2, typingApi }
