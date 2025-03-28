@@ -22,7 +22,7 @@
             <!-- <router-link to="/addinvoice" class="btn btn-primary btn-sm "><i class="ri-add-line"></i> Add</router-link> -->
         </div>
     </section>
-    <div class="px-10" :class="{'side-panel-open': sidePanel}">
+    <div class="px-10 transition" :class="{'side-panel-open': sidePanel}">
         
         <h5 class="font-bold text-sky-800">Popular</h5>
         <section id="movieScroll" class="flex gap-5 overflow-auto mb-5">
@@ -67,7 +67,7 @@
         </ul>
         <hr>
     </div>
-    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-10 shadow" v-click-outside="onClickOutside">
+    <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-30 shadow" v-click-outside="onClickOutside">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
     </article>
 </template>

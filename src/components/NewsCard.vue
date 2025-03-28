@@ -2,9 +2,9 @@
     <div class="card ">
         <!-- <h4>News card</h4> -->
         <div v-if="joke.length > 0 || jokes.length > 0">
-            <h4 class="font-bold">
+            <!-- <h4 class="font-bold">
                 <span class="text-3xl align-middle">&#x1F606;</span>
-                Random Joke</h4>
+                Random Joke</h4> -->
             <template v-if="joke.length > 0">
                 <!-- <div v-for="j of joke" class="bg-gradient-to-br from-slate-100 to-slate-300 p-2 my-6 rounded relative">
                     <span class="rounded-t-md bg-gradient-to-b from-slate-300 to-slate-100 px-2 text-slate-600 absolute -top-3 left-0">{{j.type}}</span>
@@ -24,26 +24,6 @@
                 </div>
             </template>
         </div>
-        <!-- 
-        <div class="card-image">
-            <img v-if="news.poster_path" :src="img_uri+news.poster_path" class="img-responsive">
-            <img v-else-if="news.backdrop_path" :src="img_uri+news.backdrop_path" class="img-responsive">
-            <img v-else src="https://placehold.co/300x440/9ab/ddd?text=No+Poster" class="img-responsive" alt="">
-        </div>
-        <div class="card-header py-1 px-2">
-            <div class="card-title text-lg font-semibold leading-6 text-sky-600">{{news.title || news.name}} <small v-show="news.adult" class="font-semibold  inline-block bg-rose-400 rounded-full text-center text-white size-5 leading-5 ml-4">A</small></div>
-            <div class="card-subtitle font-medium text-sky-600">{{news.original_title}}</div>
-            <figure class="avatar avatar-sm text-uppercase " :data-initial="news.original_language" ></figure>
-            <span class="border border-amber-500 rounded-full inline-block px-2 h-6 mr-4 text-amber-600">{{humanDate(news.release_date)}}</span> <span class="border border-amber-500 text-amber-600 text-center rounded-full inline-block size-6">{{news.original_language}}</span><br>
-            <span class="text-rose-500 mr-4">Avg. Vote: {{news.vote_average}}</span> <span class="text-rose-400">Popularity: {{movie.popularity}}</span>
-        </div>
-        <div class="card-body text-base px-2">
-            <p class="line-clamp-6">{{news.overview}}</p>
-        </div>
-        <div class="card-footer ">
-            <button class="btn btn-primary w-full" @click="$emit('show-detail', this.news)">More</button>
-        </div>
-     -->
     </div>
 </template>
 <script>
@@ -68,7 +48,7 @@ export default {
             joke: [],
             jokes: [],
             typingApi,
-            option: "font=Nunito+Sans&weight=700&size=22&pause=1000&color=0f766e&center=false&vCenter=true&width=720&height=84&multiline=true&lines=",
+            option: "font=Nunito+Sans&weight=700&size=20&pause=1000&color=0f766e&center=false&vCenter=true&width=720&height=84&multiline=true&lines=",
         }
     },
     computed: {
@@ -101,7 +81,8 @@ export default {
         })*/
 
         setInterval(() => {
-            this.getRandomJoke()
+            this.getRandomJoke();
+            this.getMoreJokes();
         }, 60000)
 
         // joke api 2
@@ -114,12 +95,13 @@ export default {
         // sample
         // https://v2.jokeapi.dev/joke/Programming,Miscellaneous,Dark,Pun,Spooky,Christmas?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart&contains=tits&amount=2
 
-        const j2 = axios.get(`${jokeApi2}Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart&amount=3`).then(jo2 => {
+        /*const j2 = axios.get(`${jokeApi2}Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart&amount=3`).then(jo2 => {
             // console.info(jo2)
             if (jo2.status == 200) {
                 this.jokes = jo2.data.jokes
             }
-        })
+        })*/
+        this.getMoreJokes()
     },
     methods: {
         humanDate(d) {
@@ -138,6 +120,14 @@ export default {
                     this.joke[0] = jo.data
                 }
             })
+        },
+        getMoreJokes(){
+            axios.get(`${jokeApi2}Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart&amount=3`).then(jo2 => {
+                // console.info(jo2)
+                if (jo2.status == 200) {
+                    this.jokes = jo2.data.jokes
+                }
+            }).catch(e => console.error(e))
         },
     }
 }

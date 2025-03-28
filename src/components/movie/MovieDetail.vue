@@ -1,6 +1,6 @@
 <template>
     <div class="card h-full grid grid-cols-1 outline outline-4 outline-zinc-300 " >
-        <div class="card-header p-4">
+        <div class="card-header p-4 ">
             <button class="absolute right-4 top-4 z-10 cursor-pointer" @click="$emit('close-panel')">x</button>
             <div class="card-title text-2xl font-semibold text-sky-700 pr-12">{{detail.title}}
             </div>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="inline-flex items-center gap-2">
                     <div class="w-40 border rounded-full overflow-clip" :class="`border-${avg.color}`" style="padding: 1px;">
-                        <span class="inline-block bg-gradient-to-br text-white rounded-full" :class="avg.class" :style="{width: avg.percent+'%'}">&nbsp;</span>
+                        <span class="inline-block bg-gradient-to-br text-white rounded-full transition-all duration-500 delay-500" :class="avg.class" :style="{width: avg.percent+'%'}">&nbsp;</span>
                     </div>
                     <span class=" rounded-full border px-2" :class="[`border-${avg.color}`, `text-${avg.color}`]" title="Avg. vote">{{detail.vote_average}}</span>
                     <span class="rounded-full border px-2" :class="[`border-${avg.color}`, `text-${avg.color}`]" title="Votes">{{detail.vote_count}}</span>
@@ -23,7 +23,7 @@
             </div>
 
         </div>
-        <div class="overflow-auto">
+        <div class="card-body overflow-auto">
             <figure v-if="detail.poster_path" class="card-image p-4 " >
                 <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" @load="getPromColor()" >
                 <p class="text-slate-700 text-base">

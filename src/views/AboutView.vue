@@ -64,7 +64,8 @@
                 <img src="https://api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=128x128&format=svg&color=235410&bgcolor=ffeecc&margin=2&qzone=1" alt="qrcode" title="HelloWorld" />
             </aside>
             <aside class="basis-[50%]">
-                <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Nunito+Sans&weight=600&size=22&pause=1000&color=115e59&center=false&vCenter=true&width=480&height=48&lines=Random+joke+using+free+api+quickly;Using+two+different+APIs+to+get+data" alt="Typing SVG" /></a>
+                <span class="text-3xl align-middle">&#x1F606;</span>
+                <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Nunito+Sans&weight=600&size=22&pause=1000&color=115e59&center=false&vCenter=true&width=480&height=48&lines=Random+joke+using+free+api+quickly;Using+two+different+APIs+to+get+data;Random+joke+will+appear+after+one+minute" alt="Typing SVG" /></a>
                 <!-- <iframe src="https://www.raaga.com/embed/widget-m.php?artist=Gostho Gopal Das&l=B&g=&ty=S" width="100%" height="212" frameborder="0" allowtransparency="true"></iframe> -->
                 <!-- <hr> -->
                 <news-card></news-card>
