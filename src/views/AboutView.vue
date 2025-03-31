@@ -57,11 +57,13 @@
                     <input type="email" v-model="email" placeholder="Email">
                 </div>
                 <button @click="addPeople">Add</button> -->
-                <h5>Chart via api</h5>
+                <h5 class="text-teal-800">Chart via api </h5>
+                (https://image-charts.com)
                 <img src="https://image-charts.com/chart?chs=254x254&chd=t:60,40&cht=p3&chl=Hello%7CWorld&chan=1500">
                 <hr>
-                <h5>QR Code api</h5>
+                <h5 class="text-teal-800">QR Code api </h5>(https://api.qrserver.com)
                 <img src="https://api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=128x128&format=svg&color=235410&bgcolor=ffeecc&margin=2&qzone=1" alt="qrcode" title="HelloWorld" />
+                
             </aside>
             <aside class="basis-[50%]">
                 <span class="text-3xl align-middle">&#x1F606;</span>

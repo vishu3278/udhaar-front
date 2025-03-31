@@ -2,7 +2,7 @@
     <section class="py-1 px-4 ">
         <div v-if="loading">Loading...</div>
         <div v-if="error">{{ error }}</div>
-        <div class="grid grid-cols-2 my-4">
+        <div class="grid grid-cols-3 my-4">
             <div class="column ">
                 <div class="grid grid-cols-2 gap-5">
                     <div class="column col-span-2">
@@ -50,9 +50,15 @@
                         </div>
                     </div>
                 </div>
+                <div v-for="(items, year) in groupedData" :key="year">
+                  <h2>{{ year }}</h2>
+                  <ul>
+                    <li v-for="item in items" :key="item.id">{{ item.name }} - {{ item.total }}</li>
+                  </ul>
+                </div>
             </div>
             <div class="column ">
-                <div id="chart" style=" width:100%; aspect-ratio: 1 / 1;"></div>
+                <div id="chart" class="mx-auto" style=" width:600px; aspect-ratio: 4 / 3;"></div>
                 <!-- <div class="card p-3 rounded">
                     <div class="card-header">
                         <div class="card-title font-bold text-blue-400">Total</div>
@@ -71,6 +77,11 @@
                     </div>
                 </div> -->
             </div>
+            <div class="column">
+                <h5>Another chart api</h5>
+                (https://quickchart.io)
+                <img src="https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:['Jan','Feb', 'Mar','Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'], datasets:[{label:'Udhaar',data:[50,60,70,180,190]}, {label:'Recovered',data:[100,200,300,400,500]}]}}" />
+            </div>
         </div>
         
     </section>
@@ -78,10 +89,11 @@
 <script>
 import { ref, onBeforeMount, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
 import NewsCard from '@/components/NewsCard.vue'
-// import { db } from '@/firebase';
-// import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useStore } from 'vuex'
 import * as echarts from 'echarts';
+import { toDate, parseISO, isValid, getMonth, getYear } from 'date-fns'
 
 export default {
     setup() {
@@ -107,6 +119,17 @@ export default {
         });
         const pending = computed(() => total.value - (recovered.value + bad.value))
 
+        const groupedData = computed(() => {
+          return payees.value.reduce((acc, item) => {
+            const year = getYear(parseISO(item.udhaar[0]?.date)); // Extract year from date
+            if (!acc[year]) {
+              acc[year] = [];
+            }
+            acc[year].push(item);
+            return acc;
+          }, {});
+        });
+
         /*onBeforeMount(() => {
             console.log("before mount")
         })*/
@@ -123,12 +146,36 @@ export default {
         })
 
         onUpdated(() => {
-            renderChart()
+            // renderChart()
+            // getUdhaarByDate()
         })
 
         onErrorCaptured((e) => {
             console.log(e)
         })
+
+        const getUdhaarByDate = () => {
+            /*const payeesRef = collection(db, "payees");
+            const q = query(payeesRef, where("udhaar", "==", true));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              console.log(doc.id, " => ", doc.data());
+            });*/
+            let byYear = []
+            payees.value.map(p => {
+                // console.info(p.id)
+                let d = parseISO(p.udhaar[0]?.date)
+                // console.log(d, isValid(d))
+                if(isValid(d)){
+                    console.info(getMonth(d), getYear(d))
+                } else {
+                    // console.warn("invalid date")
+                    console.warn(d)
+                }
+            })
+
+        }
 
         const renderChart = () => {
             const chartDom = document.getElementById('chart');
@@ -146,10 +193,10 @@ export default {
                 },
                 legend: {
                     // show: false,
-                    top: 20,
-                    // bottom: 20,
+                    // top: 20,
+                    bottom: 20,
                     left: 'center',
-                    // icon: "pin",
+                    icon: "pin",
                     itemGap: 20,
                     textStyle: {
                         fontSize: 14,
@@ -231,12 +278,14 @@ export default {
             loading,
             error,
             totalUdhaar,
+            getUdhaarByDate,
+            groupedData,
         }
     }
 }
 </script>
 <style lang="css" scoped>
 #chart {
-    max-width: 720px;
+/*    max-width: 720px;*/
 }
 </style>
