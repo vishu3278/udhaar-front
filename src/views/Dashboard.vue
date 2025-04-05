@@ -50,15 +50,10 @@
                         </div>
                     </div>
                 </div>
-                <div v-for="(items, year) in groupedData" :key="year">
-                  <h2>{{ year }}</h2>
-                  <ul>
-                    <li v-for="item in items" :key="item.id">{{ item.name }} - {{ item.total }}</li>
-                  </ul>
-                </div>
             </div>
             <div class="column ">
-                <div id="chart" class="mx-auto" style=" width:600px; aspect-ratio: 4 / 3;"></div>
+                <!-- <div id="chart" class="mx-auto" style=" width:600px; aspect-ratio: 4 / 3;"></div> -->
+                <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'doughnut',data:{labels:['Pending','Bad', 'Recovered'], datasets:[{backgroundColor:['rgb(234,179,8)','rgb(239,68,68)','rgb(37,194,97)'],borderWidth:4, fontColor:'rgb(250,250,250)',data:[${pending},${bad},${recovered}]}]}}`" />
                 <!-- <div class="card p-3 rounded">
                     <div class="card-header">
                         <div class="card-title font-bold text-blue-400">Total</div>
@@ -80,14 +75,28 @@
             <div class="column">
                 <h5>Another chart api</h5>
                 (https://quickchart.io)
-                <img src="https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:['Jan','Feb', 'Mar','Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'], datasets:[{label:'Udhaar',data:[50,60,70,180,190]}, {label:'Recovered',data:[100,200,300,400,500]}]}}" />
+                <select v-model="year">
+                    <option v-for="(value, key) in groupedData" :value="key">{{key}}</option>
+                </select>
+                <template v-if="chartLabels.length > 0 && chartDatasets.length > 0">
+                    <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:[${chartLabels}], datasets:[{label:${year},backgroundColor:'rgb(55,125,200)',data:[${chartDatasets}]}]}}`" />
+                </template> 
             </div>
         </div>
+        <article class="flex gap-3">
+            
+            <div v-for="(items, year) in groupedData" :key="year">
+                <h3 class="font-medium text-indigo-600">{{ year }}</h3>
+              <ul>
+                <li v-for="item in items" :key="item.id" class="border pb-2"><span class="text-gray-400">{{item.id}}</span><p class="font-bold">{{ item.name }}</p>{{ item.total }}</li>
+              </ul>
+            </div>
+        </article>
         
     </section>
 </template>
 <script>
-import { ref, onBeforeMount, onMounted, onUpdated, computed, nextTick, onErrorCaptured } from 'vue'
+import { ref, onBeforeMount, onMounted, onUpdated, computed, watch, watchEffect, nextTick, onErrorCaptured } from 'vue'
 import NewsCard from '@/components/NewsCard.vue'
 import { db } from '@/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -106,6 +115,9 @@ export default {
         // let recovered = ref(0)
         const loading = ref(true);
         const error = ref(null);
+        const chartLabels = ref([])
+        const chartDatasets = ref([])
+        const year = ref(2022)
 
         const payees = computed(() => {
             return store.getters.getPayees
@@ -129,6 +141,40 @@ export default {
             return acc;
           }, {});
         });
+
+        /*watch (groupedData, (newValue, oldValue) => {
+            let l = []
+            let d = []
+            for(let [key, value] of Object.entries(newValue)){
+                console.info(key)
+                if(key == 2022){
+                    if (key == 2022) {
+                        value.map(elem => {
+                            l.push(elem.name)
+                            d.push(value.total)
+                        })
+                    }
+                }
+            }
+            chartLabels.value = l
+            chartDatasets.value = d            
+        })*/
+
+        watchEffect(() => {
+            let l = []
+            let d = []
+            for(let [key, value] of Object.entries(groupedData.value)){
+                console.info(key)
+                if(key == year.value){
+                    value.map(elem => {
+                        l.push("'"+elem.name+"'")
+                        d.push(elem.total)
+                    })
+                }
+            }
+            chartLabels.value = l
+            chartDatasets.value = d
+        })
 
         /*onBeforeMount(() => {
             console.log("before mount")
@@ -280,6 +326,10 @@ export default {
             totalUdhaar,
             getUdhaarByDate,
             groupedData,
+            // chartData,
+            chartLabels,
+            chartDatasets,
+            year,
         }
     }
 }
