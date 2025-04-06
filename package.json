@@ -11,11 +11,12 @@
     "click-outside-vue3": "^4.0.1",
     "color.js": "^1.2.0",
     "date-fns": "^2.29.1",
-    "echarts": "^5.3.3",
+    "echarts": "^5.6.0",
     "firebase": "^9.9.0",
     "remixicon": "^3.1.1",
     "sass": "^1.83.0",
     "vue": "^3.2.37",
+    "vue-echarts": "^7.0.3",
     "vue-router": "^4.1.2",
     "vuex": "^4.0.2"
   },

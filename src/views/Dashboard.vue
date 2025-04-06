@@ -53,7 +53,8 @@
             </div>
             <div class="column ">
                 <!-- <div id="chart" class="mx-auto" style=" width:600px; aspect-ratio: 4 / 3;"></div> -->
-                <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'doughnut',data:{labels:['Pending','Bad', 'Recovered'], datasets:[{backgroundColor:['rgb(234,179,8)','rgb(239,68,68)','rgb(37,194,97)'],borderWidth:4, fontColor:'rgb(250,250,250)',data:[${pending},${bad},${recovered}]}]}}`" />
+                <v-chart class="chart" :option="option" autoresize />
+                <!-- <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'doughnut',data:{labels:['Pending','Bad', 'Recovered'], datasets:[{backgroundColor:['rgb(234,179,8)','rgb(239,68,68)','rgb(37,194,97)'],borderWidth:4, fontColor:'rgb(250,250,250)',data:[${pending},${bad},${recovered}]}]}}`" /> -->
                 <!-- <div class="card p-3 rounded">
                     <div class="card-header">
                         <div class="card-title font-bold text-blue-400">Total</div>
@@ -79,7 +80,7 @@
                     <option v-for="(value, key) in groupedData" :value="key">{{key}}</option>
                 </select>
                 <template v-if="chartLabels.length > 0 && chartDatasets.length > 0">
-                    <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:[${chartLabels}], datasets:[{label:${year},backgroundColor:'rgb(55,125,200)',data:[${chartDatasets}]}]}}`" />
+                    <!-- <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:[${chartLabels}], datasets:[{label:${year},backgroundColor:'rgb(55,125,200)',data:[${chartDatasets}]}]}}`" /> -->
                 </template> 
             </div>
         </div>
@@ -96,16 +97,36 @@
     </section>
 </template>
 <script>
-import { ref, onBeforeMount, onMounted, onUpdated, computed, watch, watchEffect, nextTick, onErrorCaptured } from 'vue'
+import { ref, provide, onBeforeMount, onMounted, onUpdated, computed, watch, watchEffect, nextTick, onErrorCaptured } from 'vue'
 import NewsCard from '@/components/NewsCard.vue'
 import { db } from '@/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useStore } from 'vuex'
-import * as echarts from 'echarts';
+// import * as echarts from 'echarts';
 import { toDate, parseISO, isValid, getMonth, getYear } from 'date-fns'
+import { use } from 'echarts/core'
+import { PieChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, LegendComponent } from 'echarts/components'
+import { SVGRenderer } from 'echarts/renderers'
+// import { CanvasRenderer } from 'echarts/renderers';
+import VChart, { THEME_KEY } from 'vue-echarts';
 
 export default {
+    components: {
+        VChart
+    },
     setup() {
+        use([
+          TitleComponent,
+          TooltipComponent,
+          LegendComponent,
+          PieChart,
+          SVGRenderer,
+          // CanvasRenderer
+        ])
+
+        provide(THEME_KEY, '');
+
         const store = useStore()
         // let payees = ref([])
         let msg = ref(null)
@@ -142,6 +163,62 @@ export default {
           }, {});
         });
 
+        const option = ref({
+            // backgroundColor: 'transparent',
+            // darkMode: false,
+          title: {
+            text: 'Udhaar',
+            left: 'center',
+            textStyle: {
+                color: '#0ea5e9'
+            }
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b} : {c} ({d}%)',
+          },
+          legend: {
+            orient: 'horizontal',
+            // left: 'auto',
+            // right: 'auto',
+            align: 'auto',
+            top: 40,
+            data: ['Pending', 'Recovered', 'Bad'],
+          },
+          series: [
+            {
+              // name: 'Udhaar',
+              type: 'pie',
+              radius: ['20%','60%'],
+              center: ['50%', '60%'],
+              data: [
+                { value: pending.value, name: 'Pending' },
+                { value: recovered.value, name: 'Recovered' },
+                { value: bad.value, name: 'Bad' },
+              ],
+              color: ['#eab308', '#22c55e', '#ef4444'],
+              label: {
+                // position: 'inside',
+                formatter: '{b}:{d}%',
+                // rotate: true,
+                borderWidth: 0,
+              },
+              itemStyle: {
+                // borderType: 'dashed',
+                borderWidth: 2,
+                borderColor: 'white',
+              },
+              /*emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)',
+                },
+              },*/
+            },
+          ],
+        });
+
         /*watch (groupedData, (newValue, oldValue) => {
             let l = []
             let d = []
@@ -164,7 +241,7 @@ export default {
             let l = []
             let d = []
             for(let [key, value] of Object.entries(groupedData.value)){
-                console.info(key)
+                // console.info(key)
                 if(key == year.value){
                     value.map(elem => {
                         l.push("'"+elem.name+"'")
@@ -187,6 +264,7 @@ export default {
             if(store.getters.getPayees.length < 1) {
                 store.dispatch("fetchData").then(() => {
                     loading.value = false
+                    // renderChart()
                 })
             }
         })
@@ -201,13 +279,6 @@ export default {
         })
 
         const getUdhaarByDate = () => {
-            /*const payeesRef = collection(db, "payees");
-            const q = query(payeesRef, where("udhaar", "==", true));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              console.log(doc.id, " => ", doc.data());
-            });*/
             let byYear = []
             payees.value.map(p => {
                 // console.info(p.id)
@@ -330,6 +401,7 @@ export default {
             chartLabels,
             chartDatasets,
             year,
+            option,
         }
     }
 }
@@ -337,5 +409,8 @@ export default {
 <style lang="css" scoped>
 #chart {
 /*    max-width: 720px;*/
+}
+.chart {
+  height: 400px;
 }
 </style>
