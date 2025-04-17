@@ -53,7 +53,7 @@
             </div>
             <div class="column ">
                 <!-- <div id="chart" class="mx-auto" style=" width:600px; aspect-ratio: 4 / 3;"></div> -->
-                <v-chart class="chart" :option="option" autoresize />
+                <v-chart class="chart" :option="chart1" autoresize />
                 <!-- <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'doughnut',data:{labels:['Pending','Bad', 'Recovered'], datasets:[{backgroundColor:['rgb(234,179,8)','rgb(239,68,68)','rgb(37,194,97)'],borderWidth:4, fontColor:'rgb(250,250,250)',data:[${pending},${bad},${recovered}]}]}}`" /> -->
                 <!-- <div class="card p-3 rounded">
                     <div class="card-header">
@@ -74,13 +74,14 @@
                 </div> -->
             </div>
             <div class="column">
-                <h5>Another chart api</h5>
-                (https://quickchart.io)
+                <!-- <h5>Another chart api</h5>
+                (https://quickchart.io) -->
                 <select v-model="year">
                     <option v-for="(value, key) in groupedData" :value="key">{{key}}</option>
                 </select>
                 <template v-if="chartLabels.length > 0 && chartDatasets.length > 0">
                     <!-- <img :src="`https://quickchart.io/chart?width=500&height=400&chart={type:'bar',data:{labels:[${chartLabels}], datasets:[{label:${year},backgroundColor:'rgb(55,125,200)',data:[${chartDatasets}]}]}}`" /> -->
+                    <v-chart class="chart" :option="chart2"></v-chart>
                 </template> 
             </div>
         </div>
@@ -105,8 +106,9 @@ import { useStore } from 'vuex'
 // import * as echarts from 'echarts';
 import { toDate, parseISO, isValid, getMonth, getYear } from 'date-fns'
 import { use } from 'echarts/core'
-import { PieChart } from 'echarts/charts'
-import { TitleComponent, TooltipComponent, LegendComponent } from 'echarts/components'
+import { PieChart, BarChart } from 'echarts/charts'
+
+import { TitleComponent, TooltipComponent, LegendComponent, GridComponent } from 'echarts/components'
 import { SVGRenderer } from 'echarts/renderers'
 // import { CanvasRenderer } from 'echarts/renderers';
 import VChart, { THEME_KEY } from 'vue-echarts';
@@ -121,7 +123,9 @@ export default {
           TooltipComponent,
           LegendComponent,
           PieChart,
+          BarChart,
           SVGRenderer,
+          GridComponent,
           // CanvasRenderer
         ])
 
@@ -163,7 +167,19 @@ export default {
           }, {});
         });
 
-        const option = ref({
+        const chartColors = ref([
+                        "#73c0de",
+                        "#fac858",
+                        "#9a60b4",
+                        "#91cc75",
+                        "#fc8452",
+                        "#5470c6",
+                        "#ee6666",
+                        "#3ba272",
+                        "#ea7ccc"
+                    ])
+
+        const chart1 = ref({
             // backgroundColor: 'transparent',
             // darkMode: false,
           title: {
@@ -219,6 +235,37 @@ export default {
           ],
         });
 
+        const chart2 = ref({
+            
+          title: {
+            text: 'Udhaar by year',
+            textStyle: {
+                color: "#0ea5e9",
+            }
+          },
+          tooltip: {
+            show: true
+          },
+          /*legend: {
+            data: ['Udhaar']
+          },*/
+          xAxis: {
+            data: [],
+            axisLabel: {
+                // inside: true,
+                rotate: 45,
+            }
+          },
+          yAxis: {},
+          series: [
+            {
+              name: 'Udhaar',
+              type: 'bar',
+              data: []
+            }
+          ]
+        })
+
         /*watch (groupedData, (newValue, oldValue) => {
             let l = []
             let d = []
@@ -243,14 +290,16 @@ export default {
             for(let [key, value] of Object.entries(groupedData.value)){
                 // console.info(key)
                 if(key == year.value){
-                    value.map(elem => {
-                        l.push("'"+elem.name+"'")
-                        d.push(elem.total)
+                    value.map((elem, index) => {
+                        l.push(elem.name)
+                        d.push({value: elem.total, itemStyle: {color: chartColors.value[index]}})
                     })
                 }
             }
             chartLabels.value = l
             chartDatasets.value = d
+            chart2.value.xAxis.data = l
+            chart2.value.series[0].data = d
         })
 
         /*onBeforeMount(() => {
@@ -401,7 +450,9 @@ export default {
             chartLabels,
             chartDatasets,
             year,
-            option,
+            chart1,
+            chart2,
+            chartColors,
         }
     }
 }

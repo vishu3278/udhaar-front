@@ -48,13 +48,14 @@
                 <table class="table compact table-striped table-hover w-full">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th v-for="f in fields" class="capitalize">{{f}}</th>
+                            <!-- <th>Id</th>
                             <th>Name</th>
+                            <th>Mobile</th>
                             <th>Amount</th>
-                            <!-- <th>Remarks</th> -->
                             <th>Pending</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -181,7 +182,7 @@ export default {
     },
     setup(){
         const store = useStore()
-        const fields = ["id", 'name', "total",  "pending", "status", "action"]
+        const fields = ["id", 'name', "mobile", "total", "pending", "status", "action"]
         const detail = ref(null)
         const udhaarAmount = ref(0)
         const udhaarDate = ref(null)
