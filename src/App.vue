@@ -30,6 +30,7 @@
         <RouterLink to="/expense">Expense</RouterLink>
         <RouterLink to="/invoice">Invoice</RouterLink>
         <RouterLink to="/movies">Movies</RouterLink>
+        <RouterLink to="/harrypotter">Harry</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/logout">Logout</RouterLink>
