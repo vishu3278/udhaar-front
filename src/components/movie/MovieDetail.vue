@@ -96,11 +96,11 @@
             <div class="p-4">
                 <p v-show="posters.length > 0" class="text-base text-slate-500 font-bold">Posters</p>
                 <div class="images grid grid-cols-3 gap-2 mb-3" >
-                    <img v-for="im in posters" :src="img_uri+im.file_path" class="" alt="">
+                    <img v-for="im in posters" :src="img_uri+im.file_path" loading="lazy" class="" alt="">
                 </div>
                 <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-bold">Backdrops</p>
                 <div class="images flex flex-wrap gap-2 mb-3">
-                    <img v-for="im in backdrops" :src="img_uri+im.file_path" class="w-full h-auto object-contain" alt="">
+                    <img v-for="im in backdrops" :src="img_uri+im.file_path" loading="lazy" class="w-full h-auto object-contain" alt="">
                 </div>
                 <!-- <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">

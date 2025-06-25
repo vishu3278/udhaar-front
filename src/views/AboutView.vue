@@ -30,6 +30,14 @@
                         <li>Get details of movie (in progress)</li>
                     </ul>
                 </section>
+                <section class="p-3 flex gap-4 bg-slate-100 rounded mb-2">
+                    <h5 class="mt-0 mb-3 text-teal-600">Harry Potter</h5>
+                    <ul class="list-disc list-inside">
+                        <li>List all characters</li>
+                        <li>Grid view with information</li>
+                        <!-- <li>Get details of movie (in progress)</li> -->
+                    </ul>
+                </section>
                 <h5>Created using </h5>
                 <ul class="list-inside list-disc">
                     <li>Vue js 3</li>

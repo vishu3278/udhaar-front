@@ -1,8 +1,8 @@
 <template>
     <div class="card shadow shadow-slate-300">
         <div class="card-image">
-            <img v-if="movie.poster_path" :src="img_uri+movie.poster_path" class="img-responsive">
-            <img v-else-if="movie.backdrop_path" :src="img_uri+movie.backdrop_path" class="img-responsive">
+            <img v-if="movie.poster_path" :src="img_uri+movie.poster_path" loading="lazy" class="img-responsive">
+            <img v-else-if="movie.backdrop_path" :src="img_uri+movie.backdrop_path" loading="lazy" class="img-responsive">
             <img v-else src="https://placehold.co/300x440/9ab/ddd?text=No+Poster" class="img-responsive" alt="">
         </div>
         <div class="card-header py-1 px-2">
