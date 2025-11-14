@@ -78,6 +78,8 @@ export default createStore({
 			commit("set_pending", 0)
 			commit("set_error", null)
             try {
+
+                // old method
                 const payeesSnapshot = await getDocs(collection(db, 'payees'));
                 let payees = [], total = 0, recovered = 0
 
