@@ -27,7 +27,7 @@
         <!-- <RouterLink to="/people">Peoples</RouterLink> -->
         <RouterLink to="/udhaar">Udhaar</RouterLink>
         <RouterLink to="/addpayee">New Payee</RouterLink>
-        <RouterLink to="/expense">Expense</RouterLink>
+        <!-- <RouterLink to="/expense">Expense</RouterLink> -->
         <RouterLink to="/invoice">Invoice</RouterLink>
         <RouterLink to="/movies">Movies</RouterLink>
         <RouterLink to="/harrypotter">Harry</RouterLink>

@@ -262,7 +262,7 @@ onMounted(async () => {
     if (store.getters.getPayees.length < 1) {
         store.dispatch("fetchData").then(() => {
             loading.value = false
-            renderChart()
+            // renderChart()
         })
     }
 
@@ -340,6 +340,8 @@ const getUdhaarByDate = () => {
 
 const renderChart = () => {
     const chartDom = document.getElementById('chart');
+    console.info(chartDom)
+    if (!chartDom) return
     let myChart = echarts.init(chartDom);
     let option = {
         tooltip: {

@@ -29,7 +29,7 @@ const router = createRouter({
     { path: '/people', name: 'people', component: Peoples },
     { path: '/addpayee', name: 'addpayee', component: AddPayeeView },
     { path: '/editpayee/:id', name: 'editpayee', component: EditPayeeView },
-    { path: '/expense', name: 'expense', component: Expense },
+    // { path: '/expense', name: 'expense', component: Expense },
     { path: '/addexpense', name: 'addexpense', component: AddExpenseView },
     { path: '/invoice', name: 'invoice', component: Invoice },
     { path: '/movies', name: 'movies', component: Movies },
