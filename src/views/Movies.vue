@@ -66,6 +66,11 @@
             </li> -->
         </ul>
         <hr>
+        <h5 class="font-bold text-sky-800">Top Rated</h5>
+        <section id="movieScroll" class="flex gap-5 overflow-auto mb-5">
+            <movie-card-small v-for="p in toprated" :key="p.id" :movie="p" @show-detail="showDetail">
+            </movie-card-small>
+        </section>
     </div>
     <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-30 shadow" v-click-outside="onClickOutside">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
@@ -113,6 +118,7 @@ export default {
             sidePanel: false,
             // genres: [],
             popular: [],
+            toprated: [],
         }
     },
 
@@ -123,10 +129,12 @@ export default {
             this.genres = res.data.genres
         })*/
 
-        axios.get(`${base_uri}/movie/popular?api_key=${api_key}`).then(res => {
-            // console.log(res.data)
-            this.popular = res.data.results
-        })
+        axios.get(`${base_uri}/movie/popular?api_key=${api_key}`)
+            .then(res => {
+                // console.log(res.data)
+                this.popular = res.data.results
+            })
+            .catch(err => console.error(err));
 
         const scrollContainer = document.getElementById("movieScroll");
 
@@ -134,6 +142,13 @@ export default {
             evt.preventDefault();
             scrollContainer.scrollLeft += evt.deltaY;
         });
+
+        const options = {method: 'GET', headers: {accept: 'application/json'}};
+
+        axios.get(`${base_uri}/movie/top_rated?api_key=${api_key}&page=1`)
+            .then(res => this.toprated = res.data.results)
+            .catch(err => console.error(err))
+            .then(() => console.log("always"))
 
     },
     methods: {
@@ -172,7 +187,7 @@ export default {
         },
         showDetail(movie) {
             // console.log(movie)
-            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images,keywords`)
+            axios.get(`${base_uri}/movie/${movie.id}?api_key=${api_key}&append_to_response=credits,images,videos,keywords`)
                 .then(response => {
                     // console.log(response)
                     this.detail = response.data

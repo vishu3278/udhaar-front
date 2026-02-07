@@ -2,7 +2,7 @@
     <main>
         <div class="container py-4">
             <h4 class="text-center">Harry Potter</h4>
-            <section class="grid grid-cols-6 gap-4 my-4">
+            <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 my-4">
                 <div v-for="c in allChars" class="bg-sky-100 rounded overflow-clip" @click="active = c.id">
                     <figure class="w-full rounded relative" style="min-height: 2.5rem;">
                         <img v-if="c.image" :src="c.image" :alt="c.actor" class="object-cover h-80 w-full">

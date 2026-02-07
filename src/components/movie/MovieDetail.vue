@@ -36,6 +36,7 @@
             <!-- <figure v-if="detail.backdrop_path" class="">
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
             </figure> -->
+            <iframe v-if="videos.length>0" height="360" width="100%" :src="`https://www.youtube.com/embed/${videos[0].key}?autoplay=0&mute=0&rel=0`"></iframe>
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
                 <div id="budget">
                     <span class="text-slate-500">Budget: </span>
@@ -216,6 +217,9 @@ export default {
         backdrops(){
             return this.detail?.images.backdrops
         },
+        videos(){
+            return this.detail?.videos.results.filter(v => v.type == "Trailer")
+        }
     },
     mounted() {
         // const scrollContainer = document.querySelectorAll(".overflow-x-auto");
@@ -257,22 +261,7 @@ export default {
             // var img = document.createElement('img');
             // img.setAttribute('src', 'examples/octocat.png')
             let img = document.getElementById("posterImg")
-            // img.addEventListener('load', function() {
-                /*var vibrant = new Vibrant(img);
-                var swatches = vibrant.swatches()
-                for (var swatch in swatches)
-                    if (swatches.hasOwnProperty(swatch) && swatches[swatch])
-                        console.log(swatch, swatches[swatch].getHex())*/
-
-                /*
-                 * Results into:
-                 * Vibrant #7a4426
-                 * Muted #7b9eae
-                 * DarkVibrant #348945
-                 * DarkMuted #141414
-                 * LightVibrant #f3ccb4
-                 */
-            // });
+            
         },
         
     }
