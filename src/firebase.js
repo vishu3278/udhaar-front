@@ -6,12 +6,12 @@ import { getFirestore, collection, getDoc, getDocs, doc, addDoc, setDoc, updateD
 import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBJ1jIfcGIrXaVKin6ee7pQ_KsE3r0K5DE",
-    authDomain: "udhaar-f2428.firebaseapp.com",
-    projectId: "udhaar-f2428",
-    storageBucket: "udhaar-f2428.appspot.com",
-    messagingSenderId: "385759629335",
-    appId: "1:385759629335:web:db254575d8156ffb6c4c52"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
@@ -33,7 +33,7 @@ const getPayees = async () => {
 
         const u = await getUdhaar(doc.id)
         payees.push({ id: doc.id, ...doc.data(), udhaar: u })
-        
+
     });
     // console.log(payees)
     return payees;
@@ -93,7 +93,7 @@ const getUdhaarTransact = async (id) => {
         udh.udhaar.push(ent)
         // udh.total += doc.data().amount
     });
-    
+
     return udh
 }
 
@@ -116,7 +116,7 @@ const getTransactions = async (payeepId, udhaarId) => {
     const query = await getDocs(collection(db, "payees", payeepId, "udhaar", udhaarId, "transaction"));
     query.forEach(doc => {
         // console.log(doc.id, doc.data())
-        t.push({...doc.data(), id: doc.id})
+        t.push({ ...doc.data(), id: doc.id })
     })
     return t
 }
