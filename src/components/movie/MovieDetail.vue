@@ -25,7 +25,7 @@
         </div>
         <div class="card-body overflow-auto">
             <figure v-if="detail.poster_path" class="card-image p-4 " >
-                <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" @load="getPromColor()" >
+                <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" loading="lazy" @load="getPromColor()" >
                 <p class="text-slate-700 text-base">
                     <span class="text-sky-600 font-bold">Overview:</span><br>
                     {{detail.overview}}
@@ -52,19 +52,19 @@
                 </div>
                 <div id="country">
                     <span class="text-slate-500">Country of origin: </span>
-                    <span v-for="c in detail.origin_country" class="text-sky-600">{{c}}</span>
+                    <span v-for="c in detail.origin_country" :key="c" class="text-sky-600">{{c}}</span>
                 </div>
                 <div id="language">
                     <span class="text-slate-500">Spoken language: </span>
-                    <span v-for="l in detail.spoken_languages" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
+                    <span v-for="l in detail.spoken_languages" :key="l.iso_639_1" class="text-sky-600">{{l.english_name}} - {{l.name}}, </span>
                 </div>
                 <!-- cast -->
                 <div v-if="detail.credits.cast.length > 0" id="cast">
                     <h6 class="text-slate-500 font-semibold">Cast</h6>
-                    <div class="flex gap-4 overflow-x-auto py-1">
+                    <div id="castCarousel" class="flex gap-4 overflow-x-auto py-1">
                         <figure v-for="cast in detail.credits.cast" :key="cast.id" class="text-sky-600 w-40 shrink-0 bg-sky-100 text-center shadow">
-                            <img v-if="cast.profile_path" :src="profile_uri+cast.profile_path" :alt="cast.name">
-                            <img v-else src="/400x600.svg" :alt="cast.name">
+                            <img v-if="cast.profile_path" :src="profile_uri+cast.profile_path" :alt="cast.name" loading="lazy">
+                            <img v-else src="/400x600.svg" :alt="cast.name" loading="lazy">
                             <figcaption class="font-semibold">{{cast.name}}</figcaption>
                             <figcaption class="text-slate-500">({{cast.character}})</figcaption>
                         </figure>
@@ -73,10 +73,10 @@
                 <!-- crew -->
                 <div v-if="detail.credits.crew.length > 0" id="crew">
                     <h6 class="text-slate-500 font-semibold">Crew</h6>
-                    <div class="flex gap-2 overflow-x-auto py-1">
+                    <div id="crewCarousel" class="flex gap-2 overflow-x-auto py-1">
                         <figure v-for="crew in detail.credits.crew" :key="crew.id" class="text-sky-600 w-32 shrink-0 bg-sky-100 text-center shadow">
-                            <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name">
-                            <img v-else src="/400x600.svg" :alt="crew.name">
+                            <img v-if="crew.profile_path" :src="profile_uri+crew.profile_path" :alt="crew.name" loading="lazy">
+                            <img v-else src="/400x600.svg" :alt="crew.name" loading="lazy">
                             <figcaption class="font-semibold">{{crew.name}}</figcaption>
                             <figcaption class="text-slate-600">{{crew.job}}</figcaption>
                             <!-- <figcaption class="text-slate-400">{{crew.department}}</figcaption> -->
@@ -85,10 +85,10 @@
                 </div>
                 <div v-if="detail.production_companies.length > 0" id="company" >
                     <h6 class="text-slate-500 font-semibold">Production companies </h6>
-                    <div class="flex gap-4 overflow-x-auto py-1">
+                    <div id="companyCarousel" class="flex gap-4 overflow-x-auto py-1">
                         <figure v-for="c in detail.production_companies" :key="c.id" class="text-sky-600 border flex flex-col justify-between border-sky-200 shrink-0 w-40 text-center">
-                            <img v-if="c.logo_path" :src="logo_uri+c.logo_path" :alt="c.name">
-                            <img v-else src="/600x400.svg" :alt="c.name">
+                            <img v-if="c.logo_path" :src="logo_uri+c.logo_path" :alt="c.name" loading="lazy">
+                            <img v-else src="/600x400.svg" :alt="c.name" loading="lazy">
                             <figcaption>{{c.name}}</figcaption>
                         </figure>
                     </div>
@@ -96,12 +96,12 @@
             </div>
             <div class="p-4">
                 <p v-show="posters.length > 0" class="text-base text-slate-500 font-bold">Posters</p>
-                <div class="images grid grid-cols-3 gap-2 mb-3" >
-                    <img v-for="im in posters" :src="img_uri+im.file_path" loading="lazy" class="" alt="">
+                <div id="posterGrid" class="gap-2 mb-3 overflow-x-auto" style="display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-auto-columns: minmax(150px, 150px); grid-template-rows: repeat(2, 230px); height: 480px;" >
+                    <img v-for="(im, index) in posters" :key="'p-'+index" :src="img_uri+im.file_path" loading="lazy" class="object-cover" alt="">
                 </div>
                 <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-bold">Backdrops</p>
-                <div class="images flex flex-wrap gap-2 mb-3">
-                    <img v-for="im in backdrops" :src="img_uri+im.file_path" loading="lazy" class="w-full h-auto object-contain" alt="">
+                <div id="backdropGrid" class="gap-2 mb-3 overflow-x-auto overflow-y-hidden" style="display: flex; flex-wrap: nowrap; height: 340px;" >
+                    <img v-for="(im, index) in backdrops" :key="'b-'+index" :src="img_uri+im.file_path" loading="lazy" class="object-cover" style="aspect-ratio: 300 / 170; width: 100%;" alt="">
                 </div>
                 <!-- <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">
@@ -231,8 +231,151 @@ export default {
             });
         }*/
 
+        this.$nextTick(() => {
+            this.setupCarousel("castCarousel");
+            this.setupCarousel("crewCarousel");
+            this.setupCarousel("companyCarousel");
+            this.setupCarousel("posterGrid");
+            this.setupCarousel("backdropGrid");
+        });
+    },
+    watch: {
+        'detail.credits.crew': {
+            handler(newVal) {
+                if (newVal && newVal.length > 0) {
+                    this.$nextTick(() => {
+                        this.setupCarousel("crewCarousel");
+                    });
+                }
+            },
+            deep: true
+        },
+        'detail.production_companies': {
+            handler(newVal) {
+                if (newVal && newVal.length > 0) {
+                    this.$nextTick(() => {
+                        this.setupCarousel("companyCarousel");
+                    });
+                }
+            },
+            deep: true
+        },
+        posters: {
+            handler(newVal) {
+                if (newVal && newVal.length > 0) {
+                    this.$nextTick(() => {
+                        this.setupCarousel("posterGrid");
+                    });
+                }
+            }
+        },
+        backdrops: {
+            handler(newVal) {
+                if (newVal && newVal.length > 0) {
+                    this.$nextTick(() => {
+                        this.setupCarousel("backdropGrid");
+                    });
+                }
+            }
+        }
+    },
+    beforeUnmount() {
+        // Clean up all carousel intervals and event listeners
+        if (this._carouselCleanups) {
+            this._carouselCleanups.forEach(cleanup => cleanup());
+            this._carouselCleanups = [];
+        }
     },
     methods: {
+        setupCarousel(carouselId) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+
+            let isAutoScrolling = true;
+            let scrollSpeed = 50;
+            let scrollDirection = 1; // 1 for right, -1 for left
+            let maxScrollLeft = 0;
+
+            // Calculate max scroll position
+            const updateMaxScroll = () => {
+                maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+            };
+
+            // Update max scroll on window resize
+            window.addEventListener('resize', updateMaxScroll);
+            updateMaxScroll();
+
+            const autoScroll = () => {
+                if (isAutoScrolling) {
+                    const currentScroll = carousel.scrollLeft;
+                    const nextScroll = currentScroll + (2 * scrollDirection);
+
+                    // Check if we've reached the end
+                    if (scrollDirection === 1 && currentScroll >= maxScrollLeft - 10) {
+                        scrollDirection = -1; // Start scrolling left
+                        setTimeout(() => {
+                            carousel.scrollLeft = maxScrollLeft;
+                        }, 1000);
+                    }
+                    // Check if we've reached the beginning
+                    else if (scrollDirection === -1 && currentScroll <= 10) {
+                        scrollDirection = 1; // Start scrolling right
+                        setTimeout(() => {
+                            carousel.scrollLeft = 0;
+                        }, 1000);
+                    }
+                    else {
+                        carousel.scrollBy({
+                            left: 2 * scrollDirection,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            };
+
+            // Auto-scroll interval
+            const scrollInterval = setInterval(autoScroll, scrollSpeed);
+
+            // Manual scroll with wheel
+            carousel.addEventListener("wheel", (evt) => {
+                evt.preventDefault();
+                isAutoScrolling = false;
+                scrollDirection = evt.deltaY > 0 ? 1 : -1;
+
+                const scrollAmount = evt.deltaY > 0 ? 100 : -100;
+                carousel.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+
+                // Resume auto-scroll after 5 seconds of no interaction
+                clearTimeout(carousel.resumeTimeout);
+                carousel.resumeTimeout = setTimeout(() => {
+                    isAutoScrolling = true;
+                    scrollDirection = 1; // Reset to forward direction
+                }, 5000);
+            });
+
+            // Resume on mouse leave
+            carousel.addEventListener("mouseleave", () => {
+                isAutoScrolling = true;
+            });
+
+            // Pause on mouse enter
+            carousel.addEventListener("mouseenter", () => {
+                isAutoScrolling = false;
+            });
+
+            // Store cleanup functions for later use
+            carousel._cleanup = () => {
+                clearInterval(scrollInterval);
+                window.removeEventListener('resize', updateMaxScroll);
+            };
+
+            // Cleanup on component destroy - store reference for manual cleanup
+            this._carouselCleanups = this._carouselCleanups || [];
+            this._carouselCleanups.push(carousel._cleanup);
+        },
         /*fetchImages(){
             axios.get(`${base_uri}/movie/${this.detail.id}/images?api_key=${api_key}`)
                 .then(response => {
@@ -268,5 +411,61 @@ export default {
 
 }
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
+#castCarousel,
+#crewCarousel,
+#companyCarousel {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 150, 255, 0.4) transparent;
+}
+
+#posterGrid,
+#backdropGrid {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 150, 255, 0.4) transparent;
+    gap: 0.5rem;
+}
+
+#castCarousel::-webkit-scrollbar,
+#crewCarousel::-webkit-scrollbar,
+#companyCarousel::-webkit-scrollbar,
+#posterGrid::-webkit-scrollbar,
+#backdropGrid::-webkit-scrollbar {
+    height: 6px;
+}
+
+#castCarousel::-webkit-scrollbar-track,
+#crewCarousel::-webkit-scrollbar-track,
+#companyCarousel::-webkit-scrollbar-track,
+#posterGrid::-webkit-scrollbar-track,
+#backdropGrid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#castCarousel::-webkit-scrollbar-thumb,
+#crewCarousel::-webkit-scrollbar-thumb,
+#companyCarousel::-webkit-scrollbar-thumb,
+#posterGrid::-webkit-scrollbar-thumb,
+#backdropGrid::-webkit-scrollbar-thumb {
+    background: rgba(100, 150, 255, 0.4);
+    border-radius: 3px;
+}
+
+#castCarousel::-webkit-scrollbar-thumb:hover,
+#crewCarousel::-webkit-scrollbar-thumb:hover,
+#companyCarousel::-webkit-scrollbar-thumb:hover,
+#posterGrid::-webkit-scrollbar-thumb:hover,
+#backdropGrid::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 150, 255, 0.6);
+}
+
+#castCarousel::-webkit-scrollbar-button,
+#crewCarousel::-webkit-scrollbar-button,
+#companyCarousel::-webkit-scrollbar-button,
+#posterGrid::-webkit-scrollbar-button,
+#backdropGrid::-webkit-scrollbar-button {
+    display: none;
+}
 </style>

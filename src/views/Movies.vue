@@ -31,7 +31,7 @@
         </section>
         <h5 v-if="movies.results" class="text-center text-lg font-light text-sky-600"><span class="font-bold">{{movies.total_results}}</span> results found for "{{query}}"</h5><br>
         <div id="movieWrapper" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 row-auto">
-            <div v-for="m in movies.results" class=" ">
+            <div v-for="m in movies.results" :key="m.id" class=" ">
                 <movie-card :movie="m" @show-detail="showDetail"></movie-card>
                 <!-- <div v-if="queryType == 'keyword'" class="shadow">{{m.id}} - {{m.name}} <br><button class="btn btn-sm" @click="showDetail(m)">detail</button></div> -->
             </div>
@@ -52,7 +52,7 @@
             <!-- <li class="page-item disabled">
                 <a href="#" tabindex="-1">Previous</a>
             </li> -->
-            <li v-for="n in movies.total_pages">
+            <li v-for="n in movies.total_pages" :key="n">
                 <a class="py-1 px-2 border border-sky-600 rounded-md inline-block min-w-6 cursor-pointer hover:bg-sky-200 hover:text-sky-600" :class="{'text-white bg-sky-400 font-bold': n == movies.page}" @click.stop="searchPage(n)">{{n}}</a>
             </li>
             <!-- <li class="page-item active">
@@ -67,7 +67,7 @@
         </ul>
         <hr>
         <h5 class="font-bold text-sky-800">Top Rated</h5>
-        <section id="movieScroll" class="flex gap-5 overflow-auto mb-5">
+        <section id="topratedScroll" class="flex gap-5 overflow-auto mb-5">
             <movie-card-small v-for="p in toprated" :key="p.id" :movie="p" @show-detail="showDetail">
             </movie-card-small>
         </section>
@@ -140,7 +140,22 @@ export default {
 
         scrollContainer.addEventListener("wheel", (evt) => {
             evt.preventDefault();
-            scrollContainer.scrollLeft += evt.deltaY;
+            const scrollAmount = evt.deltaY > 0 ? 100 : -100;
+            scrollContainer.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        const topratedScroll = document.getElementById("topratedScroll");
+
+        topratedScroll.addEventListener("wheel", (evt) => {
+            evt.preventDefault();
+            const scrollAmount = evt.deltaY > 0 ? 100 : -100;
+            topratedScroll.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
         });
 
         const options = {method: 'GET', headers: {accept: 'application/json'}};
@@ -211,6 +226,40 @@ export default {
     margin-block: 0.1rem;
     margin-inline: auto;
     max-width: 40rem;
+}
+
+#movieScroll,
+#topratedScroll {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 150, 255, 0.4) transparent;
+    
+    & > * {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(100, 150, 255, 0.4);
+        border-radius: 3px;
+        
+        &:hover {
+            background: rgba(100, 150, 255, 0.6);
+        }
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
 }
 
 .side-panel {
