@@ -166,7 +166,7 @@ const loading = ref(true);
 const error = ref(null);
 const chartLabels = ref([])
 const chartDatasets = ref([])
-const year = ref(2022)
+const year = ref(new Date().getFullYear())
 const chartColors = ref([
     "#73c0de",
     "#fac858",
@@ -178,6 +178,30 @@ const chartColors = ref([
     "#3ba272",
     "#ea7ccc"
 ])
+
+// computed properties
+const payees = computed(() => {
+    return store.getters.getPayees
+})
+const total = computed(() => store.getters.getTotal)
+const recovered = computed(() => store.getters.getRecovered)
+const bad = computed(() => store.getters.getBad)
+const totalUdhaar = computed(() => {
+    return payees.value.reduce((accumulator, item) => accumulator + parseInt(item.total), 0);
+    // return payees.length
+});
+const pending = computed(() => total.value - (recovered.value + bad.value))
+
+const groupedData = computed(() => {
+    return payees.value.reduce((acc, item) => {
+        const year = getYear(parseISO(item.udhaar[0]?.date)); // Extract year from date
+        if (!acc[year]) {
+            acc[year] = [];
+        }
+        acc[year].push(item);
+        return acc;
+    }, {});
+});
 
 const chart2 = ref({
 
@@ -208,31 +232,46 @@ const chart2 = ref({
     }]
 })
 
-const groupedDataByYear = ref([])
-
-// computed properties
-const payees = computed(() => {
-    return store.getters.getPayees
-})
-const total = computed(() => store.getters.getTotal)
-const recovered = computed(() => store.getters.getRecovered)
-const bad = computed(() => store.getters.getBad)
-const totalUdhaar = computed(() => {
-    return payees.value.reduce((accumulator, item) => accumulator + parseInt(item.total), 0);
-    // return payees.length
-});
-const pending = computed(() => total.value - (recovered.value + bad.value))
-
-const groupedData = computed(() => {
-    return payees.value.reduce((acc, item) => {
-        const year = getYear(parseISO(item.udhaar[0]?.date)); // Extract year from date
-        if (!acc[year]) {
-            acc[year] = [];
+const chart1 = ref({
+    title: {
+        text: 'Udhaar',
+        left: 'center',
+        textStyle: {
+            color: '#0ea5e9'
         }
-        acc[year].push(item);
-        return acc;
-    }, {});
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{b} : {c} ({d}%)',
+    },
+    legend: {
+        orient: 'horizontal',
+        align: 'auto',
+        top: 40,
+        data: ['Pending', 'Recovered', 'Bad'],
+    },
+    series: [{
+        type: 'pie',
+        radius: ['20%', '60%'],
+        center: ['50%', '60%'],
+        data: [
+            { value: pending.value, name: 'Pending' },
+            { value: recovered.value, name: 'Recovered' },
+            { value: bad.value, name: 'Bad' },
+        ],
+        color: ['#eab308', '#22c55e', '#ef4444'],
+        label: {
+            formatter: '{b}:{d}%',
+            borderWidth: 0,
+        },
+        itemStyle: {
+            borderWidth: 2,
+            borderColor: 'white',
+        },
+    }, ],
 });
+
+const groupedDataByYear = ref([])
 
 /*watch (groupedData, (newValue, oldValue) => {
     let l = []
@@ -296,51 +335,8 @@ onMounted(async () => {
 onErrorCaptured((e) => {
     console.log(e)
 })
-
-
-const chart1 = ref({
-    title: {
-        text: 'Udhaar',
-        left: 'center',
-        textStyle: {
-            color: '#0ea5e9'
-        }
-    },
-    tooltip: {
-        trigger: 'item',
-        formatter: '{b} : {c} ({d}%)',
-    },
-    legend: {
-        orient: 'horizontal',
-        align: 'auto',
-        top: 40,
-        data: ['Pending', 'Recovered', 'Bad'],
-    },
-    series: [{
-        type: 'pie',
-        radius: ['20%', '60%'],
-        center: ['50%', '60%'],
-        data: [
-            { value: pending.value, name: 'Pending' },
-            { value: recovered.value, name: 'Recovered' },
-            { value: bad.value, name: 'Bad' },
-        ],
-        color: ['#eab308', '#22c55e', '#ef4444'],
-        label: {
-            formatter: '{b}:{d}%',
-            borderWidth: 0,
-        },
-        itemStyle: {
-            borderWidth: 2,
-            borderColor: 'white',
-        },
-    }, ],
-});
 </script>
 <style lang="css" scoped>
-#chart {
-}
-
 .chart {
     height: 400px;
 }

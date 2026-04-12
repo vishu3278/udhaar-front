@@ -1,9 +1,11 @@
 <template>
 	<tr :class="{'active': active == rowData.id}">
 		<template v-for="(f, index) in fields">
-			<!-- <td v-if="key == fields[index]">{{value}}</td> -->
-			<td v-if="f == 'id' || f == 'name' || f == 'total'">{{rowData[f]}}</td>
-			<td v-if="f == 'mobile'">{{rowData[f]}}</td>
+			<td v-if="f == 'payee'">
+				<div class="font-bold">{{rowData.name}}</div>
+				<div class="text-xs text-slate-500">{{rowData.id}} | {{rowData.mobile}}</div>
+			</td>
+			<td v-if="f == 'total'">{{rowData[f]}}</td>
 	        <td v-if="f == 'pending'">{{pending}}</td>
 			<td v-if="f == 'status'" class="text-center">
 	            <span v-show="rowData['udhaar'][0]?.bad" class="text-xs px-2 rounded-full bg-rose-200 text-red-800 mr-1">Bad</span>

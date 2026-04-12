@@ -25,10 +25,6 @@
         @apply border-gray-300 border-collapse w-full
     }
 
-    table thead {}
-    table tbody {}
-    table tfoot {}
-
     table th {
         @apply font-bold bg-slate-200 border border-solid border-slate-300 p-1
     }
@@ -80,10 +76,6 @@
 }
 
 @tailwind utilities;
-
-@media (prefers-color-scheme: dark) {
-    
-}
 
 *,
 *::before,

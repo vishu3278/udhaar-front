@@ -1,5 +1,5 @@
 <template>
-    <section class="container my-4">
+    <section class="container-fluid px-4 py-4">
         <div class="grid grid-cols-3 gap-3">
             <div class="column">
                 <div class="card bg-gradient-to-br from-blue-200 to-blue-400 rounded p-4">
@@ -42,8 +42,8 @@
             <!-- <div class="divider-vert"></div> -->
         </div>
     </section>
-    <div class="container">
-            <div :class="{'w-4/5': detail}">
+    <div class="container-fluid px-4 py-4">
+            <div :class="{'w-4/6': detail}">
                 
                 <table class="table compact table-striped table-hover w-full">
                     <thead>
@@ -83,7 +83,7 @@
                 </table>
             </div>
         
-            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-100 to-neutral-300 udhaar-panel outline outline-4 outline-neutral-300 top-0 right-0 bottom-0 z-50">
+            <div v-show="detail" class="fixed bg-gradient-to-br from-stone-100 to-neutral-300 udhaar-panel w-2/6 outline outline-4 outline-neutral-300 top-0 right-0 bottom-0 z-50">
                 <aside class="p-4 h-full flex flex-col justify-between">
                     <template v-if="detail">
                         <div>
@@ -182,7 +182,7 @@ export default {
     },
     setup(){
         const store = useStore()
-        const fields = ["id", 'name', "mobile", "total", "pending", "status", "action"]
+        const fields = ["payee", "total", "pending", "status", "action"]
         const detail = ref(null)
         const udhaarAmount = ref(0)
         const udhaarDate = ref(null)
@@ -511,6 +511,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .udhaar-panel {
-    width: 30rem;
+    //width: 30rem;
 }
 </style>
