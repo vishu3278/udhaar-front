@@ -156,28 +156,6 @@ use([
 provide(THEME_KEY, '');
 
 const store = useStore()
-// let payees = ref([])
-let msg = ref(null)
-// let total = ref(0)
-// let pending = ref(0)
-// let bad = ref(0)
-// let recovered = ref(0)
-const loading = ref(true);
-const error = ref(null);
-const chartLabels = ref([])
-const chartDatasets = ref([])
-const year = ref(new Date().getFullYear())
-const chartColors = ref([
-    "#73c0de",
-    "#fac858",
-    "#9a60b4",
-    "#91cc75",
-    "#fc8452",
-    "#5470c6",
-    "#ee6666",
-    "#3ba272",
-    "#ea7ccc"
-])
 
 // computed properties
 const payees = computed(() => {
@@ -202,6 +180,29 @@ const groupedData = computed(() => {
         return acc;
     }, {});
 });
+
+// let payees = ref([])
+let msg = ref(null)
+// let total = ref(0)
+// let pending = ref(0)
+// let bad = ref(0)
+// let recovered = ref(0)
+const loading = ref(true);
+const error = ref(null);
+const chartLabels = ref([])
+const chartDatasets = ref([])
+const year = ref(new Date().getFullYear())
+const chartColors = ref([
+    "#73c0de",
+    "#fac858",
+    "#9a60b4",
+    "#91cc75",
+    "#fc8452",
+    "#5470c6",
+    "#ee6666",
+    "#3ba272",
+    "#ea7ccc"
+])
 
 const chart2 = ref({
 

@@ -100,8 +100,25 @@
                     <img v-for="(im, index) in posters" :key="'p-'+index" :src="img_uri+im.file_path" loading="lazy" class="object-cover" alt="">
                 </div>
                 <p v-show="backdrops.length > 0" class="text-base text-slate-500 font-bold">Backdrops</p>
-                <div id="backdropGrid" class="gap-2 mb-3 overflow-x-auto overflow-y-hidden" style="display: flex; flex-wrap: nowrap; height: 340px;" >
-                    <img v-for="(im, index) in backdrops" :key="'b-'+index" :src="img_uri+im.file_path" loading="lazy" class="object-cover" style="aspect-ratio: 300 / 170; width: 100%;" alt="">
+                <div class="relative group">
+                    <div id="backdropGrid" class="gap-2 mb-3 overflow-x-auto overflow-y-hidden snap-x snap-mandatory" style="display: flex; flex-wrap: nowrap; height: 340px;" @mouseenter="pauseCarousel('backdropGrid')" @mouseleave="resumeCarousel('backdropGrid')">
+                        <img v-for="(im, index) in backdrops" :key="'b-'+index" :src="img_uri+im.file_path" loading="lazy" class="object-cover shrink-0 snap-center" style="aspect-ratio: 300 / 170; width: 100%;" alt="">
+                    </div>
+                    <!-- Navigation Buttons -->
+                    <button v-show="backdrops.length > 1" @click="manualScroll('backdropGrid', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <i class="ri-arrow-left-s-line text-2xl"></i>
+                    </button>
+                    <button v-show="backdrops.length > 1" @click="manualScroll('backdropGrid', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <i class="ri-arrow-right-s-line text-2xl"></i>
+                    </button>
+                    <!-- Indicators -->
+                    <div v-show="backdrops.length > 1" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                        <span v-for="(_, index) in backdrops" :key="'ind-'+index" 
+                            class="size-2 rounded-full transition-all duration-300 cursor-pointer"
+                            :class="currentBackdropIndex === index ? 'bg-white w-4' : 'bg-white/40'"
+                            @click="scrollToIndex('backdropGrid', index)">
+                        </span>
+                    </div>
                 </div>
                 <!-- <p v-show="logos.length > 0" class="text-base text-slate-500 font-bold">Logos</p>
                 <div class="images flex gap-2 overflow-x-auto mb-3">
@@ -166,6 +183,8 @@ export default {
             movie2: {},
             movie1: {},
             promColor: ["#667889", "#9abcde", "#ddeeff"],
+            currentBackdropIndex: 0,
+            carouselIntervals: {},
         }
     },
     computed: {
@@ -236,7 +255,7 @@ export default {
             this.setupCarousel("crewCarousel");
             this.setupCarousel("companyCarousel");
             this.setupCarousel("posterGrid");
-            this.setupCarousel("backdropGrid");
+            this.initBackdropCarousel();
         });
     },
     watch: {
@@ -273,7 +292,7 @@ export default {
             handler(newVal) {
                 if (newVal && newVal.length > 0) {
                     this.$nextTick(() => {
-                        this.setupCarousel("backdropGrid");
+                        this.initBackdropCarousel();
                     });
                 }
             }
@@ -285,8 +304,63 @@ export default {
             this._carouselCleanups.forEach(cleanup => cleanup());
             this._carouselCleanups = [];
         }
+        // Clean up backdrop carousel interval
+        Object.values(this.carouselIntervals).forEach(clearInterval);
     },
     methods: {
+        initBackdropCarousel() {
+            const carousel = document.getElementById('backdropGrid');
+            if (!carousel) return;
+
+            // Track current index based on scroll position
+            const handleScroll = () => {
+                const index = Math.round(carousel.scrollLeft / carousel.clientWidth);
+                this.currentBackdropIndex = index;
+            };
+
+            carousel.addEventListener('scroll', handleScroll);
+            
+            // Initial auto-play
+            this.resumeCarousel('backdropGrid');
+
+            // Cleanup
+            this._carouselCleanups = this._carouselCleanups || [];
+            this._carouselCleanups.push(() => {
+                carousel.removeEventListener('scroll', handleScroll);
+                this.pauseCarousel('backdropGrid');
+            });
+        },
+        manualScroll(id, direction) {
+            const carousel = document.getElementById(id);
+            if (!carousel) return;
+            
+            const nextIndex = (this.currentBackdropIndex + direction + this.backdrops.length) % this.backdrops.length;
+            this.scrollToIndex(id, nextIndex);
+        },
+        scrollToIndex(id, index) {
+            const carousel = document.getElementById(id);
+            if (!carousel) return;
+            
+            carousel.scrollTo({
+                left: index * carousel.clientWidth,
+                behavior: 'smooth'
+            });
+            this.currentBackdropIndex = index;
+        },
+        pauseCarousel(id) {
+            if (this.carouselIntervals[id]) {
+                clearInterval(this.carouselIntervals[id]);
+                delete this.carouselIntervals[id];
+            }
+        },
+        resumeCarousel(id) {
+            this.pauseCarousel(id);
+            if (this.backdrops && this.backdrops.length > 1) {
+                this.carouselIntervals[id] = setInterval(() => {
+                    this.manualScroll(id, 1);
+                }, 5000); // 5 seconds interval
+            }
+        },
         setupCarousel(carouselId) {
             const carousel = document.getElementById(carouselId);
             if (!carousel) return;
