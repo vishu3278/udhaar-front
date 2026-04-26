@@ -7,9 +7,9 @@
                     <span class="">Search by </span>
                     <label><input type="radio" name="param" value="movie" v-model="queryType" checked> Title</label>
                     <label><input type="radio" name="param" value="keyword" v-model="queryType"> Keyword</label>
-                    <input type="search" class="form-input flex-grow" v-model="query" placeholder="...">
+                    <input type="search" class="form-input flex-grow" v-model="query" placeholder="..." @keyup.enter="searchMovie(true)">
                     <label><input type="checkbox" v-model="adult"> Adult</label>
-                    <button class="btn btn-primary " @click="searchMovie">Search</button>
+                    <button class="btn btn-primary " @click="searchMovie(true)">Search</button>
                 </div>
             </div>
             <div class="account-info inline-flex items-center gap-2">
@@ -72,6 +72,7 @@
             </movie-card-small>
         </section>
     </div>
+    <div v-if="sidePanel" class="fixed inset-0 bg-slate-900/20 backdrop-blur-[2px] z-20 transition-all duration-300" @click="sidePanel = false"></div>
     <article v-if="sidePanel" class="side-panel fixed bg-gradient-to-br to-sky-100 from-yellow-50 inset-y-0 right-0 z-30 shadow" v-click-outside="onClickOutside">
         <movie-detail :detail="detail" @close-panel="sidePanel = false"></movie-detail>
     </article>
@@ -122,6 +123,15 @@ export default {
         }
     },
 
+    watch: {
+        sidePanel(val) {
+            if (val) {
+                document.body.style.overflow = 'hidden'
+            } else {
+                document.body.style.overflow = 'auto'
+            }
+        }
+    },
     mounted() {
         // console.log('mounted')
         /*axios.get(`${base_uri}/genre/movie/list?api_key=${api_key}`).then(res => {
@@ -166,6 +176,9 @@ export default {
             .then(() => console.log("always"))
 
     },
+    beforeUnmount() {
+        document.body.style.overflow = 'auto'
+    },
     methods: {
         onClickOutside(event){
             // console.log(event)
@@ -180,10 +193,11 @@ export default {
             }, duration)
         },
 
-        searchMovie() {
-            // url: `${base_uri}/search/movie?api_key=${api_key}&query=${q}`,
+        async searchMovie(resetPage = false) {
+            if (resetPage) this.page = 1;
+            
             if (this.queryType == "movie") {
-                axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&include_adult=${this.adult}&query=${this.query}&page=${this.page}`)
+                axios.get(`${base_uri}/search/movie?api_key=${api_key}&include_adult=${this.adult}&query=${this.query}&page=${this.page}`)
                     .then(movies => {
                         this.movies = movies.data
                     })
@@ -191,13 +205,26 @@ export default {
             }
 
             if (this.queryType == "keyword") {
-                // axios.get(`${base_uri}/search/${this.queryType}?api_key=${api_key}&query=${this.query}&page=${this.page}`)
-                axios.get(`${base_uri}/discover/movie?api_key=${api_key}&include_adult=${this.adult}&page=${this.page}&with_keywords=${this.query}`)
-                    .then(movies => {
-                        // console.log(movies)
-                        this.movies = movies.data
-                    })
-                    .catch(e => console.warn(e))
+                try {
+                    // Keyword search requires an ID. First, we find the keyword ID.
+                    const keywordRes = await axios.get(`${base_uri}/search/keyword?api_key=${api_key}&query=${this.query}`);
+                    
+                    if (keywordRes.data.results && keywordRes.data.results.length > 0) {
+                        // Use the ID of the first (most relevant) keyword match
+                        const keywordId = keywordRes.data.results[0].id;
+                        
+                        axios.get(`${base_uri}/discover/movie?api_key=${api_key}&include_adult=${this.adult}&page=${this.page}&with_keywords=${keywordId}`)
+                            .then(movies => {
+                                this.movies = movies.data
+                            })
+                            .catch(e => console.warn(e))
+                    } else {
+                        // No keywords found
+                        this.movies = { results: [], total_results: 0, total_pages: 0, page: 1 };
+                    }
+                } catch (e) {
+                    console.warn("Keyword search failed:", e);
+                }
             }
         },
         showDetail(movie) {
@@ -216,7 +243,7 @@ export default {
             const elm = document.getElementById("movieWrapper")
             // console.log(elm.offsetTop)
             window.scrollTo({ top: elm.offsetTop, left: 0, behavior: 'smooth' })
-            this.searchMovie()
+            this.searchMovie(false)
         }
     }
 }

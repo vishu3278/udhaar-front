@@ -23,7 +23,7 @@
             </div>
 
         </div>
-        <div class="card-body overflow-auto">
+        <div class="card-body overflow-y-auto">
             <figure v-if="detail.poster_path" class="card-image p-4 " >
                 <img :src="img_uri+detail.poster_path" id="posterImg" class="float-left mr-4" loading="lazy" @load="getPromColor()" >
                 <p class="text-slate-700 text-base">
@@ -36,7 +36,7 @@
             <!-- <figure v-if="detail.backdrop_path" class="">
                 <img :src="img_uri+detail.backdrop_path" class="object-cover w-full h-96">
             </figure> -->
-            <iframe v-if="videos.length>0" height="360" width="100%" :src="`https://www.youtube.com/embed/${videos[0].key}?autoplay=0&mute=0&rel=0`"></iframe>
+            <iframe v-if="videos.length>0" height="360" width="100%" :src="`https://www.youtube.com/embed/${videos[0].key}?autoplay=0&mute=0&rel=0`" allowfullscreen></iframe>
             <div class="card-body p-4 grid grid-cols-1 gap-y-2 text-base divide-y">
                 <div id="budget">
                     <span class="text-slate-500">Budget: </span>
