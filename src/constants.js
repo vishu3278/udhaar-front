@@ -9,7 +9,7 @@ const no_img = "/600x400.svg"
 
 const date_format = "d MMM y"
 
-const newsApi = "https://inshorts.deta.dev/"
+const newsApi = "https://saurav.tech/NewsAPI/";
 const jokeApi = "https://official-joke-api.appspot.com/"
 const jokeApi2 = "https://v2.jokeapi.dev/joke/"
 const typingApi = "https://readme-typing-svg.demolab.com?"

@@ -14,6 +14,7 @@ import MovieDetail from '../components/movie/MovieDetail.vue'
 import AddExpenseView from '../views/AddExpenseView.vue'
 import AddInvoice from '../views/AddInvoice.vue'
 import Harry from '../views/Harry.vue'
+import News from '../views/News.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,7 @@ const router = createRouter({
     { path: '/movie/:id', name: 'moviedetail', component: MovieDetail },
     { path: '/addinvoice', name: 'addinvoice', component: AddInvoice },
     { path: '/harrypotter', name: 'harrypotter', component: Harry },
+    { path: '/news', name: 'news', component: News },
     {
       path: '/about',
       name: 'about',
