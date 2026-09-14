@@ -41,7 +41,7 @@
     <p v-if="error" class="notice">{{ error }}</p>
 
     <section class="news-list" aria-live="polite">
-      <article v-for="article in articles" :key="article.id" class="news-item shadow-md rounded-md border border-stone-100">
+      <article v-for="article in articles" :key="article.id" class="news-item rounded border border-stone-400">
         <img
           class="news-image"
           :src="article.image"
@@ -49,11 +49,11 @@
           @error="usePlaceholderImage"
         >
         <div class="news-content">
-          <h2>{{ article.title }}</h2>
-          <p class="description">{{ article.description }} - <a :href="article.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800">more...</a></p>
+          <h2 class="text-lg font-semibold text-teal-800 leading-tight">{{ article.title }}</h2>
+          <p class="description my-2">{{ article.description }} - <a :href="article.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800">more...</a></p>
           
-          <footer class="meta">
-            <span><i class="ri-user-line"></i>{{ article.author }}</span>
+          <footer class="meta text-teal-600">
+            <span><i class="ri-user-line "></i>{{ article.author }}</span>
             <span><i class="ri-calendar-line"></i>{{ formatDate(article.date) }}</span>
           </footer>
         </div>
@@ -185,7 +185,7 @@ onMounted(loadNews)
   text-transform: uppercase;
 }
 
-h1, h2, p { margin-top: 0; }
+/* h1, h2, p { margin-top: 0; } */
 h1 { margin-bottom: .25rem; color: #0f172a; font-size: 2rem; font-weight: 700; }
 .subtitle { margin-bottom: 0; color: #64748b; }
 
@@ -218,10 +218,10 @@ h1 { margin-bottom: .25rem; color: #0f172a; font-size: 2rem; font-weight: 700; }
 
 .news-image { width: 100%; height: 100%; min-height: 170px; object-fit: cover; background: #f1f5f9; }
 .news-content { padding: 1.1rem 1.2rem; }
-h2 { color: #0f172a; font-size: 1.15rem; line-height: 1.35; }
-.description { color: #475569; line-height: 1.55; }
-.content { color: #475569; line-height: 1.55; margin-top: .5rem; }
-.meta { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; color: #64748b; font-size: .875rem; }
+/* h2 { color: #0f172a; font-size: 1.15rem; line-height: 1.35; } */
+/* .description {  } */
+/* .content { color: #475569; line-height: 1.55; margin-top: .5rem; } */
+.meta { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; font-size: .875rem; }
 .meta span { display: inline-flex; align-items: center; gap: .35rem; }
 .notice, .loading, .empty { padding: .75rem 1rem; border-radius: .5rem; }
 .notice { background: #fffbeb; color: #92400e; }

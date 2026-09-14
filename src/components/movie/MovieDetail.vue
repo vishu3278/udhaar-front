@@ -112,10 +112,10 @@
                         <i class="ri-arrow-right-s-line text-2xl"></i>
                     </button>
                     <!-- Indicators -->
-                    <div v-show="backdrops.length > 1" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                    <div v-show="backdrops.length > 1" class="absolute bottom-4 left-0 right-0 flex flex-wrap justify-center  z-10">
                         <span v-for="(_, index) in backdrops" :key="'ind-'+index" 
-                            class="size-2 rounded-full transition-all duration-300 cursor-pointer"
-                            :class="currentBackdropIndex === index ? 'bg-white w-4' : 'bg-white/40'"
+                            class="size-2 border-y border-white transition-all duration-300 cursor-pointer"
+                            :class="currentBackdropIndex === index ? 'bg-white  w-5' : 'bg-white/20 '"
                             @click="scrollToIndex('backdropGrid', index)">
                         </span>
                     </div>
